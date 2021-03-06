@@ -7,9 +7,8 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
-
 class Awards(models.Model):
-    amemoreferencenumber = models.OneToOneField('Record', models.DO_NOTHING, db_column='aMemoReferenceNumber', primary_key=True)  # Field name made lowercase
+    amemoreferencenumber = models.OneToOneField('Record', models.DO_NOTHING, db_column='aMemoReferenceNumber', primary_key=True)  # Field name made lowercase.
     awardissuer = models.CharField(db_column='awardIssuer', max_length=20)  # Field name made lowercase.
     awardpurpose = models.CharField(db_column='awardPurpose', max_length=20)  # Field name made lowercase.
     awardtype = models.CharField(db_column='awardType', max_length=20)  # Field name made lowercase.
@@ -33,7 +32,7 @@ class ChildBackground(models.Model):
     childname = models.CharField(db_column='childName', max_length=20)  # Field name made lowercase.
     childage = models.IntegerField(db_column='childAge', blank=True, null=True)  # Field name made lowercase.
     childoccupation = models.CharField(db_column='childOccupation', max_length=20, blank=True, null=True)  # Field name made lowercase.
-    childid = models.IntegerField(db_column='childId', primary_key=True)  # Field name made lowercase.
+    childid = models.AutoField(db_column='childId', primary_key=True)  # Field name made lowercase.
     informationid = models.ForeignKey('EmployeePersonalInfo', models.DO_NOTHING, db_column='informationId')  # Field name made lowercase.
 
     class Meta:
@@ -41,8 +40,9 @@ class ChildBackground(models.Model):
         db_table = 'child_background'
 
 
+
 class Document(models.Model):
-    documentid = models.IntegerField(db_column='documentId', primary_key=True)  # Field name made lowercase.
+    documentid = models.AutoField(db_column='documentId', primary_key=True)  # Field name made lowercase.
     documentname = models.CharField(db_column='documentName', max_length=50)  # Field name made lowercase.
     dateandtimecreated = models.DateTimeField(db_column='dateAndTimeCreated')  # Field name made lowercase.
     author = models.CharField(max_length=50)
@@ -71,7 +71,7 @@ class EducationalBackground(models.Model):
     endingyearattended = models.DateField(db_column='endingYearAttended')  # Field name made lowercase.
     schooltype = models.CharField(db_column='schoolType', max_length=15)  # Field name made lowercase.
     informationid = models.ForeignKey('EmployeePersonalInfo', models.DO_NOTHING, db_column='informationId')  # Field name made lowercase.
-    degreeid = models.IntegerField(db_column='degreeId', primary_key=True)  # Field name made lowercase.
+    degreeid = models.AutoField(db_column='degreeId', primary_key=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -119,7 +119,7 @@ class EmployeePersonalInfo(models.Model):
     permanentaddress = models.CharField(db_column='permanentAddress', max_length=100)  # Field name made lowercase.
     contactnumber = models.IntegerField(db_column='contactNumber')  # Field name made lowercase.
     spouseid = models.ForeignKey('SpouseBackground', models.DO_NOTHING, db_column='spouseId', blank=True, null=True)  # Field name made lowercase.
-    informationid = models.IntegerField(db_column='informationId', primary_key=True)  # Field name made lowercase.
+    informationid = models.AutoField(db_column='informationId', primary_key=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -128,7 +128,7 @@ class EmployeePersonalInfo(models.Model):
 
 class EmployeePosition(models.Model):
     position = models.CharField(max_length=20)
-    jobid = models.IntegerField(db_column='jobId', primary_key=True)  # Field name made lowercase.
+    jobid = models.AutoField(db_column='jobId', primary_key=True)  # Field name made lowercase.
     department = models.CharField(max_length=20)
 
     class Meta:
@@ -142,7 +142,7 @@ class EmployeePositionHistory(models.Model):
     previousbranch = models.CharField(db_column='previousBranch', max_length=20)  # Field name made lowercase.
     year = models.TextField()  # This field type is a guess.
     employeeid = models.ForeignKey(Employee, models.DO_NOTHING, db_column='employeeId')  # Field name made lowercase.
-    pastpositionid = models.IntegerField(db_column='pastPositionId', primary_key=True)  # Field name made lowercase.
+    pastpositionid = models.AutoField(db_column='pastPositionId', primary_key=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -164,7 +164,7 @@ class EmploymentHistory(models.Model):
     reasonforleaving = models.CharField(db_column='reasonForLeaving', max_length=20, blank=True, null=True)  # Field name made lowercase.
     companycontactnumber = models.CharField(db_column='companyContactNumber', max_length=20, blank=True, null=True)  # Field name made lowercase.
     withcoeorclearance = models.CharField(db_column='withCOEorClearance', max_length=10)  # Field name made lowercase.
-    employmenthistoryid = models.IntegerField(db_column='employmentHistoryId', primary_key=True)  # Field name made lowercase.
+    employmenthistoryid = models.AutoField(db_column='employmentHistoryId', primary_key=True)  # Field name made lowercase.
     informationid = models.ForeignKey(EmployeePersonalInfo, models.DO_NOTHING, db_column='informationId')  # Field name made lowercase.
 
     class Meta:
@@ -177,7 +177,7 @@ class FamilyMemberBackground(models.Model):
     memberage = models.IntegerField(db_column='memberAge', blank=True, null=True)  # Field name made lowercase.
     memberrelationship = models.CharField(db_column='memberRelationship', max_length=20)  # Field name made lowercase.
     memberoccupation = models.CharField(db_column='memberOccupation', max_length=20, blank=True, null=True)  # Field name made lowercase.
-    familyid = models.IntegerField(db_column='familyId', primary_key=True)  # Field name made lowercase.
+    familyid = models.AutoField(db_column='familyId', primary_key=True)  # Field name made lowercase.
     informationid = models.ForeignKey(EmployeePersonalInfo, models.DO_NOTHING, db_column='informationId')  # Field name made lowercase.
 
     class Meta:
@@ -224,7 +224,7 @@ class SpouseBackground(models.Model):
     spousecompany = models.CharField(db_column='spouseCompany', max_length=20, blank=True, null=True)  # Field name made lowercase.
     spousecompanyaddress = models.CharField(db_column='spouseCompanyAddress', max_length=20, blank=True, null=True)  # Field name made lowercase.
     numberofchildren = models.IntegerField(db_column='numberOfChildren', blank=True, null=True)  # Field name made lowercase.
-    spouseid = models.IntegerField(db_column='spouseId', primary_key=True)  # Field name made lowercase.
+    spouseid = models.AutoField(db_column='spouseId', primary_key=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
