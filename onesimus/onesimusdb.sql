@@ -485,13 +485,13 @@ DROP TABLE IF EXISTS `employee`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `employee` (
   `employeeId` int NOT NULL,
-  `branch` varchar(20) NOT NULL,
+  `branch` varchar(20) DEFAULT NULL,
   `startDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `endDate` datetime DEFAULT NULL,
   `employmentStatus` varchar(15) NOT NULL DEFAULT 'Probationary',
   `salaryType` varchar(10) NOT NULL DEFAULT 'Monthly',
   `salary` float(10,2) NOT NULL DEFAULT '0.00',
-  `jobId` int NOT NULL,
+  `jobId` int DEFAULT NULL,
   `informationId` int NOT NULL,
   PRIMARY KEY (`employeeId`),
   KEY `branch` (`branch`),
