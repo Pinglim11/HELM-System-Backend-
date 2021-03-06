@@ -250,7 +250,7 @@ CREATE TABLE `child_background` (
   `childName` varchar(20) NOT NULL,
   `childAge` int DEFAULT NULL,
   `childOccupation` varchar(20) DEFAULT NULL,
-  `childId` int NOT NULL,
+  `childId` int NOT NULL AUTO_INCREMENT,
   `informationId` int NOT NULL,
   PRIMARY KEY (`childId`),
   KEY `informationId` (`informationId`),
@@ -388,7 +388,7 @@ DROP TABLE IF EXISTS `document`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `document` (
-  `documentId` int NOT NULL,
+  `documentId` int NOT NULL AUTO_INCREMENT,
   `documentName` varchar(50) NOT NULL,
   `dateAndTimeCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `author` varchar(50) NOT NULL,
@@ -435,7 +435,7 @@ CREATE TABLE `educational_background` (
   `endingYearAttended` date NOT NULL,
   `schoolType` varchar(15) NOT NULL DEFAULT 'Elementary',
   `informationId` int NOT NULL,
-  `degreeId` int NOT NULL,
+  `degreeId` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`degreeId`),
   KEY `informationId` (`informationId`),
   CONSTRAINT `educational_background_ibfk_1` FOREIGN KEY (`informationId`) REFERENCES `employee_personal_info` (`informationId`)
@@ -535,7 +535,7 @@ CREATE TABLE `employee_personal_info` (
   `permanentAddress` varchar(100) NOT NULL,
   `contactNumber` int NOT NULL,
   `spouseId` int DEFAULT NULL,
-  `informationId` int NOT NULL,
+  `informationId` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`informationId`),
   KEY `emergencyContactNumber` (`emergencyContactNumber`),
   KEY `spouseId` (`spouseId`),
@@ -562,7 +562,7 @@ DROP TABLE IF EXISTS `employee_position`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `employee_position` (
   `position` varchar(20) NOT NULL,
-  `jobId` int NOT NULL,
+  `jobId` int NOT NULL AUTO_INCREMENT,
   `department` varchar(20) NOT NULL,
   PRIMARY KEY (`jobId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -590,7 +590,7 @@ CREATE TABLE `employee_position_history` (
   `previousBranch` varchar(20) NOT NULL,
   `year` year NOT NULL,
   `employeeId` int NOT NULL,
-  `pastPositionId` int NOT NULL,
+  `pastPositionId` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`pastPositionId`),
   KEY `employeeHistory_fk` (`employeeId`),
   CONSTRAINT `employeeHistory_fk` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`employeeId`)
@@ -642,7 +642,7 @@ CREATE TABLE `employment_history` (
   `reasonForLeaving` varchar(20) DEFAULT NULL,
   `companyContactNumber` varchar(20) DEFAULT NULL,
   `withCOEorClearance` varchar(10) NOT NULL,
-  `employmentHistoryId` int NOT NULL,
+  `employmentHistoryId` int NOT NULL AUTO_INCREMENT,
   `informationId` int NOT NULL,
   PRIMARY KEY (`employmentHistoryId`),
   KEY `informationId` (`informationId`),
@@ -671,7 +671,7 @@ CREATE TABLE `family_member_background` (
   `memberAge` int DEFAULT NULL,
   `memberRelationship` varchar(20) NOT NULL DEFAULT 'Mother',
   `memberOccupation` varchar(20) DEFAULT NULL,
-  `familyId` int NOT NULL,
+  `familyId` int NOT NULL AUTO_INCREMENT,
   `informationId` int NOT NULL,
   PRIMARY KEY (`familyId`),
   KEY `informationId` (`informationId`),
@@ -782,7 +782,7 @@ CREATE TABLE `spouse_background` (
   `spouseCompany` varchar(20) DEFAULT NULL,
   `spouseCompanyAddress` varchar(20) DEFAULT NULL,
   `numberOfChildren` int DEFAULT '0',
-  `spouseId` int NOT NULL,
+  `spouseId` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`spouseId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
