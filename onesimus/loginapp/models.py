@@ -91,13 +91,13 @@ class EmergencyDetails(models.Model):
 
 class Employee(models.Model):
     employeeid = models.OneToOneField(Document, models.DO_NOTHING, db_column='employeeId', primary_key=True)  # Field name made lowercase.
-    branch = models.ForeignKey('EmployeeWorkLocation', models.DO_NOTHING, db_column='branch')
+    branch = models.ForeignKey('EmployeeWorkLocation', models.DO_NOTHING, db_column='branch', blank=True, null=True)
     startdate = models.DateTimeField(db_column='startDate')  # Field name made lowercase.
     enddate = models.DateTimeField(db_column='endDate', blank=True, null=True)  # Field name made lowercase.
     employmentstatus = models.CharField(db_column='employmentStatus', max_length=15)  # Field name made lowercase.
     salarytype = models.CharField(db_column='salaryType', max_length=10)  # Field name made lowercase.
     salary = models.FloatField()
-    jobid = models.ForeignKey('EmployeePosition', models.DO_NOTHING, db_column='jobId')  # Field name made lowercase.
+    jobid = models.ForeignKey('EmployeePosition', models.DO_NOTHING, db_column='jobId', blank=True, null=True)  # Field name made lowercase.
     informationid = models.ForeignKey('EmployeePersonalInfo', models.DO_NOTHING, db_column='informationId')  # Field name made lowercase.
 
     class Meta:
