@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onésimus HELM System</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" type="text/css" />
+</head>
+<body>
+    
+    <header id="header"></header>
+
+    <div id="login-section" class="section">
+
+        <form id="login-form" method="POST" action="{% url 'login' %}" class="section-container">
+        {% csrf_token %}
+            <div class="section-block">
+                <img id="login-logo" src="{% static 'images/logo-black.png' %}">
+                <hr style="width: 85%; border: 0px solid #202020; border-top-width: 0.5px; margin: 10px auto;" />
+                <span class="helm-system" id="login-span">Human Resource Lifecycle<br>Management System</span>
+            </div>
+
+      
+        <div class="section-block">
+            <div class="section-row">
+                <div class="input-item">
+                    <label for="uname">Username:</label>
+                    {{ form.username }}
+                </div>
+            </div>
+            <div class="section-row">
+                <div class="input-item">
+                    <label for="pword">Password:</label>
+                    {{ form.password }}
+                    {% if form.errors %}
+                    <p>Your username and password didn't match. <br> Please try again.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="section-block">
+            <button id="login-btn" type="submit" class="primary-btn">
+                Sign In
+            </button>
+            <input type="hidden" name="next" value="{{ next }}" />
+        </div>
+              
+            
+            <div class="section-block">
+                <a href="{% url 'password_reset' %}" id="login-link">
+                    Forgot password?
+                </a>
+            </div>
+
+        </form>
+    </div>
+
+</body>
+</html>
