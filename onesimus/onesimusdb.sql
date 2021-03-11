@@ -497,7 +497,6 @@ CREATE TABLE `employee` (
   KEY `branch` (`branch`),
   KEY `jobId` (`jobId`),
   KEY `informationId` (`informationId`),
-  CONSTRAINT `employee_ibfk_1` FOREIGN KEY (`employeeId`) REFERENCES `document` (`employeeId`),
   CONSTRAINT `employee_ibfk_5` FOREIGN KEY (`branch`) REFERENCES `employee_work_location` (`branch`),
   CONSTRAINT `employee_ibfk_6` FOREIGN KEY (`jobId`) REFERENCES `employee_position` (`jobId`),
   CONSTRAINT `employee_ibfk_7` FOREIGN KEY (`informationId`) REFERENCES `employee_personal_info` (`informationId`),
