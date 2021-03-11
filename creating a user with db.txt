@@ -1,0 +1,11 @@
+
+CREATE DATABASE onesimusDB;
+
+CREATE USER 'onesimushelm'@'%' IDENTIFIED WITH mysql_native_password BY 'onesimus123helm';
+grant all on onesimusDB.* to 'onesimushelm'@'%';
+flush privileges;
+
+USE onesimusDB;
+SOURCE onesimusDB.sql;
+
+
