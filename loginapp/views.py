@@ -33,9 +33,9 @@ def testing(request):
     position = JobsForm(request.POST)
     spouse = SpouseForm(request.POST) 
     emphistory = formset_factory(EmploymentHistoryForm, extra = 1)
-    education = EducationalBackgroundForm(request.POST) 
-    family = FamilyMemberBackgroundForm(request.POST) 
-    child = ChildBackgroundForm (request.POST) 
+    education = formset_factory(EducationalBackgroundForm, extra = 1)
+    family = formset_factory(FamilyMemberBackgroundForm, extra = 1)
+    child = formset_factory(ChildBackgroundForm, extra = 1)
 
     # check if form data is valid 
     if request.method == "POST":
@@ -116,9 +116,13 @@ def testing(request):
             )
 
 
-
-            if emphistory.is_valid():
-                for histories in emphistory:
+            emphistory = emphistory(request.POST)
+            education = education(request.POST)
+            family = family(request.POST)
+            child = child(request.POST)
+            #if emphistory.is_valid():
+            for histories in emphistory:
+                if histories.is_valid():
                     emphistorystore = EmploymentHistory.objects.create(
                     informationid=informationid, 
                     previouscompanyname= histories.cleaned_data['previouscompanyname'],
@@ -129,35 +133,35 @@ def testing(request):
                     )
 
 
-
-            if education.is_valid():
-                educationstore = EducationalBackground.objects.create(
-                informationid=informationid,
-                highestdegree= education.cleaned_data['highestdegree'],
-                schoolname=education.cleaned_data['schoolname'],
-                startingyearattended=education.cleaned_data['startingyearattended'],
-                endingyearattended=education.cleaned_data['endingyearattended'],
-                schooltype=education.cleaned_data['schooltype']
-                )
+            for educations in education:
+                if educations.is_valid():
+                    educationstore = EducationalBackground.objects.create(
+                    informationid=informationid,
+                    highestdegree= educations.cleaned_data['highestdegree'],
+                    schoolname=educations.cleaned_data['schoolname'],
+                    startingyearattended=educations.cleaned_data['startingyearattended'],
+                    endingyearattended=educations.cleaned_data['endingyearattended'],
+                    schooltype=educations.cleaned_data['schooltype']
+                    )
   
-
-            if family.is_valid():
-                familystore = FamilyMemberBackground.objects.create(
-                    informationid= informationid,
-                    membername= family.cleaned_data['membername'],
-                    memberage= family.cleaned_data['memberage'],
-                    memberrelationship= family.cleaned_data['memberrelationship'],
-                    memberoccupation= family.cleaned_data['memberoccupation']
-                )
+            for fammembers in family:
+                if fammembers.is_valid():
+                    familystore = FamilyMemberBackground.objects.create(
+                        informationid= informationid,
+                        membername= fammembers.cleaned_data['membername'],
+                        memberage= fammembers.cleaned_data['memberage'],
+                        memberrelationship= fammembers.cleaned_data['memberrelationship'],
+                        memberoccupation= fammembers.cleaned_data['memberoccupation']
+                    )
                 
-
-            if child.is_valid():
-                childstore = ChildBackground.objects.create(
-                childname= child.cleaned_data['childname'],
-                childage= child.cleaned_data['childage'],
-                childoccupation= child.cleaned_data['childoccupation'],
-                informationid= informationid
-                )
+            for children in child:
+                if children.is_valid():
+                    childstore = ChildBackground.objects.create(
+                    childname= children.cleaned_data['childname'],
+                    childage= children.cleaned_data['childage'],
+                    childoccupation= children.cleaned_data['childoccupation'],
+                    informationid= informationid
+                    )
                 
                 
     
