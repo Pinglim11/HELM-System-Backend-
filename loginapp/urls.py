@@ -22,6 +22,8 @@ urlpatterns = [
     path('employeeform', views.employeeform, name = 'employeeform'),
     path('createrecord', views.createrecord, name = 'createrecord'),
     path('test', views.testing, name='test'),
+    path('viewtest', views.viewtest, name='viewtest'),
     path('logout', views.logoutuser, name='logout'),
+    path('employee/<int:empid>/', views.employeeprof, name='record'),
 ] +  static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

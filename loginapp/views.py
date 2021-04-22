@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
@@ -24,6 +25,19 @@ def checkmodelq(classmodel, arg):
 @login_required
 def employeeform(request):
     return render(request, 'loginapp/employee_masterlist.html')
+
+@login_required
+def employeeprof(request,empid):
+    record = get_object_or_404(Employee, employeeid=empid)
+    return render(request, 'loginapp/prof.html', {'employee': record})
+
+@login_required
+def viewtest(request):
+    employees = Employee.objects.all().order_by('employeeid')
+    context = {
+    'employees': employees,
+    } 
+    return render(request, 'loginapp/viewtest.html',context)
 
 
 def testing(request):
