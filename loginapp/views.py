@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.forms.models import model_to_dict
 from .forms import EmployeeRequiredRecordForm,JobsForm, BranchForm, SpouseForm, EmploymentHistoryForm,EducationalBackgroundForm,FamilyMemberBackgroundForm,ChildBackgroundForm 
 from .models import Employee, EmployeePersonalInfo,EmployeePosition,EmployeeWorkLocation, ChildBackground,SpouseBackground,FamilyMemberBackground,EducationalBackground,EmploymentHistory, EmergencyDetails
 from django.forms import formset_factory
@@ -32,6 +33,108 @@ def employeeprof(request,empid):
     return render(request, 'loginapp/prof.html', {'employee': record})
 
 @login_required
+def employeeedit(request,empid):
+    employee = get_object_or_404(Employee, employeeid=empid)
+    information = employee.informationid
+    emergency = information.emergencycontactnumber
+    spouse = information.spouseid
+    emphistory = EmploymentHistory.objects.filter(informationid=information)
+    education = EducationalBackground.objects.filter(informationid=information)
+    family = FamilyMemberBackground.objects.filter(informationid=information)
+    children = ChildBackground.objects.filter(informationid=information)
+    requiredData = {
+    'employeeid': employee.employeeid,
+    'startdate': employee.startdate,
+    'enddate' : employee.enddate,
+    'employmentstatus' : employee.employmentstatus,
+    'salarytype' : employee.salarytype,
+    'salary': employee.salary,
+    'branch': employee.branch,
+    'jobid': employee.jobid,
+    'employeename'  : information.employeename,
+    'gender' : information.gender,
+    'birthdate' : information.birthdate,
+    'civilstatus' : information.civilstatus,
+    'citizenship' : information.citizenship,
+    'religion' : information.religion,
+    'bloodtype' : information.bloodtype,
+    'numberofdependent' : information.numberofdependent,
+    'presentaddress' : information.presentaddress,
+    'permanentaddress' : information.permanentaddress,
+    'contactnumber' : information.contactnumber,
+    #Emergency Details
+    'emergencycontactnumber' : emergency.emergencycontactnumber,
+    'emergencycontactname' : emergency.emergencycontactname,
+    'emergencyrelationship' : emergency.emergencyrelationship,
+    'emergencyaddress' : emergency.emergencyaddress,
+    }
+    spouseData = {}
+    emphistoryData = []
+    educationData = []
+    familyData = []
+    childrenData = []
+    if spouse != None:
+        spouseData['spousename'] = spouse.spousename
+        spouseData['spousecompany'] = spouse.spousecompany
+        spouseData['spousecompanyaddress'] = spouse.spousecompanyaddress
+        spouseData['numberofchildren'] = spouse.numberofchildren
+    
+    for history in emphistory:
+        dic = {
+            'previouscompanyname': history.previouscompanyname,
+            'previousposition'  : history.previousposition,
+            'reasonforleaving'   : history.reasonforleaving,
+            'companycontactnumber' : history.companycontactnumber,
+            'withcoeorclearance' : history.withcoeorclearance,
+        }
+        emphistoryData.append(dic)
+    
+    for background in education:
+        dic = {
+            'highestdegree': background.highestdegree,
+            'schoolname'  : background.schoolname,
+            'startingyearattended'   : background.startingyearattended,
+            'endingyearattended' : background.endingyearattended,
+            'schooltype' : background.schooltype,
+        }
+        educationData.append(dic)
+
+
+    for member in family:
+        dic = {
+            'membername': member.membername,
+            'memberage'  : member.memberage,
+            'memberrelationship'   : member.memberrelationship,
+            'memberoccupation' : member.memberoccupation,
+        }
+        familyData.append(dic)
+
+    for child in children:
+        dic = {
+            'childname': child.childname,
+            'childage'  : child.childage,
+            'childoccupation'   : child.childoccupation,
+        }
+        childrenData.append(dic)
+    recordform = EmployeeRequiredRecordForm(requiredData) 
+    spouseform = SpouseForm(spouseData) 
+    emphistoryform = formset_factory(EmploymentHistoryForm )(initial = emphistoryData)
+    educationform = formset_factory(EducationalBackgroundForm )(initial = educationData)
+    familyform = formset_factory(FamilyMemberBackgroundForm )(initial = familyData)
+    childform = formset_factory(ChildBackgroundForm)(initial = childrenData)
+
+    context = {
+    'employee': employee,
+    'record': recordform,
+    'spouse': spouseform,
+    'emphistory': emphistoryform,
+    'education': educationform ,
+    'family': familyform,
+    'child': childform 
+    } 
+    return render(request, 'loginapp/edit.html', context)
+
+@login_required
 def viewtest(request):
     employees = Employee.objects.all().order_by('employeeid')
     context = {
@@ -42,56 +145,60 @@ def viewtest(request):
 
 def testing(request):
 
-    record = EmployeeRequiredRecordForm(request.POST) 
-    worklocation = BranchForm(request.POST) 
-    position = JobsForm(request.POST)
-    spouse = SpouseForm(request.POST) 
-    emphistory = formset_factory(EmploymentHistoryForm, extra = 1)
-    education = formset_factory(EducationalBackgroundForm, extra = 1)
-    family = formset_factory(FamilyMemberBackgroundForm, extra = 1)
-    child = formset_factory(ChildBackgroundForm, extra = 1)
+    record = EmployeeRequiredRecordForm() 
+    #worklocation = BranchForm() 
+    #position = JobsForm()
+    spouse = SpouseForm() 
+    emphistory = formset_factory(EmploymentHistoryForm)
+    education = formset_factory(EducationalBackgroundForm)
+    family = formset_factory(FamilyMemberBackgroundForm)
+    child = formset_factory(ChildBackgroundForm)
 
     # check if form data is valid 
     if request.method == "POST":
-        
+        record = EmployeeRequiredRecordForm(request.POST) 
+        #worklocation = BranchForm(request.POST) 
+       # position = JobsForm(request.POST)
+        spouse = SpouseForm(request.POST)    
 
 
         if record.is_valid(): 
-            branch = None
-            job = None
+            branch = record.cleaned_data['branch']
+            job = record.cleaned_data['jobid']
             spousetemp = None
             emergency = None
             informationid = None
             #Check if worklocation already exist, These are temporary, can be a dropdown foreign key thing in the future if ever
-            if worklocation.is_valid():
-                branchcheck = checkmodel(EmployeeWorkLocation, branch = worklocation.cleaned_data['branch'])
-                if branchcheck == None:
-                    workstore = EmployeeWorkLocation.objects.create(branch = worklocation.cleaned_data['branch'], region = worklocation.cleaned_data['region'])
-                    branch = workstore
-                else:
-                    branch = branchcheck
+            # if worklocation.is_valid():
+            #     branchcheck = checkmodel(EmployeeWorkLocation, branch = worklocation.cleaned_data['branch'])
+            #     if branchcheck == None:
+            #         workstore = EmployeeWorkLocation.objects.create(branch = worklocation.cleaned_data['branch'], region = worklocation.cleaned_data['region'])
+            #         branch = workstore
+            #     else:
+            #         branch = branchcheck
                 
 
-            if position.is_valid():
-                deptarg = Q(department__contains = position.cleaned_data['department'])
-                jobarg = Q(position__contains = position.cleaned_data['position'])
-                positioncheck = checkmodelq(EmployeePosition, deptarg & jobarg)
-                if positioncheck == None:
-                    posstore = EmployeePosition.objects.create(position = position.cleaned_data['position'], department = position.cleaned_data['department'])
-                    job = posstore
-                else:
-                    job = positioncheck
+            # if position.is_valid():
+            #     deptarg = Q(department__contains = position.cleaned_data['department'])
+            #     jobarg = Q(position__contains = position.cleaned_data['position'])
+            #     positioncheck = checkmodelq(EmployeePosition, deptarg & jobarg)
+            #     if positioncheck == None:
+            #         posstore = EmployeePosition.objects.create(position = position.cleaned_data['position'], department = position.cleaned_data['department'])
+            #         job = posstore
+            #     else:
+            #         job = positioncheck
             
             if spouse.is_valid():
-                spousenamearg = Q(spousename__contains = spouse.cleaned_data['spousename'])
-                spousecomparg = Q(spousecompany__contains = spouse.cleaned_data['spousecompany'])
-                spousechildren = Q(numberofchildren__contains = spouse.cleaned_data['numberofchildren'])
-                spousecheck = checkmodelq(SpouseBackground, spousenamearg & spousecomparg & spousechildren) 
-                if spousecheck == None:
-                    spousestore = SpouseBackground.objects.create(spousename = spouse.cleaned_data['spousename'], spousecompany = spouse.cleaned_data['spousecompany'], spousecompanyaddress = spouse.cleaned_data['spousecompanyaddress'], numberofchildren = spouse.cleaned_data['numberofchildren'])
-                    spousetemp = spousestore
-                else:
-                    spousetemp = spousecheck
+                if spouse.cleaned_data['spousename'] != None and spouse.cleaned_data['spousecompany'] != None and spouse.cleaned_data['numberofchildren'] != None:
+                    spousenamearg = Q(spousename__contains = spouse.cleaned_data['spousename'])
+                    spousecomparg = Q(spousecompany__contains = spouse.cleaned_data['spousecompany'])
+                    spousechildren = Q(numberofchildren__contains = spouse.cleaned_data['numberofchildren'])
+                    spousecheck = checkmodelq(SpouseBackground, spousenamearg & spousecomparg & spousechildren) 
+                    if spousecheck == None:
+                        spousestore = SpouseBackground.objects.create(spousename = spouse.cleaned_data['spousename'], spousecompany = spouse.cleaned_data['spousecompany'], spousecompanyaddress = spouse.cleaned_data['spousecompanyaddress'], numberofchildren = spouse.cleaned_data['numberofchildren'])
+                        spousetemp = spousestore
+                    else:
+                        spousetemp = spousecheck
 
             
             emergencycheck = checkmodel(EmergencyDetails,emergencycontactnumber = record.cleaned_data['emergencycontactnumber'])
@@ -183,8 +290,8 @@ def testing(request):
   
     context = {
     'record': record,
-    'worklocation': worklocation,
-    'position': position,
+    #'worklocation': worklocation,
+   # 'position': position,
     'spouse': spouse,
     'emphistory': emphistory,
     'education': education ,

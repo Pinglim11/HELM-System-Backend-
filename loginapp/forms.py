@@ -4,6 +4,9 @@ from .models import Employee, EmployeePersonalInfo,EmployeePosition,EmployeeWork
   
 # create a ModelForm 
 
+
+
+
 class EmployeeRequiredRecordForm(forms.Form):
     #Employee Record
     employeeid = forms.IntegerField()  
@@ -12,7 +15,8 @@ class EmployeeRequiredRecordForm(forms.Form):
     employmentstatus = forms.CharField(max_length=15)  
     salarytype = forms.CharField(max_length=10)  
     salary = forms.FloatField()
-    
+    branch = forms.ModelChoiceField(EmployeeWorkLocation.objects.all())
+    jobid = forms.ModelChoiceField(EmployeePosition.objects.all())
     #Emplyoee Personal Info
     employeename = forms.CharField(max_length=20)  
     gender = forms.CharField(max_length=10)
@@ -40,7 +44,7 @@ class BranchForm(forms.Form):
     region = forms.CharField(max_length=20)
 
 class SpouseForm(forms.Form):
-    spousename = forms.CharField(max_length=20)  
+    spousename = forms.CharField(max_length=20,required = False)  
     spousecompany = forms.CharField(max_length=20,required = False)  
     spousecompanyaddress = forms.CharField( max_length=20, required = False)  
     numberofchildren = forms.IntegerField( required = False)  
