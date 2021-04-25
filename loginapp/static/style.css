@@ -71,7 +71,7 @@ h2 {
     padding: 0;
     display: grid;
     grid-template-rows: 45px calc(100% - 45px);
-    grid-template-columns: 50px calc(100% - 50px);
+    grid-template-columns: auto auto;
     grid-template-areas: "header header" "sidebar content";
 }
 
@@ -144,6 +144,10 @@ header button:hover svg path {
     fill: var(--white);
 }
 
+header button:focus svg path {
+    fill: var(--white);
+}
+
 header button:active {
     color: var(--light-green);
     border: none;
@@ -168,20 +172,24 @@ header button:active {
     white-space: nowrap;
 }
 
+#show-sidebar {
+    display:none;
+}
+
 /* sidebar */
 
 #sidebar {
     margin: 0;
-    padding: 0;
+    padding: 0 15px;
     grid-area: sidebar;
     top: 45px;
-    width: 50px;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    position: fixed;
-    z-index: 2;
+    left: 0;
+    width: min-content;
+    height: min-content;
+    display: block;
+    position: sticky;
     background: var(--muted-green);
+    z-index: 1;
 }
 
 #sidebar ul {
@@ -192,49 +200,74 @@ header button:active {
 #sidebar li {
     margin: 0;
     padding: 0;
-    width: 50px;
+    width: auto;
     height: 50px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: left;
     list-style: none;
     white-space: nowrap;
+}
+
+#sidebar li a {
+    align-items: center;
+    display: flex;
 }
 
 #sidebar li:hover{
     cursor: pointer;
 }
 
-#sidebar li .tooltip{
-    visibility: hidden;
-    background-color: #202020e1;
-    color: var(--white);
-    display: flex;
-    text-align: center;
+.tooltip  { 
+    margin-left: 10px;
     white-space: nowrap;
-    border-radius: 3px;
-    padding: 5px 7px;
-    top: center;
-    left: 85%;
-    position: absolute;
-    z-index: 5;
 }
 
-#sidebar li:hover .tooltip {
-    visibility: visible;
+.sidebar-text {
+    color: var(--light-green);
+    margin-left: 15px;
+}
+
+#sidebar a:hover {
+    text-decoration: none;
+}
+
+#sidebar a:focus {
+    text-decoration: none;
+}
+
+#sidebar a:visited {
+    text-decoration: none;
 }
 
 #sidebar svg path {
-    fill: var(--light-green);
+    fill: var(--light-green)
 }
 
-#sidebar li:hover svg path {
+#sidebar a:hover svg path {
     fill:var(--green);
+}
+
+#sidebar a:focus svg path {
+    fill:var(--green);
+}
+
+#sidebar a:hover .sidebar-text {
+    color: var(--green);
+}
+
+#sidebar a:focus .sidebar-text {
+    color: var(--green);
 }
 
 #sidebar svg, #header svg {
     width: 16px;
     height: 16px;
+}
+
+.li-svg {
+    width: 20px;
+    height: 20px;
 }
 
 @media print{
@@ -274,7 +307,7 @@ header button:active {
 .section {
     margin: 30px auto;
     padding: 0;
-    width: 950px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     background: var(--white);
@@ -329,6 +362,19 @@ and (max-width:1045px){
             margin-left: 15px;
         }
 
+        .section-buttons-bottom {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items:flex-start;
+            justify-content: flex-start;
+            white-space: nowrap;
+        }
+
+        .section-buttons-bottom button {
+            margin-right: 15px;
+        }
+
     /* section divisions */
 
     .section-block {
@@ -359,7 +405,7 @@ and (max-width:1045px){
     .section-column {
         margin: 0;
         padding: 0;
-        width: 250px;
+        width: 300px;
         display: block;
     }
 
@@ -393,6 +439,15 @@ and (max-width:1045px){
         .section-flex div {
             margin-bottom: 15px;
         }
+        #grid-body {
+            grid-template-columns: 35px auto;
+        }
+        .sidebar-text {
+            display: none;
+        }
+        #content {
+            width: 90%;
+        }
     }
 
     @media screen
@@ -418,12 +473,11 @@ and (max-width:1045px){
 /* breadcrumbs */
 
 #breadcrumbs{
-    width: 950px;
-    margin: 30px auto 0 auto; 
-    padding: 0;
+    width: auto;
+    margin: 30px;
+    margin-left: 10px;
     display: flex;
     flex-direction: row;
-    background: none; 
     line-height: 0;
     white-space: nowrap;
     font-size: 15px;
@@ -452,7 +506,7 @@ and (max-width:1045px){
     align-items: flex-start;
     background: var(--white);
     filter: drop-shadow(-5px 0px 5px #8d9e9433);
-    transition: 0.2s ease-out;
+    transition: 0.2s ease;
     overflow: auto;
 }
 
@@ -505,7 +559,7 @@ input {
     border-color: var(--dark-gray);
     border-radius: 3px;
     box-sizing: border-box;
-    max-width: 250px;
+    max-width: 300px;
 }
 
 input:focus {
@@ -690,7 +744,7 @@ button svg {
 
     #more-options-btn ul {
         list-style: none;
-        width: auto;
+        width: 120px;
         height: min-content;
         margin: 0;
         padding: 5px 0;
@@ -713,7 +767,7 @@ button svg {
     #more-options-btn li {
         margin: 0;
         padding: 10px 15px;
-        height: 15px;
+        height: 30px;
         display: flex;
         align-items: center;
     }
