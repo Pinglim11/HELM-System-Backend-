@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render 
+from django.shortcuts import redirect 
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login,logout
@@ -31,6 +32,12 @@ def employeeform(request):
 def employeeprof(request,empid):
     record = get_object_or_404(Employee, employeeid=empid)
     return render(request, 'loginapp/prof.html', {'employee': record})
+
+@login_required
+def employeedelete(request,empid):
+    Employee.objects.filter(pk=empid).delete()
+    return redirect('viewtest') #change for final product
+    
 
 @login_required
 def employeeedit(request,empid):
