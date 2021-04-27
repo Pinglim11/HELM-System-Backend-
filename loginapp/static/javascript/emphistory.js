@@ -1,44 +1,92 @@
+//VARIABLES
 let emphisform = document.querySelectorAll(".emphis-form");
 let container = document.querySelector("#emphisform-container");
 let addButton = container.querySelector("#emphisadd-form");
 let removeButton = container.querySelector("#emphisremove-form");
 let totalForms = container.querySelector("#id_form-TOTAL_FORMS");
-let formNum = emphisform.length-1;
 let blocker = container.querySelector('emphisblocker');
-let newForms = [];
-addButton.addEventListener('click', addForm);
-removeButton.addEventListener('click', removeForm);
-function addForm(e) {
-	e.preventDefault();
 
-	let newForm = emphisform[0].cloneNode(true); //Clone the bird form
+let familyform = document.querySelectorAll(".family-form");
+let familycontainer = document.querySelector("#familyform-container");
+let familyaddButton = familycontainer.querySelector("#familyadd-form");
+let familyremoveButton = familycontainer.querySelector("#familyremove-form");
+let familytotalForms = familycontainer.querySelector("#id_form-TOTAL_FORMS");
+let familyblocker = familycontainer.querySelector('familyblocker');
+
+let educationform = document.querySelectorAll(".education-form");
+let educationcontainer = document.querySelector("#educationform-container");
+let educationaddButton = educationcontainer.querySelector("#educationadd-form");
+let educationremoveButton = educationcontainer.querySelector("#educationremove-form");
+let educationtotalForms = educationcontainer.querySelector("#id_form-TOTAL_FORMS");
+let educationblocker = educationcontainer.querySelector('educationblocker');
+
+let childform = document.querySelectorAll(".child-form");
+let childcontainer = document.querySelector("#childform-container");
+let childaddButton = childcontainer.querySelector("#childadd-form");
+let childremoveButton = childcontainer.querySelector("#childremove-form");
+let childtotalForms = childcontainer.querySelector("#id_form-TOTAL_FORMS");
+let childblocker = childcontainer.querySelector('childblocker');
+//EVENTS
+addButton.addEventListener('click', function() {
+     addForm(emphisform,blocker,container,totalForms,removeButton);
+});
+removeButton.addEventListener('click',function() {
+     removeForm(".emphis-form",totalForms,removeButton);
+}); 
+
+familyaddButton.addEventListener('click', function() {
+     addForm(familyform,familyblocker,familycontainer,familytotalForms,familyremoveButton);
+});
+familyremoveButton.addEventListener('click',function() {
+     removeForm(".family-form",familytotalForms,familyremoveButton);
+}); 
+
+educationaddButton.addEventListener('click', function() {
+     addForm(educationform,educationblocker,educationcontainer,educationtotalForms,educationremoveButton,true);
+});
+educationremoveButton.addEventListener('click',function() {
+     removeForm(".education-form",educationtotalForms,educationremoveButton);
+}); 
+
+childaddButton.addEventListener('click', function() {
+     addForm(childform,childblocker,childcontainer,childtotalForms,childremoveButton);
+});
+childremoveButton.addEventListener('click',function() {
+     removeForm(".child-form",childtotalForms,childremoveButton);
+}); 
+
+displayRemove(totalForms,removeButton)
+displayRemove(familytotalForms,familyremoveButton)
+displayRemove(educationtotalForms,educationremoveButton)
+displayRemove(childtotalForms,childremoveButton)
+//FUNCTIONS
+function addForm(allforms,block,contain,managementform,remove,check) {
+	let newForm = allforms[0].cloneNode(true); //Clone the bird form
+	if (check == true){
+		newForm.childNodes[1].style.display = "none";
+	}
 	let formRegex = RegExp(`form-(\\d){1}-`,'g'); //Regex to find all instances of the form number
-	
-	formNum++ //Increment the form number
-	newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`); //Update the new form to have the correct form number
-	container.insertBefore(newForm, blocker); //Insert the new form at the end of the list of forms
+	let num = Number(managementform.getAttribute("value")); 
+	newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${num}-`); //Update the new form to have the correct form number
+	contain.insertBefore(newForm, block); //Insert the new form at the end of the list of forms
 
-	totalForms.setAttribute('value', `${formNum+1}`); //Increment the number of total forms in the management form
-	newForms.push(newForm);
-	displayRemove();
+	managementform.setAttribute('value', `${num+1}`); //Increment the number of total forms in the management form
+	displayRemove(managementform,remove);
 }
-function displayRemove() {
-if(totalForms.getAttribute("value") == 1) {
-	removeButton.style.display = "none";
+function displayRemove(manageform,remove) {
+if(manageform.getAttribute("value") == 1) {
+	remove.style.display = "none";
 } else {
-	removeButton.style.display = "inline";
+	remove.style.display = "inline";
 }
 }
-function removeForm(e) {
-	e.preventDefault();
+function removeForm(formtext,managementform,remove) {
+	let allforms = document.querySelectorAll(formtext);
+	let removal = allforms[allforms.length - 1]; 
+	let num = Number(managementform.getAttribute("value"));
 
-	let removal = newForms[newForms.length - 1]; 
-	
-	formNum-- //Reduce the form number
  
-	totalForms.setAttribute('value', `${formNum + 1}`); //Increment the number of total forms in the management form
+	managementform.setAttribute('value', `${num - 1}`); //Increment the number of total forms in the management form
 	removal.remove();
-	newForms.pop();
-	displayRemove();
+	displayRemove(managementform,remove);
 }
-displayRemove();

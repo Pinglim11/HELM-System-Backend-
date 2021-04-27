@@ -128,56 +128,18 @@
 						<form action="" method="post">
 						{% csrf_token %}
 						<table>
-						<div>
-						{{ record.as_table }}
-						{{ worklocation.as_table }}
-						{{ position.as_table }}
-						{{ spouse.as_table }}
-                        </div>
                         <div id = "emphisform-container">
-                        <button id="emphisadd-form" type="button">Add Employee History</button>
-						<button id="emphisremove-form" type="button" style="display: none;">Remove Employee History</button>
-						{{emphistory.management_form}}
-                        {% for form in emphistory %}
+                        <button id="emphisadd-form" type="button">Add Branch</button>
+						<button id="emphisremove-form" type="button" style="display: none;">Remove Branch</button>
+						{{branch.management_form}}
+                        {% for form in branch %}
                         <div class="emphis-form">
                         {{form.as_p}}
                         </div>
                         {% endfor %}
                         <div id = "emphisblocker"></div>
                          </div>
-						<div id = "familyform-container">
-                        <button id="familyadd-form" type="button">Add Family Member</button>
-						<button id="familyremove-form" type="button" style="display: none;">Remove Family Member</button>
-						{{family.management_form}}
-                        {% for form in family %}
-                        <div class="family-form">
-                        {{form.as_p}}
-                        </div>
-                        {% endfor %}
-                        <div id = "familyblocker"></div>
-                         </div>
-						 <div id = "educationform-container">
-                        <button id="educationadd-form" type="button">Add Educational Background</button>
-						<button id="educationremove-form" type="button" style="display: none;">Remove Educational Background</button>
-						{{education.management_form}}
-                        {% for form in education %}
-                        <div class="education-form">
-                        {{form.as_p}}
-                        </div>
-                        {% endfor %}
-                        <div id = "educationblocker"></div>
-                         </div>
-						  <div id = "childform-container">
-                        <button id="childadd-form" type="button">Add Children</button>
-						<button id="childremove-form" type="button" style="display: none;">Remove Children</button>
-						{{child.management_form}}
-                        {% for form in child %}
-                        <div class="child-form">
-                        {{form.as_p}}
-                        </div>
-                        {% endfor %}
-                        <div id = "childblocker"></div>
-                         </div>
+						
 						</table>
 						<input type="submit" value="Submit">
 						</form>
@@ -322,7 +284,59 @@
         }
 
     </script>
-    <script type="text/javascript" src = {% static 'javascript/emphistory.js' %}>  </script>
+    <script type="text/javascript" > 
+	
+	//VARIABLES
+	let emphisform = document.querySelectorAll(".emphis-form");
+	let container = document.querySelector("#emphisform-container");
+	let addButton = container.querySelector("#emphisadd-form");
+	let removeButton = container.querySelector("#emphisremove-form");
+	let totalForms = container.querySelector("#id_form-TOTAL_FORMS");
+	let blocker = container.querySelector('emphisblocker');
+
+
+	//EVENTS
+	addButton.addEventListener('click', function() {
+		 addForm(emphisform,blocker,container,totalForms,removeButton);
+	});
+	removeButton.addEventListener('click',function() {
+		 removeForm(".emphis-form",totalForms,removeButton);
+	}); 
+
+	displayRemove(totalForms,removeButton)
+	function addForm(allforms,block,contain,managementform,remove,check) {
+	let newForm = allforms[0].cloneNode(true); //Clone the bird form
+	if (check == true){
+		newForm.childNodes[1].style.display = "none";
+	}
+	let formRegex = RegExp(`form-(\\d){1}-`,'g'); //Regex to find all instances of the form number
+	let num = Number(managementform.getAttribute("value")); 
+	newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${num}-`); //Update the new form to have the correct form number
+	contain.insertBefore(newForm, block); //Insert the new form at the end of the list of forms
+
+	managementform.setAttribute('value', `${num+1}`); //Increment the number of total forms in the management form
+	displayRemove(managementform,remove);
+	}
+	function displayRemove(manageform,remove) {
+	if(manageform.getAttribute("value") == 1) {
+		remove.style.display = "none";
+	} else {
+		remove.style.display = "inline";
+	}
+	}
+	function removeForm(formtext,managementform,remove) {
+		let allforms = document.querySelectorAll(formtext);
+		let removal = allforms[allforms.length - 1]; 
+		let num = Number(managementform.getAttribute("value"));
+
+	 
+		managementform.setAttribute('value', `${num - 1}`); //Increment the number of total forms in the management form
+		removal.remove();
+		displayRemove(managementform,remove);
+	}
+
+
+	</script>
 
 </body>
 

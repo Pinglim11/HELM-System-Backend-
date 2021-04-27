@@ -12,19 +12,19 @@ class EmployeeRequiredRecordForm(forms.Form):
     employeeid = forms.IntegerField()  
     startdate = forms.DateTimeField()  
     enddate = forms.DateTimeField(required = False)  
-    employmentstatus = forms.CharField(max_length=15)  
-    salarytype = forms.CharField(max_length=10)  
+    employmentstatus = forms.ChoiceField( choices = (('Probationary', 'Probationary'), ('Seasonal', 'Seasonal'), ('Project-Based', 'Project-Based'), ('Reliever', 'Reliever')))  
+    salarytype = forms.ChoiceField( choices = (('Monthly', 'Monthly'), ('Daily', 'Daily'), ('Piece Rate', 'Piece Rate')))  
     salary = forms.FloatField()
     branch = forms.ModelChoiceField(EmployeeWorkLocation.objects.all())
     jobid = forms.ModelChoiceField(EmployeePosition.objects.all())
     #Emplyoee Personal Info
     employeename = forms.CharField(max_length=20)  
-    gender = forms.CharField(max_length=10)
+    gender = forms.ChoiceField( choices = (('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')))  
     birthdate = forms.DateField()  
     civilstatus = forms.CharField( max_length=10)  
     citizenship = forms.CharField(max_length=20)
     religion = forms.CharField(max_length=20, required= False)
-    bloodtype = forms.CharField( max_length=10)  
+    bloodtype = forms.ChoiceField( choices = (('Unknown', 'Unknown'), ('O+', 'O+'), ('O-', 'O-'), ('A+', 'A+'), ('OA-', 'A-'), ('B+', 'B+'), ('B-', 'B-'), ('AB+', 'AB+'), ('AB-', 'AB-')))  
     numberofdependent = forms.IntegerField()  
     presentaddress = forms.CharField(max_length=100)  
     permanentaddress = forms.CharField(max_length=100)  
@@ -54,24 +54,24 @@ class EmploymentHistoryForm(forms.Form):
     previousposition = forms.CharField( max_length=20, required = False)  
     reasonforleaving = forms.CharField( max_length=20, required = False)  
     companycontactnumber = forms.CharField( max_length=20, required = False)  
-    withcoeorclearance = forms.CharField( max_length=10)  
+    withcoeorclearance = forms.ChoiceField( choices = (('WithCOE', 'With COE'), ('Clearance', 'With Clearance')))  
 
 
 class EducationalBackgroundForm(forms.Form): 
-    highestdegree = forms.CharField( max_length=20, required = False)  
+    schooltypes = (('Grade School', 'Grade School'), ('High School', 'High School'), ('College', 'College'), ('Post Grad', 'Post Grad'), ('Vocational', 'Vocational'))
+    highestdegree = forms.ChoiceField( choices = schooltypes, required = False)  
     schoolname = forms.CharField( max_length=20)  
     startingyearattended = forms.DateField()  
     endingyearattended = forms.DateField()  
-    schooltype = forms.CharField( max_length=15)  
-
+    schooltype = forms.ChoiceField( choices = schooltypes)  
 class FamilyMemberBackgroundForm(forms.Form): 
     membername = forms.CharField( max_length=20)  
     memberage = forms.IntegerField( required = False)  
-    memberrelationship = forms.CharField( max_length=20)  
+    memberrelationship = forms.ChoiceField( choices = (('Mother', 'Mother'), ('Father', 'Father'), ('Brother', 'Brother'), ('Sister', 'Sister'), ('Younger Brother', 'Younger Brother'), ('Younger Sister', 'Younger Sister')))  
     memberoccupation = forms.CharField( max_length=20, required = False)     
 
 
 class ChildBackgroundForm(forms.Form): 
-    childname = forms.CharField( max_length=20)  
-    childage = forms.IntegerField( required = False)  
-    childoccupation = forms.CharField( max_length=20, required = False)  
+    childname = forms.CharField(max_length=20)  
+    childage = forms.IntegerField(required = False)  
+    childoccupation = forms.CharField(max_length=20, required = False)  

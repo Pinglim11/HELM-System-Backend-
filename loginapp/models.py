@@ -74,7 +74,7 @@ class EducationalBackground(models.Model):
     informationid = models.ForeignKey('EmployeePersonalInfo', models.DO_NOTHING, db_column='informationId')  # Field name made lowercase.
     degreeid = models.AutoField(db_column='degreeId', primary_key=True)  # Field name made lowercase.
     def __str__(self):
-        return 'id= ' + str(self.degreeid) + ', ' + self.informationid.employeename + ' studied at ' + self.schoolname + ' with degree of ' + self.highestdegree
+        return 'id= ' + str(self.degreeid) + ', ' + self.informationid.employeename + ' studied at ' + self.schoolname + ' with degree of ' + self.schooltype
     class Meta:
         managed = False
         db_table = 'educational_background'
