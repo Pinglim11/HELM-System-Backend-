@@ -189,7 +189,6 @@ def employeeedit(request,empid):
         }
         childrenData.append(dic)
     recordform = EmployeeRequiredRecordForm(requiredData) 
-    recordform.fields['employeeid'].widget.attrs['readonly'] = True
     spouseform = SpouseForm(spouseData) 
     emphistoryform1 = formset_factory(EmploymentHistoryForm, extra = counts[0] )
    
@@ -449,6 +448,7 @@ def employeeedit(request,empid):
         educationform = educationform1(initial = educationData)
         familyform = familyform1(initial = familyData)
         childform = childform1(initial = childrenData)
+    recordform.fields['employeeid'].widget.attrs['readonly'] = True
     context = {
     'employee': employee,
     'record': recordform,
