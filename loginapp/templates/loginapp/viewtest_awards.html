@@ -139,16 +139,16 @@
                             </thead>
                             <tbody>
                                 {% for d in documents %}
-								<tr>
-								<td>{{ d.employeeid.informationid.employeename}}</a></td>
-								<td>{{ d.employeeid.employeeid}}</td>
-								<td>{{ d.documentname }}</td>
-								<td>{{ d.author }}</td>
-								<td>{{ d.recenteditor }}</td>
-								<td>{{ d.dateandtimecreated }}</td>
-								<td>{{ d.dateandtimelastedited}}</td>
-                                <td><a href=#>View</a></td>
-								</tr>
+								    <tr>
+								        <td>{{ d.employeeid.informationid.employeename}}</a></td>
+								        <td>{{ d.employeeid.employeeid}}</td>
+								        <td>{{ d.documentname }}</td>
+								        <td>{{ d.author }}</td>
+								        <td>{{ d.recenteditor }}</td>
+								        <td>{{ d.dateandtimecreated }}</td>
+								        <td>{{ d.dateandtimelastedited}}</td>
+                                        <td><a href=#>View</a></td>
+								    </tr>
 								
 								{% endfor %}
                             </tbody>

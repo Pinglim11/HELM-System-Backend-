@@ -406,10 +406,8 @@ def viewtest(request):
 
 @login_required
 def viewtest_awards(request):
-    employees = Employee.objects.all()
-    documents = Document.objects.all()
+    documents = Document.objects.filter(memoreferencenumber__recordtype='Award')
     context = {
-    'employees': employees,
     'documents': documents,
     } 
     return render(request, 'loginapp/viewtest_awards.html',context)
