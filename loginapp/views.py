@@ -147,7 +147,7 @@ def employeeedit(request,empid):
         spouseData['numberofchildren'] = spouse.numberofchildren
     
     for history in emphistory:
-        counts[0] = 0
+        counts[0] = 1
         dic = {
             'previouscompanyname': history.previouscompanyname,
             'previousposition'  : history.previousposition,
@@ -158,7 +158,7 @@ def employeeedit(request,empid):
         emphistoryData.append(dic)
     
     for background in education:
-        counts[1] = 0
+        counts[1] = 1
         dic = {
             'highestdegree': background.highestdegree,
             'schoolname'  : background.schoolname,
@@ -170,7 +170,7 @@ def employeeedit(request,empid):
 
 
     for member in family:
-        counts[2] = 0
+        counts[2] = 1
         dic = {
             'membername': member.membername,
             'memberage'  : member.memberage,
@@ -180,7 +180,7 @@ def employeeedit(request,empid):
         familyData.append(dic)
 
     for child in children:
-        counts[3] = 0
+        counts[3] = 1
         dic = {
             'childname': child.childname,
             'childage'  : child.childage,
@@ -190,24 +190,25 @@ def employeeedit(request,empid):
     recordform = EmployeeRequiredRecordForm(requiredData) 
     recordform.fields['employeeid'].widget.attrs['readonly'] = True
     spouseform = SpouseForm(spouseData) 
-    emphistoryform = formset_factory(EmploymentHistoryForm, extra = counts[0] )
+    emphistoryform1 = formset_factory(EmploymentHistoryForm, extra = 0 )
    
-    educationform = formset_factory(EducationalBackgroundForm, extra = 1 )
+    educationform1 = formset_factory(EducationalBackgroundForm, extra = 0 )
     
-    familyform = formset_factory(FamilyMemberBackgroundForm, extra = counts[2] )
+    familyform1 = formset_factory(FamilyMemberBackgroundForm, extra = 0 )
    
-    childform = formset_factory(ChildBackgroundForm, extra = counts[3])
+    childform1 = formset_factory(ChildBackgroundForm, extra = 0)
     
 
 
     if request.method == "POST":
         recordform = EmployeeRequiredRecordForm(request.POST) 
         spouseform = SpouseForm(request.POST)   
-        emphistoryform = emphistoryform(request.POST)
-        educationform = educationform(request.POST)
-        familyform = familyform(request.POST)
-        childform = childform(request.POST)
-        print(educationform)
+        emphistoryform = emphistoryform1(request.POST)
+        educationform = educationform1(request.POST)
+        familyform = familyform1(request.POST)
+        childform = childform1(request.POST)
+        # print(educationform)
+        # print(recordform.is_valid() and spouseform.is_valid() and emphistoryform.is_valid() and educationform.is_valid() and familyform.is_valid() and childform.is_valid())
         if recordform.is_valid() and spouseform.is_valid() and emphistoryform.is_valid() and educationform.is_valid() and familyform.is_valid() and childform.is_valid():
 
             employee.startdate = recordform.cleaned_data['startdate']
@@ -260,13 +261,13 @@ def employeeedit(request,empid):
             totals = [0,0,0,0]
             
 
-            for histories in emphistoryform:
-                totals[0] += 1
+            # for histories in emphistoryform:
+            #     totals[0] += 1
             
-            if totals[0] < emphistory.count():
-                for x in range(1, totals[0], 1):
-                    todel = emphistory[-x]
-                    todel.delete()
+            # if totals[0] < emphistory.count():
+            #     for x in range(1, totals[0], 1):
+            #         todel = emphistory[-x]
+            #         todel.delete()
 
             for histories in emphistoryform:
                 counts[0] += 1
@@ -290,13 +291,13 @@ def employeeedit(request,empid):
                         withcoeorclearance= histories.cleaned_data['withcoeorclearance']
                         )
 
-            for educations in educationform:
-                totals[1] += 1
-            
-            if totals[1] < education.count():
-                for x in range(1, totals[1], 1):
-                    todel = education[-x]
-                    todel.delete()
+            # for educations in educationform:
+            #     totals[1] += 1
+            # print(totals[1])
+            # if totals[1] < education.count():
+            #     for x in range(1, totals[1], 1):
+            #         todel = education[-x]
+            #         todel.delete()
 
             highest = None
             for educations in educationform:
@@ -325,13 +326,13 @@ def employeeedit(request,empid):
                         schooltype=educations.cleaned_data['schooltype']
                         )
 
-            for fammembers in familyform:
-                totals[2] += 1
+            # for fammembers in familyform:
+            #     totals[2] += 1
             
-            if totals[2] < family.count():
-                for x in range(1, totals[2], 1):
-                    todel = family[-x]
-                    todel.delete()
+            # if totals[2] < family.count():
+            #     for x in range(1, totals[2], 1):
+            #         todel = family[-x]
+            #         todel.delete()
             
             for fammembers in familyform:
                 counts[2] += 1
@@ -353,13 +354,13 @@ def employeeedit(request,empid):
                             memberrelationship= fammembers.cleaned_data['memberrelationship'],
                             memberoccupation= fammembers.cleaned_data['memberoccupation']
                         )
-            for x in childform:
-                totals[3] += 1
+            # for x in childform:
+            #     totals[3] += 1
             
-            if totals[3] < children.count():
-                for x in range(1, totals[3], 1):
-                    todel = child[-x]
-                    todel.delete()
+            # if totals[3] < children.count():
+            #     for x in range(1, totals[3], 1):
+            #         todel = child[-x]
+            #         todel.delete()
         
             for child in childform:
                 counts[3] += 1
@@ -378,15 +379,11 @@ def employeeedit(request,empid):
                         childoccupation= child.cleaned_data['childoccupation'],
                         informationid= informationid
                         )
-    else:
-        emphistoryform = emphistoryform(initial = emphistoryData)
-   
-        educationform = educationform(initial = educationData)
     
-        familyform = familyform(initial = familyData)
-   
-        childform = childform(initial = childrenData)
-
+    emphistoryform = emphistoryform1(initial = emphistoryData)
+    educationform = educationform1(initial = educationData)
+    familyform = familyform1(initial = familyData)
+    childform = childform1(initial = childrenData)
     context = {
     'employee': employee,
     'record': recordform,

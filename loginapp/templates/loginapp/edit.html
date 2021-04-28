@@ -135,8 +135,7 @@
 						{{ spouse.as_table }}
                         </div>
                         <div id = "emphisform-container">
-                        <button id="emphisadd-form" type="button">Add Employee History</button>
-						<button id="emphisremove-form" type="button" style="display: none;">Remove Employee History</button>
+                        
 						{{emphistory.management_form}}
                         {% for form in emphistory %}
                         <div class="emphis-form">
@@ -146,8 +145,7 @@
                         <div id = "emphisblocker"></div>
                          </div>
 						<div id = "familyform-container">
-                        <button id="familyadd-form" type="button">Add Family Member</button>
-						<button id="familyremove-form" type="button" style="display: none;">Remove Family Member</button>
+                        
 						{{family.management_form}}
                         {% for form in family %}
                         <div class="family-form">
@@ -157,8 +155,7 @@
                         <div id = "familyblocker"></div>
                          </div>
 						 <div id = "educationform-container">
-                        <button id="educationadd-form" type="button">Add Educational Background</button>
-						<button id="educationremove-form" type="button" style="display: none;">Remove Educational Background</button>
+                        
 						{{education.management_form}}
                         {% for form in education %}
                         <div class="education-form">
@@ -168,8 +165,7 @@
                         <div id = "educationblocker"></div>
                          </div>
 						  <div id = "childform-container">
-                        <button id="childadd-form" type="button">Add Children</button>
-						<button id="childremove-form" type="button" style="display: none;">Remove Children</button>
+                        
 						{{child.management_form}}
                         {% for form in child %}
                         <div class="child-form">
@@ -322,7 +318,7 @@
         }
 
     </script>
-    <script type="text/javascript" src = {% static 'javascript/emphistory.js' %}>  </script>
+
 
 </body>
 
