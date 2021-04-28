@@ -1,13 +1,11 @@
-from django.shortcuts import render
-from django.shortcuts import redirect 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.forms.models import model_to_dict
 from .forms import EmployeeRequiredRecordForm,JobsForm, BranchForm, SpouseForm, EmploymentHistoryForm,EducationalBackgroundForm,FamilyMemberBackgroundForm,ChildBackgroundForm 
-from .models import Employee, EmployeePersonalInfo,EmployeePosition,EmployeeWorkLocation, ChildBackground,SpouseBackground,FamilyMemberBackground,EducationalBackground,EmploymentHistory, EmergencyDetails
+from .models import Employee, EmployeePersonalInfo,EmployeePosition,EmployeeWorkLocation, ChildBackground,SpouseBackground,FamilyMemberBackground,EducationalBackground,EmploymentHistory, EmergencyDetails, Document
 from django.forms import formset_factory
 
     # Redirect to a success page.
@@ -405,6 +403,16 @@ def viewtest(request):
     'employees': employees,
     } 
     return render(request, 'loginapp/viewtest.html',context)
+
+@login_required
+def viewtest_awards(request):
+    employees = Employee.objects.all()
+    documents = Document.objects.all()
+    context = {
+    'employees': employees,
+    'documents': documents,
+    } 
+    return render(request, 'loginapp/viewtest_awards.html',context)
 
 def testing(request):
     branch = formset_factory(BranchForm)
