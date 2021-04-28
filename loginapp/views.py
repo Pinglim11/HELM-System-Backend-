@@ -412,6 +412,14 @@ def viewtest_awards(request):
     } 
     return render(request, 'loginapp/viewtest_awards.html',context)
 
+@login_required
+def viewtest_discipline(request):
+    documents = Document.objects.filter(memoreferencenumber__recordtype='Discipline')
+    context = {
+    'documents': documents,
+    } 
+    return render(request, 'loginapp/viewtest_discipline.html',context)
+
 def testing(request):
     branch = formset_factory(BranchForm)
     if request.method == "POST":
