@@ -1,13 +1,11 @@
-from django.shortcuts import render
-from django.shortcuts import redirect 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.forms.models import model_to_dict
 from .forms import EmployeeRequiredRecordForm,JobsForm, BranchForm, SpouseForm, EmploymentHistoryForm,EducationalBackgroundForm,FamilyMemberBackgroundForm,ChildBackgroundForm 
-from .models import Employee, EmployeePersonalInfo,EmployeePosition,EmployeeWorkLocation, ChildBackground,SpouseBackground,FamilyMemberBackground,EducationalBackground,EmploymentHistory, EmergencyDetails
+from .models import Employee, EmployeePersonalInfo,EmployeePosition,EmployeeWorkLocation, ChildBackground,SpouseBackground,FamilyMemberBackground,EducationalBackground,EmploymentHistory, EmergencyDetails, Document
 from django.forms import formset_factory
 
     # Redirect to a success page.
@@ -65,7 +63,9 @@ def employeedelete(request,empid):
     employee = get_object_or_404(Employee, employeeid=empid)
     information = EmployeePersonalInfo.objects.get(pk = employee.informationid.informationid)
     emergency = EmergencyDetails.objects.get(pk = information.emergencycontactnumber.emergencycontactnumber)
-    spouse = SpouseBackground.objects.get(pk = information.spouseid.spouseid)
+    spouse = None
+    if information.spouseid:
+        spouse = SpouseBackground.objects.get(pk = information.spouseid.spouseid)
     emphistory = EmploymentHistory.objects.filter(informationid=information)
     education = EducationalBackground.objects.filter(informationid=information)
     family = FamilyMemberBackground.objects.filter(informationid=information)
@@ -88,7 +88,8 @@ def employeedelete(request,empid):
         child.delete()
     
     information.delete()
-    emergency.delete()
+    if not EmployeePersonalInfo.objects.filter(emergencycontactnumber = emergency).exists():
+        emergency.delete()
 
     if spouse:
         spouse.delete()
@@ -140,14 +141,14 @@ def employeeedit(request,empid):
     familyData = []
     childrenData = []
     counts = [1,1,1,1]
-    if spouse != None:
+    if spouse:
         spouseData['spousename'] = spouse.spousename
         spouseData['spousecompany'] = spouse.spousecompany
         spouseData['spousecompanyaddress'] = spouse.spousecompanyaddress
         spouseData['numberofchildren'] = spouse.numberofchildren
     
     for history in emphistory:
-        counts[0] = 1
+        counts[0] = 0
         dic = {
             'previouscompanyname': history.previouscompanyname,
             'previousposition'  : history.previousposition,
@@ -158,7 +159,7 @@ def employeeedit(request,empid):
         emphistoryData.append(dic)
     
     for background in education:
-        counts[1] = 1
+        counts[1] = 0
         dic = {
             'highestdegree': background.highestdegree,
             'schoolname'  : background.schoolname,
@@ -170,7 +171,7 @@ def employeeedit(request,empid):
 
 
     for member in family:
-        counts[2] = 1
+        counts[2] = 0
         dic = {
             'membername': member.membername,
             'memberage'  : member.memberage,
@@ -180,7 +181,7 @@ def employeeedit(request,empid):
         familyData.append(dic)
 
     for child in children:
-        counts[3] = 1
+        counts[3] = 0
         dic = {
             'childname': child.childname,
             'childage'  : child.childage,
@@ -190,25 +191,71 @@ def employeeedit(request,empid):
     recordform = EmployeeRequiredRecordForm(requiredData) 
     recordform.fields['employeeid'].widget.attrs['readonly'] = True
     spouseform = SpouseForm(spouseData) 
-    emphistoryform1 = formset_factory(EmploymentHistoryForm, extra = 0 )
+    emphistoryform1 = formset_factory(EmploymentHistoryForm, extra = counts[0] )
    
-    educationform1 = formset_factory(EducationalBackgroundForm, extra = 0 )
+    educationform1 = formset_factory(EducationalBackgroundForm, extra = counts[1] )
     
-    familyform1 = formset_factory(FamilyMemberBackgroundForm, extra = 0 )
+    familyform1 = formset_factory(FamilyMemberBackgroundForm, extra = counts[2] )
    
-    childform1 = formset_factory(ChildBackgroundForm, extra = 0)
+    childform1 = formset_factory(ChildBackgroundForm, extra = counts[3])
     
 
 
     if request.method == "POST":
         recordform = EmployeeRequiredRecordForm(request.POST) 
         spouseform = SpouseForm(request.POST)   
-        emphistoryform = emphistoryform1(request.POST)
-        educationform = educationform1(request.POST)
-        familyform = familyform1(request.POST)
-        childform = childform1(request.POST)
-        # print(educationform)
-        # print(recordform.is_valid() and spouseform.is_valid() and emphistoryform.is_valid() and educationform.is_valid() and familyform.is_valid() and childform.is_valid())
+
+        #########################MANUALLY PREPARE FORMSETS BECAUSE DJANGO ONLY SUPPORTS HANDLING 1 FORMSET PER PAGE#############################
+        totals = request.POST.getlist('form-TOTAL_FORMS')
+        initials = request.POST.getlist('form-INITIAL_FORMS')
+
+        temp = [{},{},{},{}]
+        ranges = 0
+        for x in totals:
+            temp[ranges]['form-TOTAL_FORMS'] = x
+            ranges += 1
+        ranges = 0
+        for y in initials:
+            
+            temp[ranges]['form-INITIAL_FORMS'] = y
+            ranges += 1
+        
+        for i in range(int(totals[0])):
+            temp[0]['form-' + str(i) + '-previouscompanyname'] = request.POST.get('form-' + str(i) + '-previouscompanyname')
+            temp[0]['form-' + str(i) + '-previousposition']= request.POST.get('form-' + str(i) + '-previousposition')
+            temp[0]['form-' + str(i) + '-reasonforleaving']= request.POST.get('form-' + str(i) + '-reasonforleaving')
+            temp[0]['form-' + str(i) + '-companycontactnumber']= request.POST.get('form-' + str(i) + '-companycontactnumber')
+            temp[0]['form-' + str(i) + '-withcoeorclearance']= request.POST.get('form-' + str(i) + '-withcoeorclearance')
+
+        for i in range(int(totals[2])):
+            temp[2]['form-' + str(i) + '-highestdegree'] = request.POST.get('form-' + str(i) + '-highestdegree')
+            temp[2]['form-' + str(i) + '-schoolname'] = request.POST.get('form-' + str(i) + '-schoolname')
+            temp[2]['form-' + str(i) + '-startingyearattended'] = request.POST.get('form-' + str(i) + '-startingyearattended')
+            temp[2]['form-' + str(i) + '-endingyearattended'] = request.POST.get('form-' + str(i) + '-endingyearattended')
+            temp[2]['form-' + str(i) + '-schooltype'] = request.POST.get('form-' + str(i) + '-schooltype')
+
+        for i in range(int(totals[1])):
+            temp[1]['form-' + str(i) + '-membername'] = request.POST.get('form-' + str(i) + '-membername')
+            temp[1]['form-' + str(i) + '-memberage'] = request.POST.get('form-' + str(i) + '-memberage')
+            temp[1]['form-' + str(i) + '-memberrelationship'] = request.POST.get('form-' + str(i) + '-memberrelationship')
+            temp[1]['form-' + str(i) + '-memberoccupation'] = request.POST.get('form-' + str(i) + '-memberoccupation')
+        
+        for i in range(int(totals[3])):
+            temp[3]['form-' + str(i) + '-childname'] = request.POST.get('form-' + str(i) + '-childname')
+            temp[3]['form-' + str(i) + '-childage'] = request.POST.get('form-' + str(i) + '-childage')
+            temp[3]['form-' + str(i) + '-childoccupation'] = request.POST.get('form-' + str(i) + '-childoccupation')
+            
+           
+
+
+
+        emphistoryform = emphistoryform1(temp[0],initial = emphistoryData)
+        educationform = educationform1(temp[2],initial = educationData)
+        familyform = familyform1(temp[1],initial = familyData)
+        childform = childform1(temp[3],initial = childrenData)
+
+
+        print(recordform.is_valid() and spouseform.is_valid() and emphistoryform.is_valid() and educationform.is_valid() and familyform.is_valid() and childform.is_valid())
         if recordform.is_valid() and spouseform.is_valid() and emphistoryform.is_valid() and educationform.is_valid() and familyform.is_valid() and childform.is_valid():
 
             employee.startdate = recordform.cleaned_data['startdate']
@@ -245,11 +292,27 @@ def employeeedit(request,empid):
                 information.spouseid = temp
             
             if checkmodel(EmergencyDetails, emergencycontactnumber = recordform.cleaned_data['emergencycontactnumber']) != emergency and checkmodel(EmergencyDetails, emergencycontactnumber = recordform.cleaned_data['emergencycontactnumber']) != None:
-                information.emergencycontactnumber = EmergencyDetails.objects.get(emergencycontactnumber = recordform.cleaned_data['emergencycontactnumber'])
+                new = EmergencyDetails.objects.get(emergencycontactnumber = recordform.cleaned_data['emergencycontactnumber'])
+                new.emergencycontactname= recordform.cleaned_data['emergencycontactname']
+                new.emergencyrelationship= recordform.cleaned_data['emergencyrelationship']
+                new.emergencyaddress=recordform.cleaned_data['emergencyaddress']
+                information.emergencycontactnumber = new
                 information.save()
-                emergency.delete()
+                
+                if not EmployeePersonalInfo.objects.filter(emergencycontactnumber = emergency).exists():
+                    emergency.delete()
+            elif recordform.cleaned_data['emergencycontactnumber'] != emergency.emergencycontactnumber:
+                new = EmergencyDetails.objects.create(
+                    emergencycontactnumber = recordform.cleaned_data['emergencycontactnumber'], 
+                    emergencycontactname= recordform.cleaned_data['emergencycontactname'], 
+                    emergencyrelationship= recordform.cleaned_data['emergencyrelationship'],
+                    emergencyaddress=recordform.cleaned_data['emergencyaddress'])
+                information.emergencycontactnumber = new
+                information.save()
+               
+                if not EmployeePersonalInfo.objects.filter(emergencycontactnumber = emergency).exists():
+                    emergency.delete()
             else:
-                emergency.emergencycontactnumber = recordform.cleaned_data['emergencycontactnumber']
                 emergency.emergencycontactname= recordform.cleaned_data['emergencycontactname']
                 emergency.emergencyrelationship= recordform.cleaned_data['emergencyrelationship']
                 emergency.emergencyaddress=recordform.cleaned_data['emergencyaddress']
@@ -261,13 +324,15 @@ def employeeedit(request,empid):
             totals = [0,0,0,0]
             
 
-            # for histories in emphistoryform:
-            #     totals[0] += 1
+            for histories in emphistoryform:
+                totals[0] += 1
             
-            # if totals[0] < emphistory.count():
-            #     for x in range(1, totals[0], 1):
-            #         todel = emphistory[-x]
-            #         todel.delete()
+            if totals[0] < emphistory.count():
+                #print(totals[0] )
+                for x in range(emphistory.count() - 1, totals[0] - 1, -1):
+                    
+                    todel = emphistory[x]
+                    todel.delete()
 
             for histories in emphistoryform:
                 counts[0] += 1
@@ -283,7 +348,7 @@ def employeeedit(request,empid):
                 else:
                     if histories['previouscompanyname'].value() and histories['withcoeorclearance'].value():
                         EmploymentHistory.objects.create(
-                        informationid=informationid, 
+                        informationid=information, 
                         previouscompanyname= histories.cleaned_data['previouscompanyname'],
                         previousposition= histories.cleaned_data['previousposition'],
                         reasonforleaving= histories.cleaned_data['reasonforleaving'],
@@ -291,13 +356,13 @@ def employeeedit(request,empid):
                         withcoeorclearance= histories.cleaned_data['withcoeorclearance']
                         )
 
-            # for educations in educationform:
-            #     totals[1] += 1
-            # print(totals[1])
-            # if totals[1] < education.count():
-            #     for x in range(1, totals[1], 1):
-            #         todel = education[-x]
-            #         todel.delete()
+            for educations in educationform:
+                totals[1] += 1
+            #print(totals[1])
+            if totals[1] < education.count():
+                for x in range(education.count() - 1, totals[1] - 1, -1):
+                    todel = education[x]
+                    todel.delete()
 
             highest = None
             for educations in educationform:
@@ -318,7 +383,7 @@ def employeeedit(request,empid):
                         if educationform[0] == educations:
                             highest = educations.cleaned_data['highestdegree']
                         EducationalBackground.objects.create(
-                        informationid=informationid,
+                        informationid=information,
                         highestdegree= highest,
                         schoolname=educations.cleaned_data['schoolname'],
                         startingyearattended=educations.cleaned_data['startingyearattended'],
@@ -326,13 +391,13 @@ def employeeedit(request,empid):
                         schooltype=educations.cleaned_data['schooltype']
                         )
 
-            # for fammembers in familyform:
-            #     totals[2] += 1
+            for fammembers in familyform:
+                totals[2] += 1
             
-            # if totals[2] < family.count():
-            #     for x in range(1, totals[2], 1):
-            #         todel = family[-x]
-            #         todel.delete()
+            if totals[2] < family.count():
+                for x in range(family.count() - 1, totals[2] - 1, -1):
+                    todel = family[x]
+                    todel.delete()
             
             for fammembers in familyform:
                 counts[2] += 1
@@ -348,42 +413,42 @@ def employeeedit(request,empid):
                 else:    
                     if fammembers['membername'].value():
                         FamilyMemberBackground.objects.create(
-                            informationid= informationid,
+                            informationid= information,
                             membername= fammembers.cleaned_data['membername'],
                             memberage= fammembers.cleaned_data['memberage'],
                             memberrelationship= fammembers.cleaned_data['memberrelationship'],
                             memberoccupation= fammembers.cleaned_data['memberoccupation']
                         )
-            # for x in childform:
-            #     totals[3] += 1
+            for x in childform:
+                totals[3] += 1
             
-            # if totals[3] < children.count():
-            #     for x in range(1, totals[3], 1):
-            #         todel = child[-x]
-            #         todel.delete()
+            if totals[3] < children.count():
+                for x in range(children.count() - 1, totals[3] - 1, -1):
+                    todel = children[x]
+                    todel.delete()
         
-            for child in childform:
+            for famchild in childform:
                 counts[3] += 1
                 if counts[3] <= children.count():
-                    if child['childname'].value():
+                    if famchild['childname'].value():
                         curchild = children[counts[3] - 1]
-                        curchild.childname= child.cleaned_data['childname']
-                        curchild.childage= child.cleaned_data['childage']
-                        curchild.childoccupation= child.cleaned_data['childoccupation']
+                        curchild.childname= famchild.cleaned_data['childname']
+                        curchild.childage= famchild.cleaned_data['childage']
+                        curchild.childoccupation= famchild.cleaned_data['childoccupation']
                         curchild.save()
                 else:
-                    if child['childname'].value():
+                    if famchild['childname'].value():
                         ChildBackground.objects.create(
-                        childname= child.cleaned_data['childname'],
-                        childage= child.cleaned_data['childage'],
-                        childoccupation= child.cleaned_data['childoccupation'],
-                        informationid= informationid
+                        childname= famchild.cleaned_data['childname'],
+                        childage= famchild.cleaned_data['childage'],
+                        childoccupation= famchild.cleaned_data['childoccupation'],
+                        informationid= information
                         )
-    
-    emphistoryform = emphistoryform1(initial = emphistoryData)
-    educationform = educationform1(initial = educationData)
-    familyform = familyform1(initial = familyData)
-    childform = childform1(initial = childrenData)
+    else:
+        emphistoryform = emphistoryform1(initial = emphistoryData)
+        educationform = educationform1(initial = educationData)
+        familyform = familyform1(initial = familyData)
+        childform = childform1(initial = childrenData)
     context = {
     'employee': employee,
     'record': recordform,
@@ -402,6 +467,16 @@ def viewtest(request):
     'employees': employees,
     } 
     return render(request, 'loginapp/viewtest.html',context)
+
+@login_required
+def viewtest_awards(request):
+    employees = Employee.objects.all()
+    documents = Document.objects.all()
+    context = {
+    'employees': employees,
+    'documents': documents,
+    } 
+    return render(request, 'loginapp/viewtest_awards.html',context)
 
 def testing(request):
     branch = formset_factory(BranchForm)
@@ -509,58 +584,99 @@ def createrecord(request):
                 jobid = job
             )
 
+            #########################MANUALLY PREPARE FORMSETS BECAUSE DJANGO ONLY SUPPORTS HANDLING 1 FORMSET PER PAGE#############################
+            totals = request.POST.getlist('form-TOTAL_FORMS')
+            initials = request.POST.getlist('form-INITIAL_FORMS')
 
-            emphistory = emphistory(request.POST)
-            education = education(request.POST)
-            family = family(request.POST)
-            child = child(request.POST)
-
-
-            if emphistory.is_valid():
-                for histories in emphistory:
-                    if histories['previouscompanyname'].value() and histories['withcoeorclearance'].value():
-                        EmploymentHistory.objects.create(
-                        informationid=informationid, 
-                        previouscompanyname= histories.cleaned_data['previouscompanyname'],
-                        previousposition= histories.cleaned_data['previousposition'],
-                        reasonforleaving= histories.cleaned_data['reasonforleaving'],
-                        companycontactnumber= histories.cleaned_data['companycontactnumber'],
-                        withcoeorclearance= histories.cleaned_data['withcoeorclearance']
-                        )
-            if education.is_valid():
-                highest = None
-                for educations in education:
-                    if educations['schoolname'].value() and educations['startingyearattended'].value() and educations['endingyearattended'].value():
-                        if education[0] == educations:
-                            highest = educations.cleaned_data['highestdegree']
-                        EducationalBackground.objects.create(
-                        informationid=informationid,
-                        highestdegree= highest,
-                        schoolname=educations.cleaned_data['schoolname'],
-                        startingyearattended=educations.cleaned_data['startingyearattended'],
-                        endingyearattended=educations.cleaned_data['endingyearattended'],
-                        schooltype=educations.cleaned_data['schooltype']
-                        )
-            if family.is_valid():
-                for fammembers in family:
-                    if fammembers['membername'].value():
-                        FamilyMemberBackground.objects.create(
-                            informationid= informationid,
-                            membername= fammembers.cleaned_data['membername'],
-                            memberage= fammembers.cleaned_data['memberage'],
-                            memberrelationship= fammembers.cleaned_data['memberrelationship'],
-                            memberoccupation= fammembers.cleaned_data['memberoccupation']
-                        )
+            temp = [{},{},{},{}]
+            ranges = 0
+            for x in totals:
+                temp[ranges]['form-TOTAL_FORMS'] = x
+                ranges += 1
+            ranges = 0
+            for y in initials:
+                
+                temp[ranges]['form-INITIAL_FORMS'] = y
+                ranges += 1
             
-            if child.is_valid():
-                for children in child:
-                    if children['childname'].value():
-                        ChildBackground.objects.create(
-                        childname= children.cleaned_data['childname'],
-                        childage= children.cleaned_data['childage'],
-                        childoccupation= children.cleaned_data['childoccupation'],
-                        informationid= informationid
-                        )
+            for i in range(int(totals[0])):
+                temp[0]['form-' + str(i) + '-previouscompanyname'] = request.POST.get('form-' + str(i) + '-previouscompanyname')
+                temp[0]['form-' + str(i) + '-previousposition']= request.POST.get('form-' + str(i) + '-previousposition')
+                temp[0]['form-' + str(i) + '-reasonforleaving']= request.POST.get('form-' + str(i) + '-reasonforleaving')
+                temp[0]['form-' + str(i) + '-companycontactnumber']= request.POST.get('form-' + str(i) + '-companycontactnumber')
+                temp[0]['form-' + str(i) + '-withcoeorclearance']= request.POST.get('form-' + str(i) + '-withcoeorclearance')
+
+            for i in range(int(totals[2])):
+                temp[2]['form-' + str(i) + '-highestdegree'] = request.POST.get('form-' + str(i) + '-highestdegree')
+                temp[2]['form-' + str(i) + '-schoolname'] = request.POST.get('form-' + str(i) + '-schoolname')
+                temp[2]['form-' + str(i) + '-startingyearattended'] = request.POST.get('form-' + str(i) + '-startingyearattended')
+                temp[2]['form-' + str(i) + '-endingyearattended'] = request.POST.get('form-' + str(i) + '-endingyearattended')
+                temp[2]['form-' + str(i) + '-schooltype'] = request.POST.get('form-' + str(i) + '-schooltype')
+
+            for i in range(int(totals[1])):
+                temp[1]['form-' + str(i) + '-membername'] = request.POST.get('form-' + str(i) + '-membername')
+                temp[1]['form-' + str(i) + '-memberage'] = request.POST.get('form-' + str(i) + '-memberage')
+                temp[1]['form-' + str(i) + '-memberrelationship'] = request.POST.get('form-' + str(i) + '-memberrelationship')
+                temp[1]['form-' + str(i) + '-memberoccupation'] = request.POST.get('form-' + str(i) + '-memberoccupation')
+            
+            for i in range(int(totals[3])):
+                temp[3]['form-' + str(i) + '-childname'] = request.POST.get('form-' + str(i) + '-childname')
+                temp[3]['form-' + str(i) + '-childage'] = request.POST.get('form-' + str(i) + '-childage')
+                temp[3]['form-' + str(i) + '-childoccupation'] = request.POST.get('form-' + str(i) + '-childoccupation')
+            
+    
+
+            emphistory = emphistory(temp[0])
+            education = education(temp[2])
+            family = family(temp[1])
+            child = child(temp[3])
+
+
+           # if emphistory.is_valid():
+            for histories in emphistory:
+                if histories['previouscompanyname'].value() and histories['withcoeorclearance'].value() and histories.is_valid():
+                    EmploymentHistory.objects.create(
+                    informationid=informationid, 
+                    previouscompanyname= histories.cleaned_data['previouscompanyname'],
+                    previousposition= histories.cleaned_data['previousposition'],
+                    reasonforleaving= histories.cleaned_data['reasonforleaving'],
+                    companycontactnumber= histories.cleaned_data['companycontactnumber'],
+                    withcoeorclearance= histories.cleaned_data['withcoeorclearance']
+                    )
+            #if education.is_valid():
+            highest = None
+            for educations in education:
+                if educations['schoolname'].value() and educations['startingyearattended'].value() and educations['endingyearattended'].value() and educations.is_valid():
+                    if education[0] == educations:
+                        highest = educations.cleaned_data['highestdegree']
+                    EducationalBackground.objects.create(
+                    informationid=informationid,
+                    highestdegree= highest,
+                    schoolname=educations.cleaned_data['schoolname'],
+                    startingyearattended=educations.cleaned_data['startingyearattended'],
+                    endingyearattended=educations.cleaned_data['endingyearattended'],
+                    schooltype=educations.cleaned_data['schooltype']
+                    )
+            #if family.is_valid():
+            for fammembers in family:
+                if fammembers['membername'].value() and fammembers.is_valid():
+                    FamilyMemberBackground.objects.create(
+                        informationid= informationid,
+                        membername= fammembers.cleaned_data['membername'],
+                        memberage= fammembers.cleaned_data['memberage'],
+                        memberrelationship= fammembers.cleaned_data['memberrelationship'],
+                        memberoccupation= fammembers.cleaned_data['memberoccupation']
+                    )
+            
+            #if child.is_valid():
+            for children in child:
+                if children['childname'].value() and children.is_valid():
+                    ChildBackground.objects.create(
+                    childname= children.cleaned_data['childname'],
+                    childage= children.cleaned_data['childage'],
+                    childoccupation= children.cleaned_data['childoccupation'],
+                    informationid= informationid
+                    )
                 
                 
     
