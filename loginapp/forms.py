@@ -1,11 +1,20 @@
 from django import forms
 
-from .models import Employee, EmployeePersonalInfo,EmployeePosition,EmployeeWorkLocation, ChildBackground,SpouseBackground,FamilyMemberBackground,EducationalBackground,EmploymentHistory, EmergencyDetails
+from .models import Employee, EmployeePersonalInfo,EmployeePosition,EmployeeWorkLocation, ChildBackground,SpouseBackground,FamilyMemberBackground,EducationalBackground,EmploymentHistory, EmergencyDetails, Document
   
 # create a ModelForm 
 
 
-
+class EmployeeDocument(forms.Form):
+    recordfile = forms.FileField()
+    preparedby = forms.CharField(max_length=20) 
+    preparationdate = forms.DateTimeField()  
+    notedby = forms.CharField( max_length=20)  
+    noteddate = forms.DateTimeField()  
+    approvedby = forms.CharField( max_length=20)  
+    approveddate = forms.DateTimeField()  
+    receivedby = forms.CharField(max_length=20)  
+    receiveddate = forms.DateTimeField()  
 
 class EmployeeRequiredRecordForm(forms.Form):
     #Employee Record

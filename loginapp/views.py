@@ -4,7 +4,9 @@ from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.forms.models import model_to_dict
-from .forms import EmployeeRequiredRecordForm,JobsForm, BranchForm, SpouseForm, EmploymentHistoryForm,EducationalBackgroundForm,FamilyMemberBackgroundForm,ChildBackgroundForm 
+import datetime
+import os
+from .forms import EmployeeRequiredRecordForm,JobsForm, BranchForm, SpouseForm, EmploymentHistoryForm,EducationalBackgroundForm,FamilyMemberBackgroundForm,ChildBackgroundForm, EmployeeDocument
 from .models import Employee, EmployeePersonalInfo,EmployeePosition,EmployeeWorkLocation, ChildBackground,SpouseBackground,FamilyMemberBackground,EducationalBackground,EmploymentHistory, EmergencyDetails, Document
 from django.forms import formset_factory
 
@@ -483,6 +485,72 @@ def viewtest_discipline(request):
     'documents': documents,
     } 
     return render(request, 'loginapp/viewtest_discipline.html',context)
+
+def handle_uploaded_file(f,id,user):
+    dest = 'media/employee/' + str(id) 
+    if os.path.isdir(dest):
+        dest = dest +'/employeerecords'
+        if os.path.isdir(dest):
+            with open(dest, 'wb+') as destination:
+                for chunk in f.chunks():
+                    destination.write(chunk)
+        else:
+             os.makedirs(dest)
+             with open(dest, 'wb+') as destination:
+                for chunk in f.chunks():
+                    destination.write(chunk)
+    else:
+        os.makedirs(dest)
+        dest = dest +'/employeerecords'
+        if os.path.isdir(dest):
+            with open(dest, 'wb+') as destination:
+                for chunk in f.chunks():
+                    destination.write(chunk)
+        else:
+             os.makedirs(dest)
+             with open(dest, 'wb+') as destination:
+                for chunk in f.chunks():
+                    destination.write(chunk)
+
+def uploademployeerecord(request,empid):
+    employee = get_object_or_404(Employee, employeeid=empid)
+    
+
+    if request.method == "POST":
+
+        recordform = EmployeeDocument(request.POST, request.FILES)
+        if recordform.is_valid():
+            time = datetime.date.today()
+            user = request.user.id
+            recordfile = request.FILES['recordfile']
+            handle_uploaded_file(recordfile,empid,user)
+            Document.objects.create(      
+            documentname = recordfile.name  ,
+            dateandtimecreated = time ,
+            author = user,
+            dateandtimelastedited = time  ,
+            recenteditor = user  ,
+            employeeid =employee  ,
+            preparedby = recordform.cleaned_data['preparedby']  ,
+            preparationdate = recordform.cleaned_data['preparationdate']  ,
+            notedby = recordform.cleaned_data['notedby'] ,
+            noteddate = recordform.cleaned_data['noteddate']  ,
+            approvedby = recordform.cleaned_data['approvedby'] ,
+            approveddate = recordform.cleaned_data['approveddate']  ,
+            receivedby =recordform.cleaned_data['receivedby']  ,
+            receiveddate = recordform.cleaned_data['receiveddate']  
+            )
+            return redirect('employeeprof' , { 'empid':empid })
+    else:
+        recordform = EmployeeDocument() 
+        return render(request, 'loginapp/recordtest.html',{'record':recordform})
+    return render(request, 'loginapp/recordtest.html',{'record':recordform})
+
+
+
+
+
+
 
 def testing(request):
     branch = formset_factory(BranchForm)

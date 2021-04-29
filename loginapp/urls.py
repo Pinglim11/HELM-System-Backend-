@@ -27,7 +27,8 @@ urlpatterns = [
     path('employee/<int:empid>/', views.employeeprof, name='record'),
     path('employee/<int:empid>/edit', views.employeeedit, name='edit'),
     path('employee/<int:empid>/delete', views.employeedelete, name='delete'),
+    path('employee/<int:empid>/upload', views.uploademployeerecord, name='upload'),
     path('viewtest_awards', views.viewtest_awards, name='viewtest_awards'),
     path('viewtest_discipline', views.viewtest_discipline, name='viewtest_discipline')
-] +  static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+] +  static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)# + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 
