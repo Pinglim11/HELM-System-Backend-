@@ -125,7 +125,7 @@ CREATE TABLE `auth_user` (
 
 LOCK TABLES `auth_user` WRITE;
 /*!40000 ALTER TABLE `auth_user` DISABLE KEYS */;
-INSERT INTO `auth_user` VALUES (1,'pbkdf2_sha256$216000$pe2ANyqBTTjz$Rb35jme6LxUbh/vfZfJOUDVHXG23fQpyYmmOCMkADNQ=','2021-03-06 11:19:36.286603',1,'onesimushelm','','','',1,1,'2021-03-06 11:00:16.569890'),(2,'pbkdf2_sha256$216000$9JcS0QoynbxT$sMYlCVp2h/YrVdoUN6K6gh0Hm9hwMcjAf++4amRVpwo=','2021-03-06 11:14:54.984633',0,'juandelacruz','','','',0,1,'2021-03-06 11:14:33.626347');
+INSERT INTO `auth_user` VALUES (1,'pbkdf2_sha256$216000$pe2ANyqBTTjz$Rb35jme6LxUbh/vfZfJOUDVHXG23fQpyYmmOCMkADNQ=','2021-05-17 05:55:46.230175',1,'onesimushelm','','','',1,1,'2021-03-06 11:00:16.569890'),(2,'pbkdf2_sha256$216000$9JcS0QoynbxT$sMYlCVp2h/YrVdoUN6K6gh0Hm9hwMcjAf++4amRVpwo=','2021-04-28 09:58:19.979728',0,'juandelacruz','','','',0,1,'2021-03-06 11:14:33.626347');
 /*!40000 ALTER TABLE `auth_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -255,7 +255,7 @@ CREATE TABLE `child_background` (
   PRIMARY KEY (`childId`),
   KEY `informationId` (`informationId`),
   CONSTRAINT `child_background_ibfk_1` FOREIGN KEY (`informationId`) REFERENCES `employee_personal_info` (`informationId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -264,6 +264,7 @@ CREATE TABLE `child_background` (
 
 LOCK TABLES `child_background` WRITE;
 /*!40000 ALTER TABLE `child_background` DISABLE KEYS */;
+INSERT INTO `child_background` VALUES ('John Dela Cruz',1,'Child',4,2),('Juana Dela Cruz',1,'Child',7,3),('John Dela Cruz Jr',2,'Child',8,3),('John Dela Cruz',1,'Child',10,5),('John Dela Cruz Jr.',2,'Child',11,5),('John Dela Cruz Sr.',3,'Child',12,5),('John Dela Cruz Xr.',4,'Child',13,5),('John Dela Cruz Rr.',5,'Child',14,5),('John Dela Cruz',1,'Child',15,6),('John Dela Cruz Jr.',2,'Child',16,6),('John Dela Cruz Sr.',3,'Child',17,6),('John Dela Cruz',1,'Child',22,10),('John Dela Cruz Jr.',2,'Child',23,10),('John Dela Cruz',1,'Child',24,12),('John Dela Cruz Jr.',2,'Child',25,12);
 /*!40000 ALTER TABLE `child_background` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -289,7 +290,7 @@ CREATE TABLE `django_admin_log` (
   CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
   CONSTRAINT `django_admin_log_user_id_c564eba6_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`),
   CONSTRAINT `django_admin_log_chk_1` CHECK ((`action_flag` >= 0))
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -298,7 +299,7 @@ CREATE TABLE `django_admin_log` (
 
 LOCK TABLES `django_admin_log` WRITE;
 /*!40000 ALTER TABLE `django_admin_log` DISABLE KEYS */;
-INSERT INTO `django_admin_log` VALUES (1,'2021-03-06 11:14:33.738124','2','juandelacruz',1,'[{\"added\": {}}]',4,1);
+INSERT INTO `django_admin_log` VALUES (1,'2021-03-06 11:14:33.738124','2','juandelacruz',1,'[{\"added\": {}}]',4,1),(2,'2021-04-27 11:17:59.123705','1','Service , Cashier',1,'[{\"added\": {}}]',11,1),(3,'2021-04-28 13:26:14.200577','2','2',3,'',9,1),(4,'2021-04-28 13:26:16.709435','12','12',3,'',9,1),(5,'2021-04-28 13:26:19.299347','13','13',3,'',9,1),(6,'2021-04-28 13:26:21.470880','14','14',3,'',9,1),(7,'2021-04-28 13:26:24.003861','15','15',3,'',9,1),(8,'2021-04-28 13:26:26.185888','123','123',3,'',9,1),(9,'2021-04-28 13:26:28.818758','456','456',3,'',9,1),(10,'2021-04-28 13:26:56.381198','4','Juan Dela Cruz2 id = 4',3,'',10,1),(11,'2021-04-29 06:43:40.984399','1','Record object (1)',1,'[{\"added\": {}}]',24,1),(12,'2021-04-29 06:43:57.452890','1','Document object (1)',1,'[{\"added\": {}}]',17,1);
 /*!40000 ALTER TABLE `django_admin_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -376,7 +377,7 @@ CREATE TABLE `django_session` (
 
 LOCK TABLES `django_session` WRITE;
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
-INSERT INTO `django_session` VALUES ('73k4jn7fyoqtl4ll2gjr2a6rnfzpaejk','.eJxVjDsOwjAQBe_iGln-Zh1Kes5geb1rHECxFCcV4u4QKQW0b2beS8S0rTVunZc4kTgLLU6_G6b84HkHdE_zrcnc5nWZUO6KPGiX10b8vBzu30FNvX5rF0hpYkcjOA0GudiBPJQxBzN4Z6AgKavKyAZ9tj4oYItQUiA0AEq8P9sZN7M:1lIUy8:FA7ttgv8I3R8fOnoMjqJbvaeLKKhmKrb2ebcXzurhjU','2021-03-20 11:19:36.295827');
+INSERT INTO `django_session` VALUES ('73k4jn7fyoqtl4ll2gjr2a6rnfzpaejk','.eJxVjDsOwjAQBe_iGln-Zh1Kes5geb1rHECxFCcV4u4QKQW0b2beS8S0rTVunZc4kTgLLU6_G6b84HkHdE_zrcnc5nWZUO6KPGiX10b8vBzu30FNvX5rF0hpYkcjOA0GudiBPJQxBzN4Z6AgKavKyAZ9tj4oYItQUiA0AEq8P9sZN7M:1lIUy8:FA7ttgv8I3R8fOnoMjqJbvaeLKKhmKrb2ebcXzurhjU','2021-03-20 11:19:36.295827'),('qugiiqkh8m930b32hvqqsqvv8yjr5j5t','.eJxVjDsOwjAQBe_iGln-Zh1Kes5geb1rHECxFCcV4u4QKQW0b2beS8S0rTVunZc4kTgLLU6_G6b84HkHdE_zrcnc5nWZUO6KPGiX10b8vBzu30FNvX5rF0hpYkcjOA0GudiBPJQxBzN4Z6AgKavKyAZ9tj4oYItQUiA0AEq8P9sZN7M:1liWEE:1et-7KLQYxH1ProZsLbJTBKIcLjT8-jQLRcKLOof9yw','2021-05-31 05:55:46.236159'),('x3twk6v01hn0hk81znh1xoekezt1cah0','.eJxVjEEOwiAQRe_C2hBmHARcuvcMhBlAqqZNSrsy3l2bdKHb_977LxXTurS49jLHIauzQnX43TjJo4wbyPc03iYt07jMA-tN0Tvt-jrl8rzs7t9BS719a2fBkaATqKZCQQ4BqHqs5I4o5QToLXEgzzaxT14YqwGDQM5mKqLeH8WANz4:1lbgxX:X98kV_QKqMoRrzcoZOF-J3y0quf1LGpl5GPqS1RCefQ','2021-05-12 09:58:19.983718');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -390,6 +391,7 @@ DROP TABLE IF EXISTS `document`;
 CREATE TABLE `document` (
   `documentId` int NOT NULL AUTO_INCREMENT,
   `documentName` varchar(50) NOT NULL,
+  `documentlink` varchar(255) NOT NULL,
   `dateAndTimeCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `author` varchar(50) NOT NULL,
   `dateAndTimeLastEdited` datetime DEFAULT CURRENT_TIMESTAMP,
@@ -403,13 +405,13 @@ CREATE TABLE `document` (
   `approvedDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `receivedBy` varchar(20) NOT NULL,
   `receivedDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `memoReferenceNumber` int NOT NULL,
+  `memoReferenceNumber` int DEFAULT NULL,
   PRIMARY KEY (`documentId`),
   KEY `employeeId` (`employeeId`),
   KEY `memoReferenceNumber` (`memoReferenceNumber`),
   CONSTRAINT `document_ibfk_1` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`employeeId`),
   CONSTRAINT `document_ibfk_2` FOREIGN KEY (`memoReferenceNumber`) REFERENCES `record` (`memoReferenceNumber`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -418,6 +420,7 @@ CREATE TABLE `document` (
 
 LOCK TABLES `document` WRITE;
 /*!40000 ALTER TABLE `document` DISABLE KEYS */;
+INSERT INTO `document` VALUES (1,'wewe','2021-04-29 06:42:44','wewew','2021-04-29 06:42:47','wewe',1,'wewe','2021-04-29 06:43:52','wewe','2021-04-29 06:43:53','we','2021-04-29 06:43:53','we','2021-04-29 06:43:54',1);
 /*!40000 ALTER TABLE `document` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -439,7 +442,7 @@ CREATE TABLE `educational_background` (
   PRIMARY KEY (`degreeId`),
   KEY `informationId` (`informationId`),
   CONSTRAINT `educational_background_ibfk_1` FOREIGN KEY (`informationId`) REFERENCES `employee_personal_info` (`informationId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -448,6 +451,7 @@ CREATE TABLE `educational_background` (
 
 LOCK TABLES `educational_background` WRITE;
 /*!40000 ALTER TABLE `educational_background` DISABLE KEYS */;
+INSERT INTO `educational_background` VALUES ('College','Ateneo','2001-01-12','2001-01-12','College',2,4),('College','Ateneo HS','2001-01-13','2001-01-13','High School',2,5),('College','Ateneo GS','2001-01-13','2001-01-13','Grade School',2,6),('College','Ateneo','2001-01-12','2001-01-12','College',3,7),('College','Ateneo HS','2001-01-13','2001-01-13','High School',3,8),('College','Ateneo GS','2001-01-12','2001-01-12','Grade School',3,10),('College','Ateneo','2001-01-15','2001-01-18','College',5,11),('College','Ateneo HS','2001-01-12','2001-01-12','High School',5,12),('College','Ateneo GS','2001-01-12','2001-01-12','Grade School',5,13),('College','Ateneo','2001-01-15','2001-01-18','College',6,14),('College','Ateneo HS','2001-01-12','2001-01-12','High School',6,15),('College','Ateneo','2001-01-15','2001-01-18','College',10,17),('Grade School','XE','2001-01-12','2001-01-12','Grade School',11,18),('Grade School','XE','2001-01-12','2001-01-12','Grade School',12,19);
 /*!40000 ALTER TABLE `educational_background` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -473,6 +477,7 @@ CREATE TABLE `emergency_details` (
 
 LOCK TABLES `emergency_details` WRITE;
 /*!40000 ALTER TABLE `emergency_details` DISABLE KEYS */;
+INSERT INTO `emergency_details` VALUES (1,'John Dela Cruz','Brother','sda'),(2,'John Dela Cruz','Brother','sda'),(19,'Juan Emergency Cruz','Brother','somewhere street'),(3145,'Juan Emergency Sr.','Friend','sda');
 /*!40000 ALTER TABLE `emergency_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -493,14 +498,14 @@ CREATE TABLE `employee` (
   `salary` float(10,2) NOT NULL DEFAULT '0.00',
   `jobId` int DEFAULT NULL,
   `informationId` int NOT NULL,
+  `deletehide` BOOLEAN DEFAULT 0,
   PRIMARY KEY (`employeeId`),
   KEY `branch` (`branch`),
   KEY `jobId` (`jobId`),
   KEY `informationId` (`informationId`),
   CONSTRAINT `employee_ibfk_5` FOREIGN KEY (`branch`) REFERENCES `employee_work_location` (`branch`),
   CONSTRAINT `employee_ibfk_6` FOREIGN KEY (`jobId`) REFERENCES `employee_position` (`jobId`),
-  CONSTRAINT `employee_ibfk_7` FOREIGN KEY (`informationId`) REFERENCES `employee_personal_info` (`informationId`),
-  CONSTRAINT `employee_chk_3` CHECK ((`employmentStatus` in (_utf8mb4'Probationary',_utf8mb4'Seasonal',_utf8mb4'Project-Based',_utf8mb4'Reliever')))
+  CONSTRAINT `employee_ibfk_7` FOREIGN KEY (`informationId`) REFERENCES `employee_personal_info` (`informationId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -510,6 +515,7 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
+INSERT INTO `employee` VALUES (1,'SM Test','2001-01-11 16:00:00',NULL,'Probationary','Daily',5000.00,1,2),(2,'SM Test','2001-01-11 16:00:00',NULL,'Probationary','Daily',5000.00,1,3),(3,'SM Test','2001-01-11 16:00:00',NULL,'Project-Based','Daily',25.00,1,5),(4,'SM Test','2001-01-11 16:00:00',NULL,'Project-Based','Daily',25.00,1,6),(5,'SM Test','2001-01-11 16:00:00',NULL,'Project-Based','Daily',25.00,1,10),(6,'SM Test','2001-01-11 16:00:00',NULL,'Project-Based','Daily',25.00,1,11),(7,'SM Test','2001-01-11 16:00:00',NULL,'Probationary','Monthly',56.00,1,12);
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -540,7 +546,7 @@ CREATE TABLE `employee_personal_info` (
   KEY `spouseId` (`spouseId`),
   CONSTRAINT `employee_personal_info_ibfk_2` FOREIGN KEY (`emergencyContactNumber`) REFERENCES `emergency_details` (`emergencyContactNumber`),
   CONSTRAINT `employee_personal_info_ibfk_3` FOREIGN KEY (`spouseId`) REFERENCES `spouse_background` (`spouseId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -549,6 +555,7 @@ CREATE TABLE `employee_personal_info` (
 
 LOCK TABLES `employee_personal_info` WRITE;
 /*!40000 ALTER TABLE `employee_personal_info` DISABLE KEYS */;
+INSERT INTO `employee_personal_info` VALUES ('Juan Dela Cruz',19,'Male','1970-01-12','Something','Filipino','Christian','O+',4,'somewhere street','Juana Dela Cruz',23,2,2),('Juan Dela Cruz3',19,'Male','1970-01-12','Something','Filipino','Christian','O+',4,'somewhere street','Juana Dela Cruz',23,2,3),('Juan Dela Cruz WWE',1,'Male','1970-01-13','Something','Filipino','Christian','O+',8,'somewhere street','somewhere street',123,3,5),('Juan Dela Cruz Was',2,'Male','1970-01-13','Something','Filipino','Christian','O+',8,'somewhere street','somewhere street',123,NULL,6),('Juan Dela Cruz Sas',2,'Male','1970-01-13','Something','Filipino','Christian','O+',8,'somewhere street','somewhere street',123,4,10),('Juan Dela Cruz Sas',2,'Male','1970-01-13','Something','Filipino','Christian','O+',8,'somewhere street','somewhere street',123,NULL,11),('Bob',3145,'Male','1970-01-12','Something','Filipino','Christian','O+',6,'somewhere street','somewhere street',21,5,12);
 /*!40000 ALTER TABLE `employee_personal_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -564,7 +571,7 @@ CREATE TABLE `employee_position` (
   `jobId` int NOT NULL AUTO_INCREMENT,
   `department` varchar(20) NOT NULL,
   PRIMARY KEY (`jobId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -573,6 +580,7 @@ CREATE TABLE `employee_position` (
 
 LOCK TABLES `employee_position` WRITE;
 /*!40000 ALTER TABLE `employee_position` DISABLE KEYS */;
+INSERT INTO `employee_position` VALUES ('Cashier',1,'Service');
 /*!40000 ALTER TABLE `employee_position` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -625,6 +633,7 @@ CREATE TABLE `employee_work_location` (
 
 LOCK TABLES `employee_work_location` WRITE;
 /*!40000 ALTER TABLE `employee_work_location` DISABLE KEYS */;
+INSERT INTO `employee_work_location` VALUES ('SM Test','NCR');
 /*!40000 ALTER TABLE `employee_work_location` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -646,7 +655,7 @@ CREATE TABLE `employment_history` (
   PRIMARY KEY (`employmentHistoryId`),
   KEY `informationId` (`informationId`),
   CONSTRAINT `employment_history_ibfk_1` FOREIGN KEY (`informationId`) REFERENCES `employee_personal_info` (`informationId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -655,6 +664,7 @@ CREATE TABLE `employment_history` (
 
 LOCK TABLES `employment_history` WRITE;
 /*!40000 ALTER TABLE `employment_history` DISABLE KEYS */;
+INSERT INTO `employment_history` VALUES ('Ateneo GS','Teacher','Why Not','12','WithCOE',4,2),('Ateneo HS','Teacher','Why Not','31','Clearance',5,2),('Ateneo GS','Teacher','Why Not','12','WithCOE',7,3),('Ateneo GS','Teacher','Why Not','12','WithCOE',11,3),('Cruz4','John','Why Not','2121','Clearance',12,5),('Ateneo HS','Teacher','E','12','Clearance',13,5),('Ateneo College','Professor','Why Not','1345','WithCOE',14,5),('Ateneo GSsa','SA','SA','3','WithCOE',15,5),('Cruz4','John','Why Not','2121','Clearance',16,6),('Ateneo HS','Teacher','E','12','Clearance',17,6),('Cruz4','John','Why Not','2121','Clearance',19,10),('Cruz4','John','Why Not','2121','WithCOE',20,11),('Cruz4','John','Why Not','2121','WithCOE',21,12),('H23','Teacher','E','12','Clearance',22,12);
 /*!40000 ALTER TABLE `employment_history` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -675,7 +685,7 @@ CREATE TABLE `family_member_background` (
   PRIMARY KEY (`familyId`),
   KEY `informationId` (`informationId`),
   CONSTRAINT `family_member_background_ibfk_1` FOREIGN KEY (`informationId`) REFERENCES `employee_personal_info` (`informationId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -684,6 +694,7 @@ CREATE TABLE `family_member_background` (
 
 LOCK TABLES `family_member_background` WRITE;
 /*!40000 ALTER TABLE `family_member_background` DISABLE KEYS */;
+INSERT INTO `family_member_background` VALUES ('Juana Dela Cruz',70,'Mother','Cook',4,2),('John Dela Cruz',69,'Father','Cook',5,2),('Juana Dela Cruz',70,'Mother','Cook',7,3),('John Dela Cruz',69,'Father','Cook',8,3),('Juana Dela Cruz',55,'Mother','Cook',11,5),('John Dela Cruz',25,'Brother','Cook',12,5),('Juana Dela Cruz',55,'Mother','Cook',13,6),('John Dela Cruz',25,'Brother','Cook',14,6),('Juana Dela Cruz',55,'Mother','Cook',16,10),('Juana Dela Cruz',12,'Younger Sister','F',17,11),('Juana Dela Cruz',46,'Mother','Cook',18,12);
 /*!40000 ALTER TABLE `family_member_background` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -766,6 +777,7 @@ CREATE TABLE `record` (
 
 LOCK TABLES `record` WRITE;
 /*!40000 ALTER TABLE `record` DISABLE KEYS */;
+INSERT INTO `record` VALUES (1,'23','2021-04-29','23','23','Award','23');
 /*!40000 ALTER TABLE `record` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -783,7 +795,7 @@ CREATE TABLE `spouse_background` (
   `numberOfChildren` int DEFAULT '0',
   `spouseId` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`spouseId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -792,6 +804,7 @@ CREATE TABLE `spouse_background` (
 
 LOCK TABLES `spouse_background` WRITE;
 /*!40000 ALTER TABLE `spouse_background` DISABLE KEYS */;
+INSERT INTO `spouse_background` VALUES ('Juan Spouse Cruz','Juan Cruz Incorporat','somewhere street',3,2),('Juan Spouse Cruz Xxl','Juan Cruz Incorporat','somewhere street',5,3),('Juan Spouse Cruz Xxl','Juan Cruz Incorporat','somewhere street',2,4),('Juan Spouse Cruz2','Juan Cruz Incorporat','somewhere street',3,5);
 /*!40000 ALTER TABLE `spouse_background` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -830,4 +843,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-03-06 20:07:18
+-- Dump completed on 2021-05-17 14:02:55

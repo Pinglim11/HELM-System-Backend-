@@ -8,7 +8,13 @@ import datetime
 import os
 from .forms import EmployeeRequiredRecordForm,JobsForm, BranchForm, SpouseForm, EmploymentHistoryForm,EducationalBackgroundForm,FamilyMemberBackgroundForm,ChildBackgroundForm, EmployeeDocument
 from .models import Employee, EmployeePersonalInfo,EmployeePosition,EmployeeWorkLocation, ChildBackground,SpouseBackground,FamilyMemberBackground,EducationalBackground,EmploymentHistory, EmergencyDetails, Document
+from django.core.files.storage import FileSystemStorage
+from django.http import HttpResponse, Http404
 from django.forms import formset_factory
+from openpyxl import Workbook
+from openpyxl import load_workbook
+from openpyxl.styles import Font
+from openpyxl.writer.excel import save_virtual_workbook
 
     # Redirect to a success page.
 def checkmodel(classmodel, **kwargs):
@@ -486,31 +492,152 @@ def viewtest_discipline(request):
     } 
     return render(request, 'loginapp/viewtest_discipline.html',context)
 
-def handle_uploaded_file(f,id,user):
-    dest = 'media/employee/' + str(id) 
-    if os.path.isdir(dest):
-        dest = dest +'/employeerecords'
-        if os.path.isdir(dest):
-            with open(dest, 'wb+') as destination:
-                for chunk in f.chunks():
-                    destination.write(chunk)
-        else:
-             os.makedirs(dest)
-             with open(dest, 'wb+') as destination:
-                for chunk in f.chunks():
-                    destination.write(chunk)
-    else:
-        os.makedirs(dest)
-        dest = dest +'/employeerecords'
-        if os.path.isdir(dest):
-            with open(dest, 'wb+') as destination:
-                for chunk in f.chunks():
-                    destination.write(chunk)
-        else:
-             os.makedirs(dest)
-             with open(dest, 'wb+') as destination:
-                for chunk in f.chunks():
-                    destination.write(chunk)
+# def handle_uploaded_file(f,id,user):
+#     dest = 'media/employee/' + str(id) + '/employeerecords'
+#     fs = FileSystemStorage(location = dest)
+#     file = fs.save(f.name,f)
+    
+    # if os.path.isdir(dest):
+    #     dest = dest +'/employeerecords'
+    #     if os.path.isdir(dest):
+    #         with open(dest, 'wb+') as destination:
+    #             for chunk in f.chunks():
+    #                 destination.write(chunk)
+    #     else:
+    #          os.makedirs(dest)
+    #          with open(dest, 'wb+') as destination:
+    #             for chunk in f.chunks():
+    #                 destination.write(chunk)
+    # else:
+    #     os.makedirs(dest)
+    #     dest = dest +'/employeerecords'
+    #     if os.path.isdir(dest):
+    #         with open(dest, 'wb+') as destination:
+    #             for chunk in f.chunks():
+    #                 destination.write(chunk)
+    #     else:
+    #          os.makedirs(dest)
+    #          with open(dest, 'wb+') as destination:
+    #             for chunk in f.chunks():
+    #                 destination.write(chunk)
+def genreport(request): 
+    wb = Workbook()
+    ws = wb.active
+    ws.title = 'General'
+    employees = Employee.objects.filter(Q(deletehide=0) | Q(deletehide=None))
+    documents = Document.objects.all()
+    employeedocu = Document.objects.filter(memoreferencenumber = None)
+    awards = Document.objects.filter(memoreferencenumber__recordtype='Award')
+    discipline = Document.objects.filter(memoreferencenumber__recordtype='Discipline')
+    curlevel = 2
+    ## Handle Main Sheet
+    ws['A1'] = 'Total Documents:'
+    ws['A2'] = 'Employee Documents:'
+    ws['A3'] = 'Awards & Recognition:'
+    ws['A4'] = 'Discipline Management:'
+    ws['E1'] = documents.count()
+    ws['E2'] = employeedocu.count()
+    ws['E3'] = awards.count()
+    ws['E4'] = discipline.count()
+    ws['A6'] = 'CHECK OTHER CORRESPONDING SHEETS FOR REPORTS'
+    ws['A6'].font = Font(size=64)
+
+    EmployeeSheet = wb.create_sheet('Employees')
+    EmployeeRecSheet = wb.create_sheet('Employee Records')
+    AwardsSheet = wb.create_sheet('Awards Records')
+    DisciplineSheet = wb.create_sheet('Discipline Records')
+
+    #Handle Employee Sheet
+    
+    EmployeeSheet['A1'] = 'Link'	
+    EmployeeSheet['B1'] ='Employee ID'	
+    EmployeeSheet['C1'] ='Employee Name'	
+    EmployeeSheet['D1'] ='Department'	
+    EmployeeSheet['E1'] ='Position'	
+    EmployeeSheet['F1'] ='Employment Status'	
+    EmployeeSheet['G1'] ='Start Date'
+    EmployeeSheet['H1'] ='End Date'	
+    EmployeeSheet['I1'] ='Salary (PHP)'	
+    EmployeeSheet['J1'] ='Salary Type'
+
+    for employee in employees:
+        EmployeeSheet['A' + str(curlevel)] = '127.0.0.1/home/employee/'	+ str(employee.employeeid) + '/'
+        EmployeeSheet['B'+ str(curlevel)] =employee.employeeid
+        EmployeeSheet['C'+ str(curlevel)] =employee.informationid.employeename
+        EmployeeSheet['D'+ str(curlevel)] = employee.jobid.department
+        EmployeeSheet['E'+ str(curlevel)] = employee.jobid.position
+        EmployeeSheet['F'+ str(curlevel)] = employee.employmentstatus
+        EmployeeSheet['G'+ str(curlevel)] = str(employee.startdate)
+        EmployeeSheet['H'+ str(curlevel)] =	str(employee.enddate)
+        EmployeeSheet['I'+ str(curlevel)] = employee.salary
+        EmployeeSheet['J'+ str(curlevel)] = employee.salarytype
+        curlevel += 1
+
+    curlevel = 2
+
+    #Handle Employee Documents
+
+    EmployeeRecSheet['A1'] = 'Link'	
+    EmployeeRecSheet['B1'] ='Employee ID'	
+    EmployeeRecSheet['C1'] ='Document ID'	
+    EmployeeRecSheet['D1'] ='Document Name'	
+    EmployeeRecSheet['E1'] ='Date Created'	
+    EmployeeRecSheet['F1'] ='Author'	
+
+    for docu in employeedocu:
+        EmployeeRecSheet['A' + str(curlevel)] = docu.documentlink
+        EmployeeRecSheet['B'+ str(curlevel)] =docu.employeeid.employeeid
+        EmployeeRecSheet['C'+ str(curlevel)] =docu.documentid
+        EmployeeRecSheet['D'+ str(curlevel)] = docu.documentname
+        EmployeeRecSheet['E'+ str(curlevel)] = str(docu.dateandtimecreated)
+        EmployeeRecSheet['F'+ str(curlevel)] = docu.author
+        curlevel += 1
+    
+    curlevel = 2
+
+    #Handle Employee Documents
+
+    AwardsSheet['A1'] = 'Link'	
+    AwardsSheet['B1'] ='Employee ID'	
+    AwardsSheet['C1'] ='Memo Reference Number'	
+    AwardsSheet['D1'] ='Document Name'	
+    AwardsSheet['E1'] ='Date Created'	
+    AwardsSheet['F1'] ='Author'	
+
+    for docu in awards:
+        AwardsSheet['A' + str(curlevel)] = docu.documentlink
+        AwardsSheet['B'+ str(curlevel)] =docu.employeeid.employeeid
+        AwardsSheet['C'+ str(curlevel)] =docu.memoreferencenumber.memoreferencenumber
+        AwardsSheet['D'+ str(curlevel)] = docu.documentname
+        AwardsSheet['E'+ str(curlevel)] = str(docu.dateandtimecreated)
+        AwardsSheet['F'+ str(curlevel)] = docu.author
+        curlevel += 1
+    
+    curlevel = 2
+
+    #Handle Employee Documents
+
+    DisciplineSheet['A1'] = 'Link'	
+    DisciplineSheet['B1'] ='Employee ID'	
+    DisciplineSheet['C1'] ='Memo Reference Number'	
+    DisciplineSheet['D1'] ='Document Name'	
+    DisciplineSheet['E1'] ='Date Created'	
+    DisciplineSheet['F1'] ='Author'	
+
+    for docu in discipline:
+        DisciplineSheet['A' + str(curlevel)] = docu.documentlink
+        DisciplineSheet['B'+ str(curlevel)] =docu.employeeid.employeeid
+        DisciplineSheet['C'+ str(curlevel)] =docu.memoreferencenumber.memoreferencenumber
+        DisciplineSheet['D'+ str(curlevel)] = docu.documentname
+        DisciplineSheet['E'+ str(curlevel)] = str(docu.dateandtimecreated)
+        DisciplineSheet['F'+ str(curlevel)] = docu.author
+        curlevel += 1
+    response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
+
+    return response
+
+
+
 
 def uploademployeerecord(request,empid):
     employee = get_object_or_404(Employee, employeeid=empid)
@@ -521,12 +648,16 @@ def uploademployeerecord(request,empid):
         recordform = EmployeeDocument(request.POST, request.FILES)
         if recordform.is_valid():
             time = datetime.date.today()
-            user = request.user.id
+            user = request.user.username
             recordfile = request.FILES['recordfile']
-            handle_uploaded_file(recordfile,empid,user)
+            dest = 'media/employee/' + str(empid) + '/employeerecords'
+            fs = FileSystemStorage(location = dest)
+            filename = fs.save(recordfile.name,recordfile)
+            fileurl = fs.url(filename)
             Document.objects.create(      
             documentname = recordfile.name  ,
             dateandtimecreated = time ,
+            documentlink = fileurl,
             author = user,
             dateandtimelastedited = time  ,
             recenteditor = user  ,
@@ -540,7 +671,7 @@ def uploademployeerecord(request,empid):
             receivedby =recordform.cleaned_data['receivedby']  ,
             receiveddate = recordform.cleaned_data['receiveddate']  
             )
-            return redirect('employeeprof' , { 'empid':empid })
+            return redirect('/home/employee/' + str(empid))
     else:
         recordform = EmployeeDocument() 
         return render(request, 'loginapp/recordtest.html',{'record':recordform})

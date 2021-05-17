@@ -45,6 +45,7 @@ class ChildBackground(models.Model):
 class Document(models.Model):
     documentid = models.AutoField(db_column='documentId', primary_key=True)  # Field name made lowercase.
     documentname = models.CharField(db_column='documentName', max_length=50)  # Field name made lowercase.
+    documentlink = models.CharField(max_length=255)
     dateandtimecreated = models.DateTimeField(db_column='dateAndTimeCreated')  # Field name made lowercase.
     author = models.CharField(max_length=50)
     dateandtimelastedited = models.DateTimeField(db_column='dateAndTimeLastEdited', blank=True, null=True)  # Field name made lowercase.
@@ -58,7 +59,7 @@ class Document(models.Model):
     approveddate = models.DateTimeField(db_column='approvedDate')  # Field name made lowercase.
     receivedby = models.CharField(db_column='receivedBy', max_length=20)  # Field name made lowercase.
     receiveddate = models.DateTimeField(db_column='receivedDate')  # Field name made lowercase.
-    memoreferencenumber = models.ForeignKey('Record', models.DO_NOTHING, db_column='memoReferenceNumber')  # Field name made lowercase.
+    memoreferencenumber = models.ForeignKey('Record', models.DO_NOTHING, db_column='memoReferenceNumber', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -102,6 +103,7 @@ class Employee(models.Model):
     salary = models.FloatField()
     jobid = models.ForeignKey('EmployeePosition', models.DO_NOTHING, db_column='jobId', blank=True, null=True)  # Field name made lowercase.
     informationid = models.ForeignKey('EmployeePersonalInfo', models.DO_NOTHING, db_column='informationId')  # Field name made lowercase.
+    deletehide = models.IntegerField(blank=True, null=True)
     def __str__(self):
         return 'id =' + str(self.employeeid) + ', ' + self.informationid.employeename
     class Meta:
