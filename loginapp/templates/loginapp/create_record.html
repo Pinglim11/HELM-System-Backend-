@@ -214,12 +214,44 @@
 
     <script type="text/javascript">  
 
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip("disable");   
+        });
+
         function filter() {
             document.getElementById("pop-up").style.right = "0px";
         }
 
         function collapse() {
             document.getElementById("pop-up").style.right = "-280px";
+        }
+
+        function hide() {
+            var sidebartext = document.getElementsByClassName('sidebar-text');
+            for (var i = 0; i < sidebartext.length; i ++) {
+                sidebartext[i].style.display = 'none';
+            }
+            document.getElementById("grid-body").style.gridTemplateColumns = "35px auto";
+            document.getElementById("hide-sidebar").style.display = "none";
+            document.getElementById("show-sidebar").style.display = "flex";
+            document.getElementById("content").style.width = "90%";
+            $(document).ready(function(){
+                $('[data-toggle="tooltip"]').tooltip("enable");   
+            });
+        }
+
+        function show() {
+            var sidebartext = document.getElementsByClassName('sidebar-text');
+            for (var i = 0; i < sidebartext.length; i ++) {
+                sidebartext[i].style.display = 'flex';
+            }
+            document.getElementById("grid-body").style.gridTemplateColumns = "auto auto";
+            document.getElementById("hide-sidebar").style.display = "flex";
+            document.getElementById("show-sidebar").style.display = "none";
+            document.getElementById("content").style.width = "100%";
+            $(document).ready(function(){
+                $('[data-toggle="tooltip"]').tooltip("disable");   
+            });
         }
 
     </script>
