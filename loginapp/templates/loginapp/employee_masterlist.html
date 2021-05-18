@@ -608,21 +608,26 @@
                                 <div class="section-row">
                                     <div class="data">
                                         <label>Total Documents:</label>
-                                        100
+                                        {{ documentcount }}
                                     </div>
                                 </div>
-
+								<div class="section-row">
+                                    <div class="data">
+                                        <label>Employee Documents:</label>
+                                        {{ employeedocucount }}
+                                    </div>
+                                </div>
                                 <div class="section-row">
                                     <div class="data">
                                         <label>Awards & Recognition:</label>
-                                        50
+                                        {{ awardscount }}
                                     </div>
                                 </div>
 
                                 <div class="section-row">
                                     <div class="data">
                                         <label>Discipline Management:</label>
-                                        50
+                                        {{ disciplinecount }}
                                     </div>
                                 </div>
 
@@ -635,143 +640,63 @@
                                 <tr>
                                     <th>
                                         <label>
-                                            <button class="sort-btn" id="employee-id">
-                                                Employee ID
+                                            <button class="sort-btn" id="File">
+                                                File
                                                 <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M0 16.67l2.829 2.83 9.175-9.339 9.167 9.339 2.829-2.83-11.996-12.17z"/></svg>
                                             </button>
                                         </label>
                                     </th>
-                                    <th>
+									<th>
                                         <label>
-                                            <button class="sort-btn" id="employee-name">Employee Name</button>
+                                            <button class="sort-btn" id="memoreference">Memo Reference Number/Document ID</button>
                                         </label>
                                     </th>
                                     <th>
                                         <label>
-                                            <button class="sort-btn" id="employee-name">Department</button>
+                                            <button class="sort-btn" id="Document-name">Document Name</button>
+                                        </label>
+                                    </th>
+									<th>
+                                        <label>
+                                            <button class="sort-btn" id="documentemp-id">Employee ID</button>
                                         </label>
                                     </th>
                                     <th>
                                         <label>
-                                            <button class="sort-btn" id="employee-name">Position</button>
+                                            <button class="sort-btn" id="documentemp-name">Employee Name</button>
                                         </label>
                                     </th>
-                                    <th>
+                                     <th>
                                         <label>
-                                            <button class="sort-btn" id="employee-name">Employment Status</button>
+                                            <button class="sort-btn" id="document-author">Author</button>
                                         </label>
                                     </th>
-                                    <th>
+									
+									<th>
                                         <label>
-                                            <button class="sort-btn" id="employee-name">Start Date</button>
-                                        </label>
-                                    </th>
-                                    <th>
-                                        <label>
-                                            <button class="sort-btn" id="employee-name">End Date</button>
-                                        </label>
-                                    </th>
-                                    <th>
-                                        <label>
-                                            <button class="sort-btn" id="employee-name">Salary (PHP)</button>
-                                        </label>
-                                    </th>
-                                    <th>
-                                        <label>
-                                            <button class="sort-btn" id="employee-name">Salary Type</button>
+                                            <button class="sort-btn" id="last-editor">Last Editor</button>
                                         </label>
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><a href="#">000001</a></td>
-                                    <td>Dela Cruz, Juan</td>
-                                    <td>Human Resources</td>
-                                    <td>Manager</td>
-                                    <td>Probationary</td>
-                                    <td>01-Jan-2021</td>
-                                    <td>31-Dec-2021</td>
-                                    <td>0.00</td>
-                                    <td>Monthly</td>
-                                </tr>
-                                <tr>
-                                    <td><a href="#">000002</a></td>
-                                    <td>Dela Cruz, Juan</td>
-                                    <td>Human Resources</td>
-                                    <td>Manager</td>
-                                    <td>Probationary</td>
-                                    <td>01-Jan-2021</td>
-                                    <td>31-Dec-2021</td>
-                                    <td>0.00</td>
-                                    <td>Monthly</td>
-                                </tr>
-                                <tr>
-                                    <td><a href="#">000003</a></td>
-                                    <td>Dela Cruz, Juan</td>
-                                    <td>Human Resources</td>
-                                    <td>Manager</td>
-                                    <td>Probationary</td>
-                                    <td>01-Jan-2021</td>
-                                    <td>31-Dec-2021</td>
-                                    <td>0.00</td>
-                                    <td>Monthly</td>
-                                </tr>
-                                <tr>
-                                    <td><a href="#">000004</a></td>
-                                    <td>Dela Cruz, Juan</td>
-                                    <td>Human Resources</td>
-                                    <td>Manager</td>
-                                    <td>Probationary</td>
-                                    <td>01-Jan-2021</td>
-                                    <td>31-Dec-2021</td>
-                                    <td>0.00</td>
-                                    <td>Monthly</td>
-                                </tr>
-                                <tr>
-                                    <td><a href="#">000005</a></td>
-                                    <td>Dela Cruz, Juan</td>
-                                    <td>Human Resources</td>
-                                    <td>Manager</td>
-                                    <td>Probationary</td>
-                                    <td>01-Jan-2021</td>
-                                    <td>31-Dec-2021</td>
-                                    <td>0.00</td>
-                                    <td>Monthly</td>
-                                </tr>
-                                <tr>
-                                    <td><a href="#">000006</a></td>
-                                    <td>Dela Cruz, Juan</td>
-                                    <td>Human Resources</td>
-                                    <td>Manager</td>
-                                    <td>Probationary</td>
-                                    <td>01-Jan-2021</td>
-                                    <td>31-Dec-2021</td>
-                                    <td>0.00</td>
-                                    <td>Monthly</td>
-                                </tr>
-                                <tr>
-                                    <td><a href="#">000007</a></td>
-                                    <td>Dela Cruz, Juan</td>
-                                    <td>Human Resources</td>
-                                    <td>Manager</td>
-                                    <td>Probationary</td>
-                                    <td>01-Jan-2021</td>
-                                    <td>31-Dec-2021</td>
-                                    <td>0.00</td>
-                                    <td>Monthly</td>
-                                </tr>
-                                <tr>
-                                    <td><a href="#">000008</a></td>
-                                    <td>Dela Cruz, Juan</td>
-                                    <td>Human Resources</td>
-                                    <td>Manager</td>
-                                    <td>Probationary</td>
-                                    <td>01-Jan-2021</td>
-                                    <td>31-Dec-2021</td>
-                                    <td>0.00</td>
-                                    <td>Monthly</td>
-                                </tr>
+                               {% for doc in documents %}
+								<tr>
+								<td><a href = "download/{{ doc.documentid }}/">Download</a></td>
+								{% if doc.memoreferencenumber %}
+								<td><a href = "document/{{ doc.documentid }}/">{{ doc.memoreferencenumber.memoreferencenumber }}</a></td>
+								{% else %}
+								<td><a href = "document/{{ doc.documentid }}/">{{ doc.documentid }}</a></td>
+								{% endif %}
+								<td>{{ doc.documentname }}</td>
+								<td>{{ doc.employeeid.employeeid }}</td>
+								<td>{{ doc.employeeid.informationid.employeename }}</td>
+								<td>{{ doc.author }}</td>
+								<td>{{ doc.recenteditor }}</td>
+								</tr>
+								
+								{% endfor %}
+                                
                             </tbody>
                         </table>
 

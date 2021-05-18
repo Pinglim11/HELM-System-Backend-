@@ -15,7 +15,7 @@ from openpyxl import Workbook
 from openpyxl import load_workbook
 from openpyxl.styles import Font
 from openpyxl.writer.excel import save_virtual_workbook
-
+from django.utils.encoding import smart_str
     # Redirect to a success page.
 def checkmodel(classmodel, **kwargs):
     try:
@@ -32,10 +32,19 @@ def checkmodelq(classmodel, arg):
 # Create your views here.
 @login_required
 def employeeform(request):
-    employees = Employee.objects.all().order_by('employeeid')
+    employees = Employee.objects.filter(deletehide = 0).order_by('employeeid')
+    documents = Document.objects.filter(employeeid__deletehide = 0)
+    employeedocu = Document.objects.filter(Q(memoreferencenumber = None) , Q(employeeid__deletehide=0))
+    awards = Document.objects.filter(Q(memoreferencenumber__recordtype='Award'),Q(employeeid__deletehide=0))
+    discipline = Document.objects.filter(Q(memoreferencenumber__recordtype='Discipline'), Q(employeeid__deletehide=0))
     context = {
     'employees': employees,
-    'count': employees.count()
+    'count': employees.count(),
+    'documentcount' : documents.count(),
+    'employeedocucount' : employeedocu.count(),
+    'awardscount' : awards.count(),
+    'disciplinecount' : discipline.count(),
+    'documents': documents
     } 
     return render(request, 'loginapp/employee_masterlist.html',context)
 
@@ -69,38 +78,40 @@ def employeeprof(request,empid):
 @login_required
 def employeedelete(request,empid):
     employee = get_object_or_404(Employee, employeeid=empid)
-    information = EmployeePersonalInfo.objects.get(pk = employee.informationid.informationid)
-    emergency = EmergencyDetails.objects.get(pk = information.emergencycontactnumber.emergencycontactnumber)
-    spouse = None
-    if information.spouseid:
-        spouse = SpouseBackground.objects.get(pk = information.spouseid.spouseid)
-    emphistory = EmploymentHistory.objects.filter(informationid=information)
-    education = EducationalBackground.objects.filter(informationid=information)
-    family = FamilyMemberBackground.objects.filter(informationid=information)
-    children = ChildBackground.objects.filter(informationid=information)
+    employee.deletehide = 1
+    employee.save()
+    # information = EmployeePersonalInfo.objects.get(pk = employee.informationid.informationid)
+    # emergency = EmergencyDetails.objects.get(pk = information.emergencycontactnumber.emergencycontactnumber)
+    # spouse = None
+    # if information.spouseid:
+    #     spouse = SpouseBackground.objects.get(pk = information.spouseid.spouseid)
+    # emphistory = EmploymentHistory.objects.filter(informationid=information)
+    # education = EducationalBackground.objects.filter(informationid=information)
+    # family = FamilyMemberBackground.objects.filter(informationid=information)
+    # children = ChildBackground.objects.filter(informationid=information)
 
     
-    employee.delete()
+    # employee.delete()
 
-    for history in emphistory:
-        history.delete()
+    # for history in emphistory:
+    #     history.delete()
     
-    for background in education:
-        background.delete()
+    # for background in education:
+    #     background.delete()
 
 
-    for member in family:
-        member.delete()
+    # for member in family:
+    #     member.delete()
 
-    for child in children:
-        child.delete()
+    # for child in children:
+    #     child.delete()
     
-    information.delete()
-    if not EmployeePersonalInfo.objects.filter(emergencycontactnumber = emergency).exists():
-        emergency.delete()
+    # information.delete()
+    # if not EmployeePersonalInfo.objects.filter(emergencycontactnumber = emergency).exists():
+    #     emergency.delete()
 
-    if spouse:
-        spouse.delete()
+    # if spouse:
+    #     spouse.delete()
     
     
 
@@ -520,15 +531,34 @@ def viewtest_discipline(request):
     #          with open(dest, 'wb+') as destination:
     #             for chunk in f.chunks():
     #                 destination.write(chunk)
+@login_required
+def download(request,did): 
+    document = get_object_or_404(Document, documentid=did)
+    file_name = document.documentname
+    path_to_file = document.documentlink
+    file = open(path_to_file,'rb').read()
+    response = HttpResponse(file,content_type='application/force-download')
+    response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(file_name)
+    return response
+
+
+def document(request,did): 
+    document = get_object_or_404(Document, documentid=did)
+    path_to_file = document.documentlink
+    file = open(path_to_file,'rb').read()
+    response = HttpResponse(file) 
+    
+    return response
+@login_required
 def genreport(request): 
     wb = Workbook()
     ws = wb.active
     ws.title = 'General'
-    employees = Employee.objects.filter(Q(deletehide=0) | Q(deletehide=None))
-    documents = Document.objects.all()
-    employeedocu = Document.objects.filter(memoreferencenumber = None)
-    awards = Document.objects.filter(memoreferencenumber__recordtype='Award')
-    discipline = Document.objects.filter(memoreferencenumber__recordtype='Discipline')
+    employees = Employee.objects.filter(deletehide=0)
+    documents = Document.objects.filter(employeeid__deletehide = 0)
+    employeedocu = Document.objects.filter(Q(memoreferencenumber = None) , Q(employeeid__deletehide=0))
+    awards = Document.objects.filter(Q(memoreferencenumber__recordtype='Award'),Q(employeeid__deletehide=0))
+    discipline = Document.objects.filter(Q(memoreferencenumber__recordtype='Discipline'), Q(employeeid__deletehide=0))
     curlevel = 2
     ## Handle Main Sheet
     ws['A1'] = 'Total Documents:'
@@ -651,7 +681,7 @@ def uploademployeerecord(request,empid):
             user = request.user.username
             recordfile = request.FILES['recordfile']
             dest = 'media/employee/' + str(empid) + '/employeerecords'
-            fs = FileSystemStorage(location = dest)
+            fs = FileSystemStorage(location = dest, base_url = dest)
             filename = fs.save(recordfile.name,recordfile)
             fileurl = fs.url(filename)
             Document.objects.create(      
@@ -782,6 +812,7 @@ def createrecord(request):
                 employmentstatus = record.cleaned_data['employmentstatus'],
                 salarytype = record.cleaned_data['salarytype'],
                 salary = record.cleaned_data['salary'],
+                deletehide = 0,
                 jobid = job
             )
 
