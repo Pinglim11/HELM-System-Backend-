@@ -503,6 +503,10 @@ def viewtest_discipline(request):
     } 
     return render(request, 'loginapp/viewtest_discipline.html',context)
 
+@login_required
+def viewtest_viewreport(request):
+    return render(request, 'loginapp/viewtest_viewreport.html')
+
 # def handle_uploaded_file(f,id,user):
 #     dest = 'media/employee/' + str(id) + '/employeerecords'
 #     fs = FileSystemStorage(location = dest)
