@@ -479,6 +479,20 @@ def employeeedit(request,empid):
     } 
     return render(request, 'loginapp/edit.html', context)
 
+
+
+
+
+
+@login_required
+def employeeeditchild(request,empid):
+    employee = get_object_or_404(Employee, employeeid=empid)
+    return render(request, 'loginapp/edit.html')
+
+
+
+
+
 @login_required
 def viewtest(request):
     employees = Employee.objects.all().order_by('employeeid')

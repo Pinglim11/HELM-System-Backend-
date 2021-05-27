@@ -222,10 +222,18 @@
 
                     <div class="section-container">
 
-                 
-
+                        
                         <div class="section-block">
+                        <div class="section-header">
                             <h1>Personal Information</h1>
+                            <div class = "section-buttons">
+                        <button class="primary-btn" onclick="location.href='/home/employee/{{ employee.employeeid }}/edit'" type="button">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7.127 22.564l-7.126 1.436 1.438-7.125 5.688 5.689zm-4.274-7.104l5.688 5.689 15.46-15.46-5.689-5.689-15.459 15.46z"/></svg>
+                                            Edit
+                                            </button>
+                        </div>
+                        </div>
+
                         </div>
 
                         <div class="section-flex">
@@ -395,7 +403,14 @@
                             <div class="section-column">
 							<div class="section-row">
 										<div class="data">
-											<h3>Employment History:</h3>
+											<h3>
+                                            Employment History:
+                                            <button class="primary-btn" onclick="location.href='/home/employee/{{ employee.employeeid }}/edit'" type="button">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7.127 22.564l-7.126 1.436 1.438-7.125 5.688 5.689zm-4.274-7.104l5.688 5.689 15.46-15.46-5.689-5.689-15.459 15.46z"/></svg>
+                                            Edit
+                                            </button>
+                                            </h3>  
+                                            
 											{% for x in emphistory %}
 											
 											<p> Previously worked at {{x.previouscompanyname}} as a {{x.previousposition}}.  </p>
@@ -411,7 +426,14 @@
                             <div class="section-column">
 								<div class="section-row">
 								<div class="data">
-										<h3>Educational History:</h3>
+										<h3>
+                                        Educational History:
+                                        <button class="primary-btn" onclick="location.href='/home/employee/{{ employee.employeeid }}/edit'" type="button">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7.127 22.564l-7.126 1.436 1.438-7.125 5.688 5.689zm-4.274-7.104l5.688 5.689 15.46-15.46-5.689-5.689-15.459 15.46z"/></svg>
+                                        Edit
+                                         </button>
+                                        </h3>
+                                         
 										<p> Highest Degree: {{ degree }} </p>
 										{% for x in education %}
 										
@@ -446,7 +468,14 @@
                             <div class="section-column">
 							<div class="section-row">
 										<div class="data">
-										<h3>Family Background:</h3>
+										<h3>
+                                        Family Background:
+                                         <button class="primary-btn" onclick="location.href='/home/employee/{{ employee.employeeid }}/edit'" type="button">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7.127 22.564l-7.126 1.436 1.438-7.125 5.688 5.689zm-4.274-7.104l5.688 5.689 15.46-15.46-5.689-5.689-15.459 15.46z"/></svg>
+                                        Edit
+                                        </button>
+                                        </h3>
+                                        
 										{% for x in family %}
 										<p> Name: {{x.membername}} </p>
 										<p> Age: {{x.memberage}} </p>
@@ -463,7 +492,14 @@
                             <div class="section-column">
 								<div class="section-row">
 								<div class="data">
-										<h3>Children Background:</h3>
+										<h3>
+                                        Children Background: 
+                                        <button class="primary-btn" onclick="location.href='/home/employee/{{ employee.employeeid }}/edit'" type="button">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7.127 22.564l-7.126 1.436 1.438-7.125 5.688 5.689zm-4.274-7.104l5.688 5.689 15.46-15.46-5.689-5.689-15.459 15.46z"/></svg>
+                                            Edit
+                                        </button>
+                                        </h3>
+                                         
 										{% for x in children %}
 										<p> Name: {{x.childname}} </p>
 										<p> Age: {{x.childage}} </p>
