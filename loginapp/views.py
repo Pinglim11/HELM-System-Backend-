@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.forms.models import model_to_dict
 import datetime
 import os
+import re
 from .forms import EmployeeRequiredRecordForm,JobsForm, BranchForm, SpouseForm, EmploymentHistoryForm,EducationalBackgroundForm,FamilyMemberBackgroundForm,ChildBackgroundForm, EmployeeDocument
 from .models import Employee, EmployeePersonalInfo,EmployeePosition,EmployeeWorkLocation, ChildBackground,SpouseBackground,FamilyMemberBackground,EducationalBackground,EmploymentHistory, EmergencyDetails, Document
 from django.core.files.storage import FileSystemStorage
@@ -46,6 +47,62 @@ def employeeform(request):
     'disciplinecount' : discipline.count(),
     'documents': documents
     } 
+    if request.method == "POST":
+        sortbytype = request.POST.get('sorted')
+        searchempid = request.POST.get('searchempid')
+        searchempname = request.POST.get('searchempname')
+        searchbranch = request.POST.get('searchbranch')
+        searchregion = request.POST.get('searchregion')
+        searchdept = request.POST.get('searchdept')
+        searchposition = request.POST.get('searchposition')
+        searchempstatus = request.POST.get('searchempstatus')
+        employees = Employee.objects.filter(deletehide = 0)
+        print(request.POST)
+        if searchempid != '' or searchempid != None:
+            if searchempid.isdecimal():
+                employees = employees.filter(employeeid = int(searchempid))
+        
+        
+        if searchempname != '' : 
+            if searchempname.replace(' ', '').replace('.',' ').isalpha(): ## This other condition can be removed, as long as it isn't empty is what it matters
+                employees = employees.filter(informationid__employeename__icontains = searchempname)
+        
+        
+        if searchbranch != '' :
+            if searchbranch.replace(' ', '').replace('.',' ').isalpha():
+                employees = employees.filter(branch__branch__icontains = searchbranch)
+        
+        
+        if searchregion != '' :
+            if searchregion.replace(' ', '').replace('.',' ').isalpha():
+                employees = employees.filter(branch__region__icontains = searchregion)
+        
+        
+        if searchdept != '': 
+            if searchdept.replace(' ', '').replace('.',' ').isalpha():
+                employees = employees.filter(jobid__department__icontains = searchdept)
+        
+        
+        if searchposition != '': 
+            if searchposition.replace(' ', '').replace('.',' ').isalpha():
+                employees = employees.filter(jobid__position__icontains = searchposition)
+        
+        if searchempstatus != '':
+                employees = employees.filter(employmentstatus__icontains = searchempstatus)
+        
+        if sortbytype == 'employeename':
+            employees = employees.order_by('informationid__employeename')
+        elif sortbytype == 'branch' or sortbytype == 'region':
+            employees = employees.order_by('branch__' + sortbytype)
+        elif sortbytype == 'department' or sortbytype == 'position':
+            employees = employees.order_by('jobid__' + sortbytype)
+        else:
+            employees = employees.order_by(sortbytype)
+        
+        context['employees'] = employees
+        context['count'] = employees.count()
+
+        return render(request, 'loginapp/employee_masterlist.html',context)
     return render(request, 'loginapp/employee_masterlist.html',context)
 
 @login_required
@@ -516,6 +573,21 @@ def viewtest_discipline(request):
     'documents': documents,
     } 
     return render(request, 'loginapp/viewtest_discipline.html',context)
+
+@login_required
+def viewtest_viewreport(request):
+    documents = Document.objects.filter(employeeid__deletehide = 0)
+    employeedocu = Document.objects.filter(Q(memoreferencenumber = None) , Q(employeeid__deletehide=0))
+    awards = Document.objects.filter(Q(memoreferencenumber__recordtype='Award'),Q(employeeid__deletehide=0))
+    discipline = Document.objects.filter(Q(memoreferencenumber__recordtype='Discipline'), Q(employeeid__deletehide=0))
+    context = {
+    'documentcount' : documents.count(),
+    'employeedocucount' : employeedocu.count(),
+    'awardscount' : awards.count(),
+    'disciplinecount' : discipline.count(),
+    'documents': documents
+    } 
+    return render(request, 'loginapp/viewtest_viewreport.html', context)
 
 # def handle_uploaded_file(f,id,user):
 #     dest = 'media/employee/' + str(id) + '/employeerecords'
