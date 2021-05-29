@@ -42,7 +42,7 @@ familyremoveButton.addEventListener('click',function() {
 }); 
 
 educationaddButton.addEventListener('click', function() {
-     addForm(educationform,educationblocker,educationcontainer,educationtotalForms,educationremoveButton,true);
+     addForm(educationform,educationblocker,educationcontainer,educationtotalForms,educationremoveButton);
 });
 educationremoveButton.addEventListener('click',function() {
      removeForm(".education-form",educationtotalForms,educationremoveButton);

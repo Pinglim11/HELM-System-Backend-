@@ -88,106 +88,1402 @@
             </ul>
         </div>
 
-
         <div id="content">
             
             <div id="container">
 
-                <div id="breadcrumbs">
-                    <a href="#">Employee Masterlist</a>
-                    &nbsp;/&nbsp;
-                </div>
-                
-        
+                <!--
                 <div class="section">
 
                     <div class="section-container">
 
-                        <div class="section-header">
+                        <form action="" method="post">
+                        {% csrf_token %}
 
-                            <div class="section-title">
-                                <h1>Create New Record</h1>
+                            <div class="section-header">
+
+                                <div class="section-title">
+                                    <h1>New Record</h1>
+                                </div>
+
+                                <div class="section-buttons">
+                                    <input class="primary-btn" type="submit" value="Submit">
+                                    <button class="secondary-btn" onclick="location.href='/home/employeeform'">
+                                        Cancel
+                                    </button>
+                                </div>
+
                             </div>
 
-                            <div class="section-buttons">
-                                <button class="secondary-btn" onclick="location.href='/home/employeeform'">
-                                    Cancel
-                                </button>
-                                <button class="primary-btn">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15.003 3h2.997v5h-2.997v-5zm8.997 1v20h-24v-24h20l4 4zm-19 5h14v-7h-14v7zm16 4h-18v9h18v-9z"/></svg>
-                                    Save
-                                </button>
+                            <div class="section-block">
+
+                                <h2>Employee Record</h2>
+
                             </div>
-                        </div>
 
-                        <div class="section-block">
-                            <h2>Employee Record</h2>
-                        </div>
+                            <div class="section-flex">
 
-                        <div class="section-flex">
-						<form action="" method="post">
-						{% csrf_token %}
-						<table>
-						<div>
-						{{ record.as_table }}
-						{{ worklocation.as_table }}
-						{{ position.as_table }}
-						{{ spouse.as_table }}
+                                <div class="section-column">
+
+                                    <div class="section-block">
+                                        <div class="section-flex">
+
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Employee ID:</label>
+                                                        {{ record.employeeid }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Employment Status:</label>
+                                                        {{ record.employmentstatus }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+                                    </div>
+
+                                    <div class="section-block">
+                                        <div class="section-flex">
+
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Department:</label>
+                                                        {{ record.department }}
+                                                        <input>
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Position:</label>
+                                                        {{ record.position }}
+                                                        <input>
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+                                    </div>
+
+                                    <div class="section-block">
+                                        <div class="section-flex">
+
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Region:</label>
+                                                        {{ record.region }}
+                                                        <input>
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Branch:</label>
+                                                        {{ record.branch }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="section-column">
+
+                                    <div class="section-block">
+                                        <div class="section-flex">
+
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Start Date:</label>
+                                                        {{ record.startdate }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>End Date:</label>
+                                                        {{ record.enddate }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+                                    </div>
+
+                                    <div class="section-block">
+                                        <div class="section-flex">
+
+                                            <div class="section-column">
+            
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Salary Type:</label>
+                                                        {{ record.salarytype }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                            <div class="section-column">
+            
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Salary:</label>
+                                                        {{ record.salary }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+                                    </div>
+
+                                    <div class="section-row">
+                                        <div class="data">
+                                            <label>Job ID:</label>
+                                            {{ record.jobid }}
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="section-block">
+                                
+                                <h2>Employee Personal Information</h2>
+
+                            </div>
+
+                            <div class="section-flex">
+
+                                <div class="section-column">
+
+                                    <div class="section-row">
+                                        <div class="data">
+                                            <label>Employee Name:</label>
+                                            {{ record.employeename }}
+                                        </div>
+                                    </div>
+
+                                    <div class="section-block">
+                                        <div class="section-flex">
+
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Contact Number:</label>
+                                                        {{ record.contactnumber }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                            <div class="section-column">
+            
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Birth Date:</label>
+                                                        {{ record.birthdate }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+                                    </div>
+
+                                    <div class="section-block">
+                                        <div class="section-flex">
+
+                                            <div class="section-column">
+            
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Gender:</label>
+                                                        {{ record.gender }}
+                                                    </div>
+                                                </div>
+
+                                            </div>
+            
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Civil Status:</label>
+                                                        {{ record.civilstatus }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+                                    </div>
+
+                                    <div class="section-block">
+                                        <div class="section-flex">
+
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Citizenship:</label>
+                                                        {{ record.citizenship }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Religion:</label>
+                                                        {{ record.religion }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="section-column">
+
+                                    <div class="section-block">
+                                        <div class="section-flex">
+
+                                            <div class="section-column">
+            
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Number of Dependent:</label>
+                                                        {{ record.numberofdependent }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                            <div class="section-column">
+            
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Blood Type:</label>
+                                                        {{ record.bloodtype }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+                                    </div>
+
+                                    <div class="section-row">
+                                        <div class="data">
+                                            <label>Present Address:</label>
+                                            {{ record.presentaddress }}
+                                        </div>
+                                    </div>
+
+                                    <div class="section-row">
+                                        <div class="data">
+                                            <label>Permanent Address:</label>
+                                            {{ record.permanentaddress }}
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="section-block">
+                                
+                                <h2>Emergency Details</h2>
+
+                            </div>
+
+                            <div class="section-flex">
+
+                                <div class="section-column">
+
+                                    <div class="section-row">
+                                        <div class="data">
+                                            <label>Emergency Contact Name:</label>
+                                            {{ record.emergencycontactname }}
+                                        </div>
+                                    </div>
+
+                                    <div class="section-block">
+                                        <div class="section-flex">
+
+                                            <div class="section-column">
+            
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Emergency Contact Number:</label>
+                                                        {{ record.emergencycontactnumber }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                            <div class="section-column">
+            
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Relationship:</label>
+                                                        {{ record.emergencyrelationship }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="section-column">
+
+                                    <div class="section-row">
+                                        <div class="data">
+                                            <label>Emergency Address:</label>
+                                            {{ record.emergencyaddress }}
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="section-header">
+
+                                <div class="section-buttons-bottom">
+                                    <input class="primary-btn" type="submit" value="Submit" style="margin-right: 15px;">
+                                    <button class="secondary-btn" onclick="location.href='/home/employeeform'">
+                                        Cancel
+                                    </button>
+                                </div>
                         </div>
-                        <div id = "emphisform-container">
-                        <button id="emphisadd-form" type="button">Add Employee History</button>
-						<button id="emphisremove-form" type="button" style="display: none;">Remove Employee History</button>
-						{{emphistory.management_form}}
-                        {% for form in emphistory %}
-                        <div class="emphis-form">
-                        {{form.as_p}}
-                        </div>
-                        {% endfor %}
-                        <div id = "emphisblocker"></div>
-                         </div>
-						<div id = "familyform-container">
-                        <button id="familyadd-form" type="button">Add Family Member</button>
-						<button id="familyremove-form" type="button" style="display: none;">Remove Family Member</button>
-						{{family.management_form}}
-                        {% for form in family %}
-                        <div class="family-form">
-                        {{form.as_p}}
-                        </div>
-                        {% endfor %}
-                        <div id = "familyblocker"></div>
-                         </div>
-						 <div id = "educationform-container">
-                        <button id="educationadd-form" type="button">Add Educational Background</button>
-						<button id="educationremove-form" type="button" style="display: none;">Remove Educational Background</button>
-						{{education.management_form}}
-                        {% for form in education %}
-                        <div class="education-form">
-                        {{form.as_p}}
-                        </div>
-                        {% endfor %}
-                        <div id = "educationblocker"></div>
-                         </div>
-						  <div id = "childform-container">
-                        <button id="childadd-form" type="button">Add Children</button>
-						<button id="childremove-form" type="button" style="display: none;">Remove Children</button>
-						{{child.management_form}}
-                        {% for form in child %}
-                        <div class="child-form">
-                        {{form.as_p}}
-                        </div>
-                        {% endfor %}
-                        <div id = "childblocker"></div>
-                         </div>
-						</table>
-						<input type="submit" value="Submit">
-						</form>
-                            
-                        </div>
+                        
+                        </form>
+
+                    </div>
+
+                </div>-->
+
+                <div class="section">
+
+                    <div class="section-container">
+
+                        <form action="" method="post">
+                        {% csrf_token %}
+
+                            <div class="section-header">
+
+                                <div class="section-title">
+                                    <h1>Employee Record</h1>
+                                    &nbsp;<span class="subtitle">1 of 8</span>
+                                </div>
+
+                            </div>
+
+                            <div class="section-flex">
+
+                                <div class="section-column">
+
+                                    <div class="section-block">
+                                        <div class="section-flex">
+
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Employee ID:</label>
+                                                        {{ record.employeeid }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Employment Status:</label>
+                                                        {{ record.employmentstatus }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+                                    </div>
+
+                                    <div class="section-block">
+                                        <div class="section-flex">
+
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Department:</label>
+                                                        {{ record.department }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Position:</label>
+                                                        {{ record.position }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+                                    </div>
+
+                                    <div class="section-block">
+                                        <div class="section-flex">
+
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Region:</label>
+                                                        {{ record.region }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Branch:</label>
+                                                        {{ record.branch }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="section-column">
+
+                                    <div class="section-block">
+                                        <div class="section-flex">
+
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Start Date:</label>
+                                                        {{ record.startdate }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>End Date:</label>
+                                                        {{ record.enddate }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+                                    </div>
+
+                                    <div class="section-block">
+                                        <div class="section-flex">
+
+                                            <div class="section-column">
+            
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Salary Type:</label>
+                                                        {{ record.salarytype }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                            <div class="section-column">
+            
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Salary:</label>
+                                                        {{ record.salary }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+                                    </div>
+
+                                    <div class="section-row">
+                                        <div class="data">
+                                            <label>Job ID:</label>
+                                            {{ record.jobid }}
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="section-header">
+
+                                <div class="section-buttons-bottom">
+                                    <input class="secondary-btn" type="submit" value="Next" style="margin-right: 15px;">
+                                </div>
+                            </div>
+
+                        </form>
 
                     </div>
 
                 </div>
 
+                <div class="section">
+
+                    <div class="section-container">
+
+                        <form action="" method="post">
+                        {% csrf_token %}
+
+                            <div class="section-header">
+
+                                <div class="section-title">
+                                    <h1>Employee Personal Information</h1>
+                                    &nbsp;<span class="subtitle">2 of 8</span>
+                                </div>
+
+                            </div>
+
+                            <div class="section-flex">
+
+                                <div class="section-column">
+
+                                    <div class="section-row">
+                                        <div class="data">
+                                            <label>Name:</label>
+                                            {{ record.employeename }}
+                                        </div>
+                                    </div>
+
+                                    <div class="section-block">
+                                        <div class="section-flex">
+
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Contact Number:</label>
+                                                        {{ record.contactnumber }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                            <div class="section-column">
+            
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Birth Date:</label>
+                                                        {{ record.birthdate }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+                                    </div>
+
+                                    <div class="section-block">
+                                        <div class="section-flex">
+
+                                            <div class="section-column">
+            
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Gender:</label>
+                                                        {{ record.gender }}
+                                                    </div>
+                                                </div>
+
+                                            </div>
+            
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Civil Status:</label>
+                                                        {{ record.civilstatus }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+                                    </div>
+
+                                    <div class="section-block">
+                                        <div class="section-flex">
+
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Citizenship:</label>
+                                                        {{ record.citizenship }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                            <div class="section-column">
+
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Religion:</label>
+                                                        {{ record.religion }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="section-column">
+
+                                    <div class="section-block">
+                                        <div class="section-flex">
+
+                                            <div class="section-column">
+            
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Number of Dependent:</label>
+                                                        {{ record.numberofdependent }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                            <div class="section-column">
+            
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Blood Type:</label>
+                                                        {{ record.bloodtype }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+                                    </div>
+
+                                    <div class="section-row">
+                                        <div class="data">
+                                            <label>Present Address:</label>
+                                            {{ record.presentaddress }}
+                                        </div>
+                                    </div>
+
+                                    <div class="section-row">
+                                        <div class="data">
+                                            <label>Permanent Address:</label>
+                                            {{ record.permanentaddress }}
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="section-header">
+
+                                <div class="section-buttons-bottom">
+                                    <button class="secondary-btn">
+                                        Back
+                                    </button>
+                                    <input class="secondary-btn" type="submit" value="Next" style="margin-right: 15px;">
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+                <div class="section">
+
+                    <div class="section-container">
+
+                        <form action="" method="post">
+                        {% csrf_token %}
+
+                            <div class="section-header">
+
+                                <div class="section-title">
+                                    <h1>Emergency Details</h1>
+                                    &nbsp;<span class="subtitle">3 of 8</span>
+                                </div>
+                            </div>
+
+                            <div class="section-flex">
+
+                                <div class="section-column">
+
+                                    <div class="section-row">
+                                        <div class="data">
+                                            <label>Emergency Contact Name:</label>
+                                            {{ record.emergencycontactname }}
+                                        </div>
+                                    </div>
+
+                                    <div class="section-block">
+                                        <div class="section-flex">
+
+                                            <div class="section-column">
+            
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Emergency Contact Number:</label>
+                                                        {{ record.emergencycontactnumber }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                            <div class="section-column">
+            
+                                                <div class="section-row">
+                                                    <div class="data">
+                                                        <label>Relationship:</label>
+                                                        {{ record.emergencyrelationship }}
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="section-column">
+
+                                    <div class="section-row">
+                                        <div class="data">
+                                            <label>Emergency Address:</label>
+                                            {{ record.emergencyaddress }}
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="section-header">
+
+                                <div class="section-buttons-bottom">
+                                    <button class="secondary-btn">
+                                        Back
+                                    </button>
+                                    <input class="secondary-btn" type="submit" value="Next" style="margin-right: 15px;">
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+                <div class="section">
+
+                    <div class="section-container">
+
+                        <form action="" method="post">
+                        {% csrf_token %}
+
+                            <div id = "emphisform-container">
+
+                                <div class="section-header">
+
+                                    <div class="section-title">
+                                        <h1>Employment History</h1>
+                                        &nbsp;<span class="subtitle">4 of 8</span>
+                                    </div>
+
+                                    <div class="section-buttons">
+                                        <button class="secondary-btn" id="emphisremove-form" type="button" style="display: none;">
+                                            Remove
+                                        </button>
+                                        <button class="secondary-btn" id="emphisadd-form" type="button">
+                                            Add
+                                        </button>
+                                    </div>
+                                </div>
+
+                                    {{emphistory.management_form}}
+                                    {% for form in emphistory %}
+                                    <div class="emphis-form">
+
+                                        <div class="section-block">
+
+                                            <div class="section-flex" style="margin: 30px 0">
+
+                                                <div class="section-column">
+                                                    <div class="section-row">
+                                                        <div class="data">
+                                                            <label>Previous Company Name:</label>
+                                                            {{ form.previouscompanyname }}
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="section-block">
+                                                        <div class="section-flex">
+                
+                                                            <div class="section-column">
+                            
+                                                                <div class="section-row">
+                                                                    <div class="data">
+                                                                        <label>Previous Position:</label>
+                                                                        {{ form.previousposition }}
+                                                                    </div>
+                                                                </div>
+                            
+                                                            </div>
+                            
+                                                            <div class="section-column">
+                            
+                                                                <div class="section-row">
+                                                                    <div class="data">
+                                                                        <label>Reason for Leaving:</label>
+                                                                        {{ form.reasonforleaving }}
+                                                                    </div>
+                                                                </div>
+                            
+                                                            </div>
+                            
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+    
+                                                <div class="section-column">
+                                                    <div class="section-block">
+                                                        <div class="section-flex">
+                
+                                                            <div class="section-column">
+                            
+                                                                <div class="section-row">
+                                                                    <div class="data">
+                                                                        <label>Company Contact Number:</label>
+                                                                        {{ form.companycontactnumber }}
+                                                                    </div>
+                                                                </div>
+                            
+                                                            </div>
+                            
+                                                            <div class="section-column">
+                            
+                                                                <div class="section-row">
+                                                                    <div class="data">
+                                                                        <label>With COE or Clearance:</label>
+                                                                        {{ form.withcoeorclearance }}
+                                                                    </div>
+                                                                </div>
+                            
+                                                            </div>
+                            
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            
+                                            </div>
+                                            
+                                        </div>
+
+                                    </div>
+                                    {% endfor %}
+                                    <div id = "emphisblocker"></div>
+
+                            </div>
+
+                            <div class="section-header">
+
+                                <div class="section-buttons-bottom">
+                                    <button class="secondary-btn">
+                                        Back
+                                    </button>
+                                    <input class="secondary-btn" type="submit" value="Next" style="margin-right: 15px;">
+                                </div>
+
+                            </div>
+                        
+                        </form>
+
+                    </div>
+
+                </div>
+
+                <div class="section">
+
+                    <div class="section-container">
+
+                        <form action="" method="post">
+                        {% csrf_token %}
+
+                            <div id = "educationform-container">
+
+                                <div class="section-header">
+
+                                    <div class="section-title">
+                                        <h1>Educational Background</h1>
+                                        &nbsp;<span class="subtitle">5 of 8</span>
+                                    </div>
+
+                                    <div class="section-buttons">
+                                        <button class="secondary-btn" id="educationremove-form" type="button" style="display: none;">
+                                            Remove
+                                        </button>
+                                        <button class="secondary-btn" id="educationadd-form" type="button">
+                                            Add
+                                        </button>
+                                    </div>
+                                </div>
+
+                                    {{education.management_form}}
+                                    {% for form in education %}
+                                    <div class="education-form">
+
+                                        <div class="section-block">
+
+                                            <div class="section-flex" style="margin: 30px 0">
+
+                                                <div class="section-column">
+                                                    
+                                                    <div class="section-row">
+                                                        <div class="data">
+                                                            <label>School Name:</label>
+                                                            {{ form.schoolname }}
+                                                        </div>
+                                                    </div>
+    
+                                                    <div class="section-block">
+                                                        <div class="section-flex">
+                
+                                                            <div class="section-column">
+                            
+                                                                <div class="section-row">
+                                                                    <div class="data">
+                                                                        <label>School Type:</label>
+                                                                        {{ form.schooltype }}
+                                                                    </div>
+                                                                </div>
+                            
+                                                            </div>
+                            
+                                                            <div class="section-column">
+                            
+                                                                <div class="section-row">
+                                                                    <div class="data">
+                                                                        <label>Highest Degree:</label>
+                                                                        {{ form.highestdegree }}
+                                                                    </div>
+                                                                </div>
+                            
+                                                            </div>
+                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+    
+                                                <div class="section-column">
+                                                    <div class="section-block">
+                                                        <div class="section-flex">
+                
+                                                            <div class="section-column">
+                            
+                                                                <div class="section-row">
+                                                                    <div class="data">
+                                                                        <label>Starting Year Attended:</label>
+                                                                        {{ form.startingyearattended }}
+                                                                    </div>
+                                                                </div>
+                            
+                                                            </div>
+                            
+                                                            <div class="section-column">
+                            
+                                                                <div class="section-row">
+                                                                    <div class="data">
+                                                                        <label>Ending Year Attended:</label>
+                                                                        {{ form.endingyearattended }}
+                                                                    </div>
+                                                                </div>
+                            
+                                                            </div>
+                            
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                            
+                                            </div>
+                                            
+                                        </div>
+
+                                    </div>
+                                    {% endfor %}
+                                    <div id = "educationblocker"></div>
+
+                            </div>
+
+                            <div class="section-header">
+
+                                    <div class="section-buttons-bottom">
+                                        <button class="secondary-btn">
+                                            Back
+                                        </button>
+                                        <input class="secondary-btn" type="submit" value="Next" style="margin-right: 15px;">
+                                    </div>
+
+                            </div>
+                        
+                        </form>
+
+                    </div>
+
+                </div>
+
+                <div class="section">
+
+                    <div class="section-container">
+
+                        <form action="" method="post">
+                        {% csrf_token %}
+
+                            <div id = "familyform-container">
+
+                                <div class="section-header">
+
+                                    <div class="section-title">
+                                        <h1>Family Member Background</h1>
+                                        &nbsp;<span class="subtitle">6 of 8</span>
+                                    </div>
+
+                                    <div class="section-buttons">
+                                        <button class="secondary-btn" id="familyremove-form" type="button" style="display: none;">
+                                            Remove
+                                        </button>
+                                        <button class="secondary-btn" id="familyadd-form" type="button">
+                                            Add
+                                        </button>
+                                    </div>
+                                </div>
+
+                                    {{family.management_form}}
+                                    {% for form in family %}
+                                    <div class="family-form">
+
+                                        <div class="section-block">
+
+                                            <div class="section-flex" style="margin: 30px 0">
+
+                                                <div class="section-column">
+                                                    <div class="section-row">
+                                                        <div class="data">
+                                                            <label>Name:</label>
+                                                            {{ form.membername }}
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="section-block">
+                                                        <div class="section-flex">
+                
+                                                            <div class="section-column">
+                            
+                                                                <div class="section-row">
+                                                                    <div class="data">
+                                                                        <label>Age:</label>
+                                                                        {{ form.memberage }}
+                                                                    </div>
+                                                                </div>
+                            
+                                                            </div>
+                            
+                                                            <div class="section-column">
+                            
+                                                                <div class="section-row">
+                                                                    <div class="data">
+                                                                        <label>Relationship:</label>
+                                                                        {{ form.memberrelationship }}
+                                                                    </div>
+                                                                </div>
+                            
+                                                            </div>
+                            
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+    
+                                                <div class="section-column">
+                                                    <div class="section-row">
+                                                        <div class="data">
+                                                            <label>Occupation:</label>
+                                                            {{ form.memberoccupation }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            
+                                            </div>
+                                            
+                                        </div>
+
+                                    </div>
+                                    {% endfor %}
+                                    <div id = "familyblocker"></div>
+
+                            </div>
+
+                            <div class="section-header">
+
+                                    <div class="section-buttons-bottom">
+                                        <button class="secondary-btn">
+                                            Back
+                                        </button>
+                                        <input class="secondary-btn" type="submit" value="Next" style="margin-right: 15px;">
+                                    </div>
+
+                            </div>
+                        
+                        </form>
+
+                    </div>
+
+                </div>
+
+                <div class="section">
+
+                    <div class="section-container">
+
+                        <form action="" method="post">
+                        {% csrf_token %}
+
+                            <div class="section-header">
+
+                                <div class="section-title">
+                                    <h1>Spouse Background</h1>
+                                    &nbsp;<span class="subtitle">7 of 8</span>
+                                </div>
+
+                            </div>
+
+                            <div class="section-flex">
+
+                                <div class="section-column">
+
+                                    <div class="section-row">
+                                        <div class="data">
+                                            <label>Name:</label>
+                                            {{ spouse.spousename }}
+                                        </div>
+                                    </div>
+
+                                    <div class="section-row">
+                                        <div class="data">
+                                            <label>Number of Children:</label>
+                                            {{ spouse.numberofchildren }}
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="section-column">
+
+                                    <div class="section-row">
+                                        <div class="data">
+                                            <label>Company:</label>
+                                            {{ spouse.spousecompany }}
+                                        </div>
+                                    </div>
+
+                                    <div class="section-row">
+                                        <div class="data">
+                                            <label>Company Address:</label>
+                                            {{ spouse.spousecompanyaddress }}
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="section-header">
+
+                                <div class="section-buttons-bottom">
+                                    <button class="secondary-btn">
+                                        Back
+                                    </button>
+                                    <input class="secondary-btn" type="submit" value="Next" style="margin-right: 15px;">
+                                </div>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+                <div class="section">
+
+                    <div class="section-container">
+
+                        <form action="" method="post">
+                        {% csrf_token %}
+
+                            <div id = "childform-container">
+
+                                <div class="section-header">
+
+                                    <div class="section-title">
+                                        <h1>Child Background</h1>
+                                        &nbsp;<span class="subtitle">8 of 8</span>
+                                    </div>
+
+                                    <div class="section-buttons">
+                                        <button class="secondary-btn" id="childremove-form" type="button" style="display: none;">
+                                            Remove
+                                        </button>
+                                        <button class="secondary-btn" id="childadd-form" type="button">
+                                            Add
+                                        </button>
+                                    </div>
+                                </div>
+
+                                    {{child.management_form}}
+                                    {% for form in child %}
+                                    <div class="child-form">
+
+                                        <div class="section-block">
+
+                                            <div class="section-flex" style="margin: 30px 0">
+
+                                                <div class="section-column">
+                                                    <div class="section-row">
+                                                        <div class="data">
+                                                            <label>Name:</label>
+                                                            {{ form.childname }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="section-row">
+                                                        <div class="data">
+                                                            <label>Age:</label>
+                                                            {{ form.childage }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="section-column">
+                                                    <div class="section-row">
+                                                        <div class="data">
+                                                            <label>Occupation:</label>
+                                                            {{ form.childoccupation }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            
+                                            </div>
+                                            
+                                        </div>
+
+                                    </div>
+                                    {% endfor %}
+                                    <div id = "childblocker"></div>
+
+                            </div>
+
+                            <div class="section-header">
+
+                                    <div class="section-buttons-bottom">
+                                        <input class="primary-btn" type="submit" value="Submit" style="margin-right: 15px;">
+                                        <button class="secondary-btn">
+                                            Back
+                                        </button>
+                                    </div>
+                            </div>
+                        
+                        </form>
+
+                    </div>
+
+                </div>
 
             </div>
             
@@ -278,8 +1574,9 @@
             </div>
 
         </div>
+
     </div>
-	 <script type="text/javascript">  
+	<script type="text/javascript">  
 
         $(document).ready(function(){
             $('[data-toggle="tooltip"]').tooltip("disable");   
@@ -312,7 +1609,7 @@
             for (var i = 0; i < sidebartext.length; i ++) {
                 sidebartext[i].style.display = 'flex';
             }
-            document.getElementById("grid-body").style.gridTemplateColumns = "auto auto";
+            document.getElementById("grid-body").style.gridTemplateColumns = "200px auto";
             document.getElementById("hide-sidebar").style.display = "flex";
             document.getElementById("show-sidebar").style.display = "none";
             document.getElementById("content").style.width = "100%";
@@ -320,6 +1617,39 @@
                 $('[data-toggle="tooltip"]').tooltip("disable");   
             });
         }
+
+        //www.w3schools.com/howto/tryit.asp?filename=tryhow_js_matchmedia
+        function adjustSidebar(x) {
+        if (x.matches) { // If media query matches
+            var sidebartext = document.getElementsByClassName('sidebar-text');
+            for (var i = 0; i < sidebartext.length; i ++) {
+                sidebartext[i].style.display = 'none';
+            }
+            document.getElementById("grid-body").style.gridTemplateColumns = "35px auto";
+            document.getElementById("hide-sidebar").style.display = "none";
+            document.getElementById("show-sidebar").style.display = "none";
+            document.getElementById("content").style.width = "90%";
+            $(document).ready(function(){
+                $('[data-toggle="tooltip"]').tooltip("enable");   
+            });
+        } else {
+            var sidebartext = document.getElementsByClassName('sidebar-text');
+            for (var i = 0; i < sidebartext.length; i ++) {
+                sidebartext[i].style.display = 'flex';
+            }
+            document.getElementById("grid-body").style.gridTemplateColumns = "200px auto";
+            document.getElementById("hide-sidebar").style.display = "flex";
+            document.getElementById("show-sidebar").style.display = "none";
+            document.getElementById("content").style.width = "100%";
+            $(document).ready(function(){
+                $('[data-toggle="tooltip"]').tooltip("disable");   
+            });
+        }
+        }
+
+        var x = window.matchMedia("(max-width: 1040px)")
+        adjustSidebar(x) // Call listener function at run time
+        x.addListener(adjustSidebar) // Attach listener function on state changes
 
     </script>
     <script type="text/javascript" src = {% static 'javascript/emphistory.js' %}>  </script>

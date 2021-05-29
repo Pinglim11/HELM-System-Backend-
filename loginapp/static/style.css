@@ -64,6 +64,13 @@ h2 {
     color: var(--dark-gray);
 }
 
+.error {
+    color: red;
+    font-size: 11px;
+    position: absolute;
+    margin: 0;
+}
+
 /* grid */
 
 #grid-body {
@@ -71,7 +78,7 @@ h2 {
     padding: 0;
     display: grid;
     grid-template-rows: 45px calc(100% - 45px);
-    grid-template-columns: auto auto;
+    grid-template-columns: 200px auto;
     grid-template-areas: "header header" "sidebar content";
 }
 
@@ -388,6 +395,7 @@ and (max-width:1045px){
         padding: 0;
         display: flex;
         flex-wrap: nowrap;
+        justify-content: space-evenly;
     }
 
     .section-flex div {
@@ -402,10 +410,23 @@ and (max-width:1045px){
         margin: 0;
     }
 
+    .section-flex div div div div {
+        margin-bottom: 0;
+        margin-right: 15px;
+    }
+
+    .section-flex div div div div div{
+        margin: 15px 0;
+    }
+
+    .section-flex div div div div:last-child {
+        margin: 0;
+    }
+
     .section-column {
         margin: 0;
         padding: 0;
-        width: 300px;
+        width: 100%;
         display: block;
     }
 
@@ -432,13 +453,29 @@ and (max-width:1045px){
     }
 
     @media screen
-    and (max-width: 685px){
+    and (max-width: 625px){
         .section-flex {
             flex-wrap: wrap;
         }
         .section-flex div {
+            margin-right: 0;
             margin-bottom: 15px;
         }
+    }
+
+    @media screen
+    and (max-width: 950px){
+        .section-flex div div div{
+            flex-wrap: wrap;
+        }
+        .section-flex div div div div {
+            margin-right: 0;
+            margin-bottom: 15px;
+        }
+    }
+
+    @media screen
+    and (max-width: 1040px){
         #grid-body {
             grid-template-columns: 35px auto;
         }
@@ -453,7 +490,7 @@ and (max-width:1045px){
     @media screen
     and (max-width: 435px){
         .section-flex div {
-            margin-right: 30px;
+            margin-right: 0px;
         }
     }
 
@@ -559,7 +596,12 @@ input {
     border-color: var(--dark-gray);
     border-radius: 3px;
     box-sizing: border-box;
-    max-width: 300px;
+    min-width: 60px;
+    /* max-width: 300px; */
+}
+
+input::placeholder {
+    color: var(--dark-gray);
 }
 
 input:focus {
@@ -597,6 +639,7 @@ button svg {
         color: var(--white);
         background: var(--green);
         border-color: var(--green);
+        min-width: 60px;
     }
 
     .primary-btn svg path {
@@ -619,6 +662,7 @@ button svg {
         color: var(--black);
         background: var(--light-gray);
         border-color: var(--gray);
+        min-width: 60px;
     }
 
     .secondary-btn svg path {
@@ -853,6 +897,20 @@ th {
 
 td {
     border-bottom: 0.5px solid var(--white);
+}
+
+/* select */
+
+select {
+    padding: 0px 4px;
+    height: 30px;
+    background: none;
+    border-width: 0.5px;
+    border-style: solid;
+    border-color: var(--dark-gray);
+    border-radius: 3px;
+    box-sizing: border-box;
+    /* max-width: 300px */
 }
 
 /* scrollbar */

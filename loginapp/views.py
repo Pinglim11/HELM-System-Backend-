@@ -57,7 +57,7 @@ def employeeform(request):
         searchposition = request.POST.get('searchposition')
         searchempstatus = request.POST.get('searchempstatus')
         employees = Employee.objects.filter(deletehide = 0)
-        print(request.POST)
+        
         if searchempid != '' or searchempid != None:
             if searchempid.isdecimal():
                 employees = employees.filter(employeeid = int(searchempid))

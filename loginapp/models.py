@@ -5,6 +5,7 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
+from onesimus.settings import TIME_ZONE
 from django.db import models
 
 class Awards(models.Model):
@@ -234,7 +235,7 @@ class SpouseBackground(models.Model):
     spousename = models.CharField(db_column='spouseName', max_length=20)  # Field name made lowercase.
     spousecompany = models.CharField(db_column='spouseCompany', max_length=20, blank=True, null=True)  # Field name made lowercase.
     spousecompanyaddress = models.CharField(db_column='spouseCompanyAddress', max_length=20, blank=True, null=True)  # Field name made lowercase.
-    numberofchildren = models.IntegerField(db_column='numberOfChildren', blank=True, null=True)  # Field name made lowercase.
+    numberofchildren = models.IntegerField(db_column='numberOfChildren', blank=True, null=True, default=0)  # Field name made lowercase.
     spouseid = models.AutoField(db_column='spouseId', primary_key=True)  # Field name made lowercase.
     def __str__(self):
         return self.spousename + ', id = ' + str(self.spouseid)
