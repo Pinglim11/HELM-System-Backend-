@@ -3,28 +3,28 @@ let emphisform = document.querySelectorAll(".emphis-form");
 let container = document.querySelector("#emphisform-container");
 let addButton = container.querySelector("#emphisadd-form");
 let removeButton = container.querySelector("#emphisremove-form");
-let totalForms = container.querySelector("#id_form-TOTAL_FORMS");
+let totalForms = container.querySelector("#4_form-TOTAL_FORMS");
 let blocker = container.querySelector('emphisblocker');
 
 let familyform = document.querySelectorAll(".family-form");
 let familycontainer = document.querySelector("#familyform-container");
 let familyaddButton = familycontainer.querySelector("#familyadd-form");
 let familyremoveButton = familycontainer.querySelector("#familyremove-form");
-let familytotalForms = familycontainer.querySelector("#id_form-TOTAL_FORMS");
+let familytotalForms = familycontainer.querySelector("#6_form-TOTAL_FORMS");
 let familyblocker = familycontainer.querySelector('familyblocker');
 
 let educationform = document.querySelectorAll(".education-form");
 let educationcontainer = document.querySelector("#educationform-container");
 let educationaddButton = educationcontainer.querySelector("#educationadd-form");
 let educationremoveButton = educationcontainer.querySelector("#educationremove-form");
-let educationtotalForms = educationcontainer.querySelector("#id_form-TOTAL_FORMS");
+let educationtotalForms = educationcontainer.querySelector("#5_form-TOTAL_FORMS");
 let educationblocker = educationcontainer.querySelector('educationblocker');
 
 let childform = document.querySelectorAll(".child-form");
 let childcontainer = document.querySelector("#childform-container");
 let childaddButton = childcontainer.querySelector("#childadd-form");
 let childremoveButton = childcontainer.querySelector("#childremove-form");
-let childtotalForms = childcontainer.querySelector("#id_form-TOTAL_FORMS");
+let childtotalForms = childcontainer.querySelector("#8_form-TOTAL_FORMS");
 let childblocker = childcontainer.querySelector('childblocker');
 //EVENTS
 addButton.addEventListener('click', function() {

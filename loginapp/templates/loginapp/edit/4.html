@@ -92,41 +92,33 @@
             
             <div id="container">
 
-               
+                <!--
                 <div class="section">
 
                     <div class="section-container">
 
-                        
-                        
+                        <form action="" method="post">
+                        {% csrf_token %}
 
                             <div class="section-header">
 
                                 <div class="section-title">
-                                <h1>{{ employee.informationid.employeename }}'s Employee Record</h1> 
-                                &nbsp;<span class="subtitle">#{{ employee.employeeid }}</span>
-								</div>
-							<div class="section-buttons">
-								<button class="primary-btn" onclick="location.href='/home/employee/{{ employee.employeeid }}/upload'" type="button">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7.127 22.564l-7.126 1.436 1.438-7.125 5.688 5.689zm-4.274-7.104l5.688 5.689 15.46-15.46-5.689-5.689-15.459 15.46z"/></svg>
-                                    Upload Record
-                                </button>
-                                <button class="primary-btn" onclick="location.href='/home/employee/{{ employee.employeeid }}/editrecord'" type="button">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7.127 22.564l-7.126 1.436 1.438-7.125 5.688 5.689zm-4.274-7.104l5.688 5.689 15.46-15.46-5.689-5.689-15.459 15.46z"/></svg>
-                                    Edit
-                                </button>
-                                <button id="more-options-btn" class="icon-btn">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 18c1.657 0 3 1.343 3 3s-1.343 3-3 3-3-1.343-3-3 1.343-3 3-3zm0-9c1.657 0 3 1.343 3 3s-1.343 3-3 3-3-1.343-3-3 1.343-3 3-3zm0-9c1.657 0 3 1.343 3 3s-1.343 3-3 3-3-1.343-3-3 1.343-3 3-3z"/></svg>
-                                    <div class="dropdown">
-                                        <ul>
-                                            <li onclick="location.href='/home/employee/{{ employee.employeeid }}/delete'">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19.604 2.562l-3.346 3.137c-1.27-.428-2.686-.699-4.243-.699-7.569 0-12.015 6.551-12.015 6.551s1.928 2.951 5.146 5.138l-2.911 2.909 1.414 1.414 17.37-17.035-1.415-1.415zm-6.016 5.779c-3.288-1.453-6.681 1.908-5.265 5.206l-1.726 1.707c-1.814-1.16-3.225-2.65-4.06-3.66 1.493-1.648 4.817-4.594 9.478-4.594.927 0 1.796.119 2.61.315l-1.037 1.026zm-2.883 7.431l5.09-4.993c1.017 3.111-2.003 6.067-5.09 4.993zm13.295-4.221s-4.252 7.449-11.985 7.449c-1.379 0-2.662-.291-3.851-.737l1.614-1.583c.715.193 1.458.32 2.237.32 4.791 0 8.104-3.527 9.504-5.364-.729-.822-1.956-1.99-3.587-2.952l1.489-1.46c2.982 1.9 4.579 4.327 4.579 4.327z"/></svg>
-                                                Hide
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </button>
+                                    <h1>New Record</h1>
+                                </div>
+
+                                <div class="section-buttons">
+                                    <input class="primary-btn" type="submit" value="Submit">
+                                    <button class="secondary-btn" onclick="location.href='/home/employeeform'">
+                                        Cancel
+                                    </button>
+                                </div>
+
                             </div>
+
+                            <div class="section-block">
+
+                                <h2>Employee Record</h2>
+
                             </div>
 
                             <div class="section-flex">
@@ -141,7 +133,7 @@
                                                 <div class="section-row">
                                                     <div class="data">
                                                         <label>Employee ID:</label>
-                                                    <p>    {{ employee.employeeid }} </p>
+                                                        {{ record.employeeid }}
                                                     </div>
                                                 </div>
             
@@ -152,7 +144,7 @@
                                                 <div class="section-row">
                                                     <div class="data">
                                                         <label>Employment Status:</label>
-                                                      <p>   {{ employee.employmentstatus }} </p>
+                                                        {{ record.employmentstatus }}
                                                     </div>
                                                 </div>
             
@@ -169,7 +161,8 @@
                                                 <div class="section-row">
                                                     <div class="data">
                                                         <label>Department:</label>
-                                                       <p>  {{ employee.jobid.department }} </p>
+                                                        {{ record.department }}
+                                                        <input>
                                                     </div>
                                                 </div>
             
@@ -180,7 +173,8 @@
                                                 <div class="section-row">
                                                     <div class="data">
                                                         <label>Position:</label>
-                                                      <p>   {{ employee.jobid.position }} </p>
+                                                        {{ record.position }}
+                                                        <input>
                                                     </div>
                                                 </div>
             
@@ -197,7 +191,8 @@
                                                 <div class="section-row">
                                                     <div class="data">
                                                         <label>Region:</label>
-                                                      <p>   {{ employee.branch.region }} </p>
+                                                        {{ record.region }}
+                                                        <input>
                                                     </div>
                                                 </div>
             
@@ -208,7 +203,7 @@
                                                 <div class="section-row">
                                                     <div class="data">
                                                         <label>Branch:</label>
-                                                       <p>  {{ employee.branch.branch }} </p>
+                                                        {{ record.branch }}
                                                     </div>
                                                 </div>
             
@@ -229,7 +224,7 @@
                                                 <div class="section-row">
                                                     <div class="data">
                                                         <label>Start Date:</label>
-                                                     <p>    {{ employee.startdate }} </p>
+                                                        {{ record.startdate }}
                                                     </div>
                                                 </div>
             
@@ -240,7 +235,7 @@
                                                 <div class="section-row">
                                                     <div class="data">
                                                         <label>End Date:</label>
-                                                     <p>    {{ employee.enddate }} </p>
+                                                        {{ record.enddate }}
                                                     </div>
                                                 </div>
             
@@ -257,7 +252,7 @@
                                                 <div class="section-row">
                                                     <div class="data">
                                                         <label>Salary Type:</label>
-                                                      <p>   {{ employee.salarytype }} </p>
+                                                        {{ record.salarytype }}
                                                     </div>
                                                 </div>
             
@@ -268,7 +263,7 @@
                                                 <div class="section-row">
                                                     <div class="data">
                                                         <label>Salary:</label>
-                                                      <p>   {{ employee.salary }} </p>
+                                                        {{ record.salary }}
                                                     </div>
                                                 </div>
             
@@ -277,39 +272,21 @@
                                         </div>
                                     </div>
 
-                                    
+                                    <div class="section-row">
+                                        <div class="data">
+                                            <label>Job ID:</label>
+                                            {{ record.jobid }}
+                                        </div>
+                                    </div>
 
                                 </div>
 
                             </div>
 
-                            
+                            <div class="section-block">
+                                
+                                <h2>Employee Personal Information</h2>
 
-                        
-
-                    </div>
-
-                </div>
-
-                <div class="section">
-
-                    <div class="section-container">
-
-                        
-                        
-
-                            <div class="section-header">
-
-                                <div class="section-title">
-                                    <h1>Employee Personal Information</h1>
-                                    
-                                </div>
-								 <div class="section-buttons">
-                                <button class="primary-btn" onclick="location.href='/home/employee/{{ employee.employeeid }}/editpersonal'" type="button">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7.127 22.564l-7.126 1.436 1.438-7.125 5.688 5.689zm-4.274-7.104l5.688 5.689 15.46-15.46-5.689-5.689-15.459 15.46z"/></svg>
-                                    Edit
-                                </button>
-								</div>
                             </div>
 
                             <div class="section-flex">
@@ -318,8 +295,8 @@
 
                                     <div class="section-row">
                                         <div class="data">
-                                            <label>Name:</label>
-                                           <p> {{ information.employeename }} </p>
+                                            <label>Employee Name:</label>
+                                            {{ record.employeename }}
                                         </div>
                                     </div>
 
@@ -331,7 +308,7 @@
                                                 <div class="section-row">
                                                     <div class="data">
                                                         <label>Contact Number:</label>
-                                                      <p>  {{ information.contactnumber }} </p>
+                                                        {{ record.contactnumber }}
                                                     </div>
                                                 </div>
             
@@ -342,7 +319,7 @@
                                                 <div class="section-row">
                                                     <div class="data">
                                                         <label>Birth Date:</label>
-                                                     <p>   {{ information.birthdate }} </p>
+                                                        {{ record.birthdate }}
                                                     </div>
                                                 </div>
             
@@ -359,7 +336,7 @@
                                                 <div class="section-row">
                                                     <div class="data">
                                                         <label>Gender:</label>
-                                                      <p>  {{ information.gender }} </p>
+                                                        {{ record.gender }}
                                                     </div>
                                                 </div>
 
@@ -370,7 +347,7 @@
                                                 <div class="section-row">
                                                     <div class="data">
                                                         <label>Civil Status:</label>
-                                                      <p>  {{ information.civilstatus }} </p>
+                                                        {{ record.civilstatus }}
                                                     </div>
                                                 </div>
             
@@ -387,8 +364,8 @@
                                                 <div class="section-row">
                                                     <div class="data">
                                                         <label>Citizenship:</label>
-                                                      <p>  {{ information.citizenship }} </p>
-                                                    </div> 
+                                                        {{ record.citizenship }}
+                                                    </div>
                                                 </div>
             
                                             </div>
@@ -398,7 +375,7 @@
                                                 <div class="section-row">
                                                     <div class="data">
                                                         <label>Religion:</label>
-                                                      <p>  {{ information.religion }} </p>
+                                                        {{ record.religion }}
                                                     </div>
                                                 </div>
             
@@ -419,7 +396,7 @@
                                                 <div class="section-row">
                                                     <div class="data">
                                                         <label>Number of Dependent:</label>
-                                                      <p>  {{ information.numberofdependent }} </p>
+                                                        {{ record.numberofdependent }}
                                                     </div>
                                                 </div>
             
@@ -430,7 +407,7 @@
                                                 <div class="section-row">
                                                     <div class="data">
                                                         <label>Blood Type:</label>
-                                                      <p>  {{ information.bloodtype }} </p>
+                                                        {{ record.bloodtype }}
                                                     </div>
                                                 </div>
             
@@ -442,14 +419,14 @@
                                     <div class="section-row">
                                         <div class="data">
                                             <label>Present Address:</label>
-                                           <p> {{ information.presentaddress }} </p>
+                                            {{ record.presentaddress }}
                                         </div>
                                     </div>
 
                                     <div class="section-row">
                                         <div class="data">
                                             <label>Permanent Address:</label>
-                                          <p>  {{ information.permanentaddress }} </p>
+                                            {{ record.permanentaddress }}
                                         </div>
                                     </div>
 
@@ -457,33 +434,10 @@
 
                             </div>
 
-                           
+                            <div class="section-block">
+                                
+                                <h2>Emergency Details</h2>
 
-                        
-
-                    </div>
-
-                </div>
-
-                <div class="section">
-
-                    <div class="section-container">
-
-                        
-                        
-
-                            <div class="section-header">
-
-                                <div class="section-title">
-                                    <h1>Emergency Details</h1>
-                                    
-                                </div>
-								 <div class="section-buttons">
-                                <button class="primary-btn" onclick="location.href='/home/employee/{{ employee.employeeid }}/editemergency'" type="button">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7.127 22.564l-7.126 1.436 1.438-7.125 5.688 5.689zm-4.274-7.104l5.688 5.689 15.46-15.46-5.689-5.689-15.459 15.46z"/></svg>
-                                    Edit
-                                </button>
-								</div>
                             </div>
 
                             <div class="section-flex">
@@ -493,7 +447,7 @@
                                     <div class="section-row">
                                         <div class="data">
                                             <label>Emergency Contact Name:</label>
-                                           <p> {{ emergency.emergencycontactnumber}} </p>
+                                            {{ record.emergencycontactname }}
                                         </div>
                                     </div>
 
@@ -505,7 +459,7 @@
                                                 <div class="section-row">
                                                     <div class="data">
                                                         <label>Emergency Contact Number:</label>
-                                                      <p>  {{ emergency.emergencycontactname}} </p>
+                                                        {{ record.emergencycontactnumber }}
                                                     </div>
                                                 </div>
             
@@ -516,7 +470,7 @@
                                                 <div class="section-row">
                                                     <div class="data">
                                                         <label>Relationship:</label>
-                                                     <p>   {{ emergency.emergencyrelationship }} </p>
+                                                        {{ record.emergencyrelationship }}
                                                     </div>
                                                 </div>
             
@@ -532,7 +486,7 @@
                                     <div class="section-row">
                                         <div class="data">
                                             <label>Emergency Address:</label>
-                                         <p>   {{ emergency.emergencyaddress }} </p>
+                                            {{ record.emergencyaddress }}
                                         </div>
                                     </div>
 
@@ -540,41 +494,68 @@
 
                             </div>
 
-                            
+                            <div class="section-header">
 
+                                <div class="section-buttons-bottom">
+                                    <input class="primary-btn" type="submit" value="Submit" style="margin-right: 15px;">
+                                    <button class="secondary-btn" onclick="location.href='/home/employeeform'">
+                                        Cancel
+                                    </button>
+                                </div>
+                        </div>
                         
+                        </form>
 
                     </div>
 
-                </div>
+                </div>-->
+
 
                 <div class="section">
 
                     <div class="section-container">
 
-                        
-                        
-
+                        <form action="" method="post">
+                        {% csrf_token %}
+						
+						
                             <div id = "emphisform-container">
 
                                 <div class="section-header">
 
                                     <div class="section-title">
                                         <h1>Employment History</h1>
-                                        
+                                        &nbsp;<span class="subtitle">4 of 8</span>
                                     </div>
-									
 
-                                     <div class="section-buttons">
-                                <button class="primary-btn" onclick="location.href='/home/employee/{{ employee.employeeid }}/editemphistory'" type="button">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7.127 22.564l-7.126 1.436 1.438-7.125 5.688 5.689zm-4.274-7.104l5.688 5.689 15.46-15.46-5.689-5.689-15.459 15.46z"/></svg>
-                                    Edit
-                                </button>
-								</div>
+                                    <div class="section-buttons">
+                                        <button class="secondary-btn" id="emphisremove-form" type="button" style="display: none;">
+                                            Remove
+                                        </button>
+                                        <button class="secondary-btn" id="emphisadd-form" type="button">
+                                            Add
+                                        </button>
+                                    </div>
                                 </div>
 
-                                    
-                                    {% for data in emphistory %}
+                                    {{form.management_form}}
+                                    {% for form in form %}
+									<p>
+										{% if form.errors %}
+										{% for field in form %}
+											{% for error in field.errors %}
+												<div class="alert alert-danger">
+													<strong>{{ error|escape }}</strong>
+												</div>
+											{% endfor %}
+										{% endfor %}
+										{% for error in form.non_field_errors %}
+											<div class="alert alert-danger">
+												<strong>{{ error|escape }}</strong>
+											</div>
+										{% endfor %}
+									{% endif %}
+									</p>
                                     <div class="emphis-form">
 
                                         <div class="section-block">
@@ -585,7 +566,7 @@
                                                     <div class="section-row">
                                                         <div class="data">
                                                             <label>Previous Company Name:</label>
-                                                           <p> {{ data.previouscompanyname }}</p>  
+                                                            {{ form.previouscompanyname }}
                                                         </div>
                                                     </div>
 
@@ -597,7 +578,7 @@
                                                                 <div class="section-row">
                                                                     <div class="data">
                                                                         <label>Previous Position:</label>
-                                                                    <p>    {{ data.previousposition }}</p>  
+                                                                        {{ form.previousposition }}
                                                                     </div>
                                                                 </div>
                             
@@ -608,7 +589,7 @@
                                                                 <div class="section-row">
                                                                     <div class="data">
                                                                         <label>Reason for Leaving:</label>
-                                                                     <p>   {{ data.reasonforleaving }}</p>  
+                                                                        {{ form.reasonforleaving }}
                                                                     </div>
                                                                 </div>
                             
@@ -628,7 +609,7 @@
                                                                 <div class="section-row">
                                                                     <div class="data">
                                                                         <label>Company Contact Number:</label>
-                                                                     <p>   {{ data.companycontactnumber }}</p>  
+                                                                        {{ form.companycontactnumber }}
                                                                     </div>
                                                                 </div>
                             
@@ -639,7 +620,7 @@
                                                                 <div class="section-row">
                                                                     <div class="data">
                                                                         <label>With COE or Clearance:</label>
-                                                                     <p>   {{ data.withcoeorclearance }} </p>  
+                                                                        {{ form.withcoeorclearance }}
                                                                     </div>
                                                                 </div>
                             
@@ -656,383 +637,49 @@
 
                                     </div>
                                     {% endfor %}
-                                    
+                                    <div id = "emphisblocker"></div>
 
                             </div>
-
-                            
-                        
-                        
-
-                    </div>
-
-                </div>
-
-                <div class="section">
-
-                    <div class="section-container">
-
-                        
-                        
-
-                            <div id = "educationform-container">
-
-                                <div class="section-header">
-
-                                    <div class="section-title">
-                                        <h1>Educational Background</h1>
-                                        
-                                    </div>
-
-                                     <div class="section-buttons">
-                                <button class="primary-btn" onclick="location.href='/home/employee/{{ employee.employeeid }}/editeducation'" type="button">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7.127 22.564l-7.126 1.436 1.438-7.125 5.688 5.689zm-4.274-7.104l5.688 5.689 15.46-15.46-5.689-5.689-15.459 15.46z"/></svg>
-                                    Edit
-                                </button>
-								</div>
-                                </div>
-									<div class="section-block">
-                                    <div class="section-flex" style="margin: 30px 0">
-                                    <div class="section-column">
-                            
-										<div class="section-row">
-											<div class="data">
-												<label>Highest Degree:</label>
-											 <p>   {{ degree }}</p>
-											</div>
-										</div>
-	
-									</div>
-									</div>
-									</div>
-                                    {% for data in education %}
-                                    <div class="education">
-
-                                        <div class="section-block">
-
-                                            <div class="section-flex" style="margin: 30px 0">
-
-                                                <div class="section-column">
-                                                    
-                                                    <div class="section-row">
-                                                        <div class="data">
-                                                            <label>School Name:</label>
-                                                           <p> {{ data.schoolname }}</p>
-                                                        </div>
-                                                    </div>
-    
-                                                    <div class="section-block">
-                                                        <div class="section-flex">
-                
-                                                            <div class="section-column">
-                            
-                                                                <div class="section-row">
-                                                                    <div class="data">
-                                                                        <label>School Type:</label>
-                                                                     <p>   {{ data.schooltype }}</p>
-                                                                    </div>
-                                                                </div>
-                            
-                                                            </div>
-                            
-                                                            
-                            
-                                                        </div>
-                                                    </div>
-                                                </div>
-    
-                                                <div class="section-column">
-                                                    <div class="section-block">
-                                                        <div class="section-flex">
-                
-                                                            <div class="section-column">
-                            
-                                                                <div class="section-row">
-                                                                    <div class="data">
-                                                                        <label>Starting Year Attended:</label>
-                                                                     <p>   {{ data.startingyearattended }}</p>
-                                                                    </div>
-                                                                </div>
-                            
-                                                            </div>
-                            
-                                                            <div class="section-column">
-                            
-                                                                <div class="section-row">
-                                                                    <div class="data">
-                                                                        <label>Ending Year Attended:</label>
-                                                                      <p>  {{ data.endingyearattended }}</p>
-                                                                    </div>
-                                                                </div>
-                            
-                                                            </div>
-                            
-                                                        </div>
-                                                    </div>
-                                                    
-                                                </div>
-                                            
-                                            </div>
-                                            
-                                        </div>
-
-                                    </div>
-                                    {% endfor %}
-                                    
-
-                            </div>
-
-                            
-                        
-                        
-
-                    </div>
-
-                </div>
-
-                <div class="section">
-
-                    <div class="section-container">
-
-                        
-                        
-
-                            <div id = "familyform-container">
-
-                                <div class="section-header">
-
-                                    <div class="section-title">
-                                        <h1>Family Member Background</h1>
-                                        
-                                    </div>
-
-                                     <div class="section-buttons">
-                                <button class="primary-btn" onclick="location.href='/home/employee/{{ employee.employeeid }}/editfamily'" type="button">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7.127 22.564l-7.126 1.436 1.438-7.125 5.688 5.689zm-4.274-7.104l5.688 5.689 15.46-15.46-5.689-5.689-15.459 15.46z"/></svg>
-                                    Edit
-                                </button>
-								</div>
-                                </div>
-
-                                    
-                                    {% for data in family %}
-                                    <div class="family">
-
-                                        <div class="section-block">
-
-                                            <div class="section-flex" style="margin: 30px 0">
-
-                                                <div class="section-column">
-                                                    <div class="section-row">
-                                                        <div class="data">
-                                                            <label>Name:</label>
-                                                         <p>   {{ data.membername }} </p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="section-block">
-                                                        <div class="section-flex">
-                
-                                                            <div class="section-column">
-                            
-                                                                <div class="section-row">
-                                                                    <div class="data">
-                                                                        <label>Age:</label>
-                                                                     <p>   {{ data.memberage }}</p>
-                                                                    </div>
-                                                                </div>
-                            
-                                                            </div>
-                            
-                                                            <div class="section-column">
-                            
-                                                                <div class="section-row">
-                                                                    <div class="data">
-                                                                        <label>Relationship:</label>
-                                                                    <p>    {{ data.memberrelationship }}</p>
-                                                                    </div>
-                                                                </div>
-                            
-                                                            </div>
-                            
-                                                        </div>
-                                                    </div>
-                                                    
-                                                </div>
-    
-                                                <div class="section-column">
-                                                    <div class="section-row">
-                                                        <div class="data">
-                                                            <label>Occupation:</label>
-                                                           <p> {{ data.memberoccupation }}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            
-                                            </div>
-                                            
-                                        </div>
-
-                                    </div>
-                                    {% endfor %}
-                               
-
-                            </div>
-
-                            
-                        
-                        
-
-                    </div>
-
-                </div>
-
-                <div class="section">
-
-                    <div class="section-container">
-
-                        
-                        
 
                             <div class="section-header">
 
-                                <div class="section-title">
-                                    <h1>Spouse Background</h1>
-                                    
-                                </div>
-								 <div class="section-buttons">
-                                <button class="primary-btn" onclick="location.href='/home/employee/{{ employee.employeeid }}/editspouse'" type="button">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7.127 22.564l-7.126 1.436 1.438-7.125 5.688 5.689zm-4.274-7.104l5.688 5.689 15.46-15.46-5.689-5.689-15.459 15.46z"/></svg>
-                                    Edit
-                                </button>
-								</div>
-                            </div>
-
-                            <div class="section-flex">
-
-                                <div class="section-column">
-
-                                    <div class="section-row">
-                                        <div class="data">
-                                            <label>Name:</label>
-                                         <p>   {{ spouse.spousename }}</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="section-row">
-                                        <div class="data">
-                                            <label>Number of Children:</label>
-                                         <p>   {{ spouse.numberofchildren }}</p>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div class="section-column">
-
-                                    <div class="section-row">
-                                        <div class="data">
-                                            <label>Company:</label>
-                                           <p> {{ spouse.spousecompany }}</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="section-row">
-                                        <div class="data">
-                                            <label>Company Address:</label>
-                                            <p>{{ spouse.spousecompanyaddress }}</p>
-                                        </div>
-                                    </div>
-
+                                <div class="section-buttons-bottom">
+                                    <input class="primary-btn" type="submit" value="Submit">
                                 </div>
 
                             </div>
-
-                            
-
                         
+                        </form>
 
                     </div>
 
                 </div>
 
-                <div class="section">
-
-                    <div class="section-container">
-
-                        
-                        
-
-                            <div id = "childform-container">
-
-                                <div class="section-header">
-
-                                    <div class="section-title">
-                                        <h1>Child Background</h1>
-                                        
-                                    </div>
-
-                                     <div class="section-buttons">
-                                <button class="primary-btn" onclick="location.href='/home/employee/{{ employee.employeeid }}/editchild'" type="button">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7.127 22.564l-7.126 1.436 1.438-7.125 5.688 5.689zm-4.274-7.104l5.688 5.689 15.46-15.46-5.689-5.689-15.459 15.46z"/></svg>
-                                    Edit
-                                </button>
-								</div>
-                                </div>
-
-                                   
-                                    {% for data in children %}
-                                    <div class="child">
-
-                                        <div class="section-block">
-
-                                            <div class="section-flex" style="margin: 30px 0">
-
-                                                <div class="section-column">
-                                                    <div class="section-row">
-                                                        <div class="data">
-                                                            <label>Name:</label>
-                                                            <p>{{ data.childname }}</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="section-row">
-                                                        <div class="data">
-                                                            <label>Age:</label>
-                                                            <p>{{ data.childage }}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="section-column">
-                                                    <div class="section-row">
-                                                        <div class="data">
-                                                            <label>Occupation:</label>
-                                                            <p>{{ data.childoccupation }}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            
-                                            </div>
-                                            
-                                        </div>
-
-                                    </div>
-                                    {% endfor %}
-   
-
-                            </div>
-
-                            
-                        
-                        
-
-                    </div>
-
-                </div>
 
             </div>
             
-            
+            <div id="pop-up">
+
+                <div class="section-block">
+                    <button class="icon-btn" onclick="collapse()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-11z"/></svg>
+                    </button>
+                </div>
+
+                <div class="section-header">
+
+                    <div class="section-title">
+                        <h2>Filter</h2>
+                    </div>
+
+                    <div class="section-buttons">
+                        <button class="secondary-btn">Clear All</button>
+                    </div>
+                    
+                </div>
+
+                
+            </div>
 
         </div>
 
@@ -1113,7 +760,7 @@
         x.addListener(adjustSidebar) // Attach listener function on state changes
 
     </script>
-
+    <script type="text/javascript" src = {% static 'javascript/editemphistory.js' %}>  </script>
 
 </body>
 

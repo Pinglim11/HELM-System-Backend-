@@ -7,6 +7,11 @@ from .models import Employee, EmployeePersonalInfo,EmployeePosition,EmployeeWork
   
 # create a ModelForm 
 
+def checkmodel(classmodel, **kwargs):
+    try:
+        return classmodel.objects.get(**kwargs)
+    except classmodel.DoesNotExist:
+        return None
 
 class EmployeeDocument(forms.Form):
     recordfile = forms.FileField()
@@ -30,7 +35,7 @@ class ExampleModelForm(forms.Form):
             'my_date_field': DateInput()
         }
 
-class EmployeeRequiredRecordForm(forms.Form):
+class EmployeeRecordForm(forms.Form):
     #Employee Record
     employeeid = forms.IntegerField()  
     startdate = forms.DateTimeField(widget = DateInput, initial=datetime.datetime.now())  
@@ -40,7 +45,29 @@ class EmployeeRequiredRecordForm(forms.Form):
     salary = forms.FloatField(min_value=0.00, max_value=100000000.00, initial=0.00)
     branch = forms.ModelChoiceField(EmployeeWorkLocation.objects.all())
     jobid = forms.ModelChoiceField(EmployeePosition.objects.all())
+
+    def clean(self):
+        cd = super().clean()
+       
+        if checkmodel(Employee, employeeid = int(cd.get('employeeid'))) != None:
+            raise forms.ValidationError(('Employee ID Already exist in the system!'), code = 'duplicate')
+
+        return cd
+
+class EditRecordForm(forms.Form):
+    #Employee Record
+    employeeid = forms.IntegerField()  
+    startdate = forms.DateTimeField(widget = DateInput, initial=datetime.datetime.now())  
+    enddate = forms.DateTimeField(required = False, widget = DateInput)  
+    employmentstatus = forms.ChoiceField( choices = (('Probationary', 'Probationary'), ('Seasonal', 'Seasonal'), ('Project-Based', 'Project-Based'), ('Reliever', 'Reliever')))  
+    salarytype = forms.ChoiceField( choices = (('Monthly', 'Monthly'), ('Daily', 'Daily'), ('Piece Rate', 'Piece Rate')))  
+    salary = forms.FloatField(min_value=0.00, max_value=100000000.00, initial=0.00)
+    branch = forms.ModelChoiceField(EmployeeWorkLocation.objects.all())
+    jobid = forms.ModelChoiceField(EmployeePosition.objects.all())
+
+    
     #Emplyoee Personal Info
+class EmployeePersonalForm(forms.Form):
     employeename = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'placeholder': 'Last Name, First Name M.I.'}))
     gender = forms.ChoiceField( choices = (('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')))  
     birthdate = forms.DateField(widget = DateInput)  
@@ -53,6 +80,8 @@ class EmployeeRequiredRecordForm(forms.Form):
     permanentaddress = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Unit No., Bldg., Street, Village, Brgy., City, Province'}))  
     contactnumber = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': '09XX-XXX-YYYY'}))  
     #Emergency Details
+
+class EmergencyForm(forms.Form):
     emergencycontactnumber = forms.IntegerField(widget=forms.NumberInput(attrs={'placeholder': '09XX-XXX-YYYY'}))  
     emergencycontactname = forms.CharField(max_length=20)  
     emergencyrelationship = forms.CharField(max_length=20, required = False)  
@@ -73,7 +102,7 @@ class SpouseForm(forms.Form):
     numberofchildren = forms.IntegerField( required = False, min_value=0, max_value=20, initial=0)  
 
 class EmploymentHistoryForm(forms.Form): 
-    previouscompanyname = forms.CharField( max_length=20)  
+    previouscompanyname = forms.CharField( max_length=20, required = False)  
     previousposition = forms.CharField( max_length=20, required = False)  
     reasonforleaving = forms.CharField( max_length=20, required = False)  
     companycontactnumber = forms.CharField( max_length=20, required = False, widget=forms.NumberInput(attrs={'placeholder': '09XX-XXX-YYYY'}))  
@@ -81,20 +110,20 @@ class EmploymentHistoryForm(forms.Form):
 
 class EducationalBackgroundForm(forms.Form): 
     schooltypes = (('Grade School', 'Grade School'), ('High School', 'High School'), ('College', 'College'), ('Post Grad', 'Post Grad'), ('Vocational', 'Vocational'))
-    highestdegree = forms.ChoiceField( choices = schooltypes, required = False)  
-    schoolname = forms.CharField( max_length=20)  
-    startingyearattended = forms.DateField(widget = DateInput)  
-    endingyearattended = forms.DateField(widget = DateInput)  
+    highestdegree = forms.ChoiceField( choices = schooltypes)  
+    schoolname = forms.CharField( max_length=20, required = False)  
+    startingyearattended = forms.DateField(widget = DateInput, required = False)  
+    endingyearattended = forms.DateField(widget = DateInput, required = False)  
     schooltype = forms.ChoiceField( choices = schooltypes)
 
 class FamilyMemberBackgroundForm(forms.Form): 
-    membername = forms.CharField( max_length=20, widget=forms.TextInput(attrs={'placeholder': 'Last Name, First Name M.I.'}))  
+    membername = forms.CharField( max_length=20, widget=forms.TextInput(attrs={'placeholder': 'Last Name, First Name M.I.'}), required = False)  
     memberage = forms.IntegerField( required = False)  
     memberrelationship = forms.ChoiceField( choices = (('Mother', 'Mother'), ('Father', 'Father'), ('Brother', 'Brother'), ('Sister', 'Sister'), ('Younger Brother', 'Younger Brother'), ('Younger Sister', 'Younger Sister')))  
     memberoccupation = forms.CharField( max_length=20, required = False)     
 
 
 class ChildBackgroundForm(forms.Form): 
-    childname = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'placeholder': 'Last Name, First Name M.I.'}))  
+    childname = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'placeholder': 'Last Name, First Name M.I.'}), required = False)  
     childage = forms.IntegerField(required = False)  
     childoccupation = forms.CharField(max_length=20, required = False)  

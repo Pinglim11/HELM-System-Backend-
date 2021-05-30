@@ -19,6 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path('', views.home, name = 'home'),
     path('employeeform', views.employeeform, name = 'employeeform'),
     path('createrecord', views.createrecord, name = 'createrecord'),
     path('test', views.testing, name='test'),
@@ -28,12 +29,19 @@ urlpatterns = [
     path('employee/<int:empid>/', views.employeeprof, name='record'),
     path('download/<int:did>/', views.download, name='download'),
     path('document/<int:did>/', views.document, name='document'),
-    path('employee/<int:empid>/edit', views.employeeedit, name='edit'),
+    path('employee/<int:empid>/editrecord', views.editrecord, name='editrecord'),
+    path('employee/<int:empid>/editpersonal', views.editpersonal, name='editpersonal'),
+    path('employee/<int:empid>/editemergency', views.editemergency, name='editemergency'),
+    path('employee/<int:empid>/editemphistory', views.editemphistory, name='editemphistory'),
+    path('employee/<int:empid>/editeducation', views.editeducation, name='editeducation'),
+    path('employee/<int:empid>/editfamily', views.editfamily, name='editfamily'),
+    path('employee/<int:empid>/editspouse', views.editspouse, name='editspouse'),
+    path('employee/<int:empid>/editchild', views.editchild, name='editchild'),
     path('employee/<int:empid>/delete', views.employeedelete, name='delete'),
     path('employee/<int:empid>/upload', views.uploademployeerecord, name='upload'),
     path('viewtest_awards', views.viewtest_awards, name='viewtest_awards'),
     path('viewtest_discipline', views.viewtest_discipline, name='viewtest_discipline'),
-    path('viewtest_viewreport', views.viewtest_viewreport, name='viewtest_viewreport')
+    path('viewreport', views.viewreport, name='viewreport')
 
 ] +  static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)# + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 

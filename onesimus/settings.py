@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'loginapp',
+    'formtools',
 ]
 
 MIDDLEWARE = [
@@ -131,5 +132,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 #LOGIN
 
-LOGIN_REDIRECT_URL  = '/home/employeeform'
+LOGIN_REDIRECT_URL  = '/home'
 LOGOUT_REDIRECT_URL = '/accounts/login'
