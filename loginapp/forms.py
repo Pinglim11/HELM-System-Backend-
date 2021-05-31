@@ -91,11 +91,11 @@ class AwardsRecord(forms.Form):
         return cd
 
 
+
 class AwardsRecordEdit(forms.Form):
     memoreferencenumber = forms.IntegerField()  
     recordname = forms.CharField(max_length=20)  
     memodate = forms.DateField(required = False, widget = DateInput)  
-    
     recorddescription = forms.CharField(required = False)  
     awardissuer = forms.CharField(max_length=20)  
     issuingbranch = forms.CharField(max_length=20)  
@@ -110,6 +110,69 @@ class AwardsRecordEdit(forms.Form):
             raise forms.ValidationError(('Memo Reference Number already exist in the system!'), code = 'duplicate')
 
         return cd
+
+
+class DisciplineRecord(forms.Form):
+    memoreferencenumber = forms.IntegerField()  
+    recordname = forms.CharField(max_length=20)  
+    memodate = forms.DateField(required = False, widget = DateInput)  
+    recordfor = forms.ModelChoiceField(Employee.objects.all(), label = 'NOAC Receiver')
+    recorddescription = forms.CharField(required = False)  
+    issuingbranch = forms.CharField(max_length=20)  
+    issuingdepartment = forms.CharField(max_length=20)  
+    remarks = forms.CharField(max_length=50, required = False)
+    noactype = forms.ChoiceField( choices = (('Timekeeping', 'Timekeeping'), ('AWOL', 'AWOL'), ('Major', 'Major')))  
+    sanction= forms.CharField(max_length=20)
+    hearingdate = forms.DateTimeField(required = False, widget = DateInput)  
+    noofoffense = forms.IntegerField(required = False) 
+    
+    def clean(self):
+        cd = super().clean()
+        
+        if checkmodel(Record, memoreferencenumber = int(cd.get('memoreferencenumber'))) != None:
+            raise forms.ValidationError(('Memo Reference Number already exist in the system!'), code = 'duplicate')
+        if (cd.get('noactype') == 'Timekeeping' or cd.get('noactype') == 'AWOL') and cd.get('noofoffense') == None:
+            raise forms.ValidationError(('Number of Offense must be filled up for AWOL or Timekeeping!'), code = 'emptyfield')
+        
+        return cd
+
+
+class DisciplineRecordEdit(forms.Form):
+    memoreferencenumber = forms.IntegerField()  
+    recordname = forms.CharField(max_length=20)  
+    memodate = forms.DateField(required = False, widget = DateInput)  
+    recorddescription = forms.CharField(required = False)  
+    issuingbranch = forms.CharField(max_length=20)  
+    issuingdepartment = forms.CharField(max_length=20)  
+    remarks = forms.CharField(max_length=50, required = False)
+    noactype = forms.ChoiceField( choices = (('Timekeeping', 'Timekeeping'), ('AWOL', 'AWOL'), ('Major', 'Major')))  
+    sanction= forms.CharField(max_length=20)
+    hearingdate = forms.DateTimeField(required = False, widget = DateInput)  
+    noofoffense = forms.IntegerField(required = False) 
+    
+    def clean(self):
+        cd = super().clean()
+        obj = checkmodel(Record, memoreferencenumber = int(cd.get('memoreferencenumber'))) 
+        if obj != None and Record.objects.get(memoreferencenumber = self.initial['memoreferencenumber']) != obj :
+            raise forms.ValidationError(('Memo Reference Number already exist in the system!'), code = 'duplicate')
+        if (cd.get('noactype') == 'Timekeeping' or cd.get('noactype') == 'AWOL') and cd.get('noofoffense') == None:
+            raise forms.ValidationError(('Number of Offense must be filled up for AWOL or Timekeeping!'), code = 'emptyfield')
+
+        return cd
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class EmployeeRecordForm(forms.Form):
