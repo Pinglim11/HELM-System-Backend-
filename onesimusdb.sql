@@ -406,6 +406,7 @@ CREATE TABLE `document` (
   `receivedBy` varchar(20) NOT NULL,
   `receivedDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `memoReferenceNumber` int DEFAULT NULL,
+  `documenthide` BOOLEAN DEFAULT 0,
   PRIMARY KEY (`documentId`),
   KEY `employeeId` (`employeeId`),
   KEY `memoReferenceNumber` (`memoReferenceNumber`),

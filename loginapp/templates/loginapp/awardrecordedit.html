@@ -88,9 +88,11 @@
             </ul>
         </div>
 
+
         <div id="content">
+            
             <div id="container">
-                
+        
                 <div class="section">
 
                     <div class="section-container">
@@ -98,89 +100,55 @@
                         <div class="section-header">
 
                             <div class="section-title">
-                                <h1>Awards & Recognition</h1>
-                                &nbsp;<span class="subtitle"> </span>
+                                <h1>Create Awards</h1>
                             </div>
 
-                            <button class="primary-btn" onclick="location.href='/home/uploadaward'">
-                                <svg style="width:10px; height:10px;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z"/></svg>
-                                New Record
-                            </button>
+                            <div class="section-buttons">
+                                <button class="secondary-btn" onclick="location.href='/home/employeeform'">
+                                    Cancel
+                                </button>
+                                
+                            </div>
                         </div>
-		 <table>
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <label>
-                                            <button class="sort-btn sort-btn-selected" id="employee-id">
-                                                Employee Name
-                                                <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M0 16.67l2.829 2.83 9.175-9.339 9.167 9.339 2.829-2.83-11.996-12.17z"/></svg>
-                                            </button>
-                                        </label>
-                                    </th>
-                                    <th>
-                                        <label>
-                                            <button class="sort-btn" id="employee-name">Employee ID</button>
-                                        </label>
-                                    </th>
-                                    <th>
-                                        <label>
-                                            <button class="sort-btn" id="employee-name">Record Name</button>
-                                        </label>
-                                    </th>
-									 <th>
-                                        <label>
-                                            <button class="sort-btn" id="employee-name">Memo Reference Number</button>
-                                        </label>
-                                    </th>
-                                    <th>
-                                        <label>
-                                            <button class="sort-btn" id="employee-name">Author</button>
-                                        </label>
-                                    </th>
-                                    <th>
-                                        <label>
-                                            <button class="sort-btn" id="employee-name">Issuing Branch</button>
-                                        </label>
-                                    </th>
-                                    <th>
-                                        <label>
-                                            <button class="sort-btn" id="employee-name">Issuing Department</button>
-                                        </label>
-                                    </th>
-                                    <th>
-                                        <label>
-                                            <button class="sort-btn" id="employee-name">Award Type</button>
-                                        </label>
-                                    </th>
-                                    <th>
-                                        <label>
-                                            <button class="sort-btn" id="employee-name"></button>
-                                        </label>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for d in documents %}
-								    <tr>
-								        <td>{{ d.employeename}}</a></td>
-								        <td>{{ d.employeeid}}</td>
-								        <td>{{ d.recordname }}</td>
-										<td>{{ d.memoreferencenumber }}</td>
-								        <td>{{ d.author }}</td>
-								        <td>{{ d.issuingbranch }}</td>
-								        <td>{{ d.issuingdepartment }}</td>
-								        <td>{{ d.awardtype}}</td>
-                                        <td><a href="/home/awards/{{ d.documentid }}/"/>View</a></td>
-								    </tr>
-								
-								{% endfor %}
-                            </tbody>
-                        </table>
+
+                        <div class="section-block">
+                            <h2>Awards Record</h2>
                         </div>
+
+                        <div class="section-flex">
+						<form enctype="multipart/form-data" action="" method="post">
+						{% csrf_token %}
+						<p>
+										{% if form.errors %}
+										{% for field in form %}
+											{% for error in field.errors %}
+												<div class="alert alert-danger">
+													<strong>{{ error|escape }}</strong>
+												</div>
+											{% endfor %}
+										{% endfor %}
+										{% for error in form.non_field_errors %}
+											<div class="alert alert-danger">
+												<strong>{{ error|escape }}</strong>
+											</div>
+										{% endfor %}
+									{% endif %}
+									</p>
+						<div>
+						{{ form.as_table }}
+						
+						<input class="primary-btn" type="submit" value="Submit" style="margin-right: 15px;">
+						</div>
+						</form>
+                            
+                        
+
+                    </div>
+
                 </div>
-        
-		
+
+
+            </div>
             
             <div id="pop-up">
 
@@ -190,12 +158,87 @@
                     </button>
                 </div>
 
+                <div class="section-header">
+
+                    <div class="section-title">
+                        <h2>Filter</h2>
+                    </div>
+
+                    <div class="section-buttons">
+                        <button class="secondary-btn">Clear All</button>
+                    </div>
+                    
+                </div>
+
+                <div class="section-block">
+                    <div class="section-row">
+                        <div class="data">
+                            <label>Sort By:</label>
+                            <input value="Employee ID">
+                        </div>
+                    </div>
+                    <div class="section-row">
+                        <div class="data">
+                            <label>Employee ID:</label>
+                            <input >
+                        </div>
+                    </div>
+                    <div class="section-row">
+                        <div class="data">
+                            <label>Employee Name:</label>
+                            <input>
+                        </div>
+                    </div>
+                    <div class="section-row">
+                        <div class="data">
+                            <label>Department:</label>
+                            <input>
+                        </div>
+                    </div>
+                    <div class="section-row">
+                        <div class="data">
+                            <label>Position:</label>
+                            <input>
+                        </div>
+                    </div>
+                    <div class="section-row">
+                        <div class="data">
+                            <label>Employment Status:</label>
+                            <input>
+                        </div>
+                    </div>
+                    <div class="section-row">
+                        <div class="data">
+                            <label>Start Date:</label>
+                            <input>
+                        </div>
+                    </div>
+                    <div class="section-row">
+                        <div class="data">
+                            <label>End Date:</label>
+                            <input>
+                        </div>
+                    </div>
+                    <div class="section-row">
+                        <div class="data">
+                            <label>Salary (PHP):</label>
+                            <input>
+                        </div>
+                    </div>
+                    <div class="section-row">
+                        <div class="data">
+                            <label>Salary Type:</label>
+                            <input>
+                        </div>
+                    </div>
+                    
+                </div>
 
             </div>
-            </div>
+
         </div>
     </div>
-    <script type="text/javascript">  
+	 <script type="text/javascript">  
 
         $(document).ready(function(){
             $('[data-toggle="tooltip"]').tooltip("disable");   
@@ -237,7 +280,41 @@
             });
         }
 
+        //www.w3schools.com/howto/tryit.asp?filename=tryhow_js_matchmedia
+        function adjustSidebar(x) {
+        if (x.matches) { // If media query matches
+            var sidebartext = document.getElementsByClassName('sidebar-text');
+            for (var i = 0; i < sidebartext.length; i ++) {
+                sidebartext[i].style.display = 'none';
+            }
+            document.getElementById("grid-body").style.gridTemplateColumns = "35px auto";
+            document.getElementById("hide-sidebar").style.display = "none";
+            document.getElementById("show-sidebar").style.display = "none";
+            document.getElementById("content").style.width = "90%";
+            $(document).ready(function(){
+                $('[data-toggle="tooltip"]').tooltip("enable");   
+            });
+        } else {
+            var sidebartext = document.getElementsByClassName('sidebar-text');
+            for (var i = 0; i < sidebartext.length; i ++) {
+                sidebartext[i].style.display = 'flex';
+            }
+            document.getElementById("grid-body").style.gridTemplateColumns = "200px auto";
+            document.getElementById("hide-sidebar").style.display = "flex";
+            document.getElementById("show-sidebar").style.display = "none";
+            document.getElementById("content").style.width = "100%";
+            $(document).ready(function(){
+                $('[data-toggle="tooltip"]').tooltip("disable");   
+            });
+        }
+        }
+
+        var x = window.matchMedia("(max-width: 1040px)")
+        adjustSidebar(x) // Call listener function at run time
+        x.addListener(adjustSidebar) // Attach listener function on state changes
+
     </script>
+
 
 </body>
 

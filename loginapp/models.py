@@ -61,7 +61,7 @@ class Document(models.Model):
     receivedby = models.CharField(db_column='receivedBy', max_length=20)  # Field name made lowercase.
     receiveddate = models.DateTimeField(db_column='receivedDate')  # Field name made lowercase.
     memoreferencenumber = models.ForeignKey('Record', models.DO_NOTHING, db_column='memoReferenceNumber', blank=True, null=True)  # Field name made lowercase.
-
+    documenthide = models.IntegerField(blank=True, null=True)
     class Meta:
         managed = False
         db_table = 'document'

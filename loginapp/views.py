@@ -8,8 +8,8 @@ import datetime
 import os
 import re
 from django import forms
-from .forms import EmployeeRecordForm,EmployeePersonalForm,EmergencyForm,JobsForm, BranchForm, SpouseForm, EmploymentHistoryForm,EducationalBackgroundForm,FamilyMemberBackgroundForm,ChildBackgroundForm, EmployeeDocument, EditRecordForm
-from .models import Employee, EmployeePersonalInfo,EmployeePosition,EmployeeWorkLocation, ChildBackground,SpouseBackground,FamilyMemberBackground,EducationalBackground,EmploymentHistory, EmergencyDetails, Document
+from .forms import EmployeeRecordForm,EmployeePersonalForm,EmergencyForm,JobsForm, BranchForm, SpouseForm, EmploymentHistoryForm,EducationalBackgroundForm,FamilyMemberBackgroundForm,ChildBackgroundForm, EmployeeDocument, EditRecordForm, AwardsRecord, RecordDocument, AwardsRecordEdit
+from .models import Employee, EmployeePersonalInfo,EmployeePosition,EmployeeWorkLocation, ChildBackground,SpouseBackground,FamilyMemberBackground,EducationalBackground,EmploymentHistory, EmergencyDetails, Document, Record, Awards
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse, Http404
 from django.forms import formset_factory
@@ -19,6 +19,8 @@ from openpyxl.styles import Font
 from openpyxl.writer.excel import save_virtual_workbook
 from django.utils.encoding import smart_str
 from formtools.wizard.views import SessionWizardView
+from itertools import chain
+
     # Redirect to a success page.
 def checkmodel(classmodel, **kwargs):
     try:
@@ -36,10 +38,10 @@ def checkmodelq(classmodel, arg):
 @login_required
 def employeeform(request):
     employees = Employee.objects.filter(deletehide = 0).order_by('employeeid')
-    documents = Document.objects.filter(employeeid__deletehide = 0)
-    employeedocu = Document.objects.filter(Q(memoreferencenumber = None) , Q(employeeid__deletehide=0))
-    awards = Document.objects.filter(Q(memoreferencenumber__recordtype='Award'),Q(employeeid__deletehide=0))
-    discipline = Document.objects.filter(Q(memoreferencenumber__recordtype='Discipline'), Q(employeeid__deletehide=0))
+    documents = Document.objects.filter(employeeid__deletehide = 0).filter(documenthide = 0)
+    employeedocu = Document.objects.filter(Q(memoreferencenumber = None) , Q(employeeid__deletehide=0) , Q(documenthide=0))
+    awards = Document.objects.filter(Q(memoreferencenumber__recordtype='Award'),Q(employeeid__deletehide=0), Q(documenthide=0))
+    discipline = Document.objects.filter(Q(memoreferencenumber__recordtype='Discipline'), Q(employeeid__deletehide=0), Q(documenthide=0))
     context = {
     'employees': employees,
     'count': employees.count(),
@@ -117,6 +119,7 @@ def employeeprof(request,empid):
     education = EducationalBackground.objects.filter(informationid=information)
     family = FamilyMemberBackground.objects.filter(informationid=information)
     children = ChildBackground.objects.filter(informationid=information)
+    employeedocu = Document.objects.filter(Q(memoreferencenumber = None) , Q(employeeid__deletehide=0) , Q(documenthide=0))
     degree = None
     if education.count() >= 1:
         degree = education[0].highestdegree
@@ -130,6 +133,7 @@ def employeeprof(request,empid):
         'education':education,
         'family' :family,
         'children':children,
+        'documents': employeedocu,
 
     }
     return render(request, 'loginapp/prof.html', context)
@@ -177,6 +181,17 @@ def employeedelete(request,empid):
 
     return redirect('employeeform') #change for final product
 
+
+
+
+
+@login_required
+def documentsdelete(request,did):
+    document = get_object_or_404(Document, documentid=did)
+
+    document.documenthide = 1
+    document.save()
+    return redirect('viewtest_awards')
 # @login_required
 # def employeeedit(request,empid):
 #     employee = get_object_or_404(Employee, employeeid=empid)
@@ -939,11 +954,88 @@ def viewtest(request):
 
 @login_required
 def viewtest_awards(request):
-    documents = Document.objects.filter(memoreferencenumber__recordtype='Award')
+    documents = []#Document.objects.filter(memoreferencenumber__recordtype='Award')
+    for award in Awards.objects.all().iterator():
+        rec = award.amemoreferencenumber
+        document = Document.objects.get(memoreferencenumber = rec)
+        if document.documenthide == 0:
+            customdatadic = {
+                'documentid' : document.documentid,
+                'recordname' : rec.recordname,
+                'issuingbranch' : rec.issuingbranch,
+                'memoreferencenumber' : rec.memoreferencenumber,
+                'issuingdepartment' : rec.issuingdepartment,
+                'employeeid' : document.employeeid.employeeid,
+                'employeename' : document.employeeid.informationid.employeename,
+                'documentlink' : document.documentlink,
+                'author' : document.author,
+                'awardtype' : award.awardtype,
+            }
+            documents.append(customdatadic)
     context = {
     'documents': documents,
     }
     return render(request, 'loginapp/viewtest_awards.html',context)
+
+@login_required
+def awardsprofile(request, did):
+    document =Document.objects.get(documentid = did)
+    rec = document.memoreferencenumber
+    
+    award = get_object_or_404(Awards, amemoreferencenumber = rec)
+
+    
+    context = {
+    'document': document,
+    'record': rec,
+    'award': award,
+    }
+    return render(request, 'loginapp/awardprof.html',context)
+
+
+def editawardrecord(request,did):
+    document = get_object_or_404(Document, documentid =did)
+    rec = document.memoreferencenumber
+    award = get_object_or_404(Awards, amemoreferencenumber = rec)
+
+    requiredData = {
+    'memoreferencenumber' :rec.memoreferencenumber,
+    'recordname': rec.recordname,
+    'memodate': rec.memodate,
+    'recorddescription' : rec.recorddescription,
+    'awardissuer' : award.awardissuer,
+    'issuingbranch' : rec.issuingbranch,
+    'issuingdepartment': rec.issuingdepartment,
+    'awardpurpose': award.awardpurpose,
+    'awardtype' : award.awardtype,
+    }
+    recordform = AwardsRecordEdit(initial = requiredData)
+    if request.method == "POST":
+        recordform = AwardsRecordEdit(request.POST, initial = requiredData)
+        if recordform.is_valid():
+            award.awardtype = recordform.cleaned_data['awardtype']
+            award.awardpurpose = recordform.cleaned_data['awardpurpose']
+            award.awardissuer = recordform.cleaned_data['awardissuer']
+            rec.issuingbranch =recordform.cleaned_data['issuingbranch']
+            rec.issuingdepartment = recordform.cleaned_data['issuingdepartment']
+            rec.recorddescription = recordform.cleaned_data['recorddescription']
+            rec.memodate = recordform.cleaned_data['memodate']
+            rec.recordname = recordform.cleaned_data['recordname']
+            rec.memoreferencenumber = recordform.cleaned_data['memoreferencenumber']
+            
+            rec.save()
+            award.amemoreferencenumber = rec
+            award.save()
+            document.memoreferencenumber = rec
+            document.save()
+            return redirect('/home/awards/' + str(did))
+    context = {
+    'form': recordform,}
+    return render(request, 'loginapp/awardrecordedit.html',context)
+
+
+
+
 
 @login_required
 def viewtest_discipline(request):
@@ -961,10 +1053,10 @@ def home(request):
 
 @login_required
 def viewreport(request):
-    documents = Document.objects.filter(employeeid__deletehide = 0)
-    employeedocu = Document.objects.filter(Q(memoreferencenumber = None) , Q(employeeid__deletehide=0))
-    awards = Document.objects.filter(Q(memoreferencenumber__recordtype='Award'),Q(employeeid__deletehide=0))
-    discipline = Document.objects.filter(Q(memoreferencenumber__recordtype='Discipline'), Q(employeeid__deletehide=0))
+    documents = Document.objects.filter(employeeid__deletehide = 0).filter(documenthide = 0)
+    employeedocu = Document.objects.filter(Q(memoreferencenumber = None) , Q(employeeid__deletehide=0), Q(documenthide=0))
+    awards = Document.objects.filter(Q(memoreferencenumber__recordtype='Award'),Q(employeeid__deletehide=0), Q(documenthide=0))
+    discipline = Document.objects.filter(Q(memoreferencenumber__recordtype='Discipline'), Q(employeeid__deletehide=0), Q(documenthide=0))
     context = {
     'documentcount' : documents.count(),
     'employeedocucount' : employeedocu.count(),
@@ -1017,24 +1109,25 @@ def download(request,did):
     response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(file_name)
     return response
 
-
+@login_required
 def document(request,did):
     document = get_object_or_404(Document, documentid=did)
     path_to_file = document.documentlink
     file = open(path_to_file,'rb').read()
     response = HttpResponse(file)
-
     return response
+
+
 @login_required
 def genreport(request):
     wb = Workbook()
     ws = wb.active
     ws.title = 'General'
     employees = Employee.objects.filter(deletehide=0)
-    documents = Document.objects.filter(employeeid__deletehide = 0)
-    employeedocu = Document.objects.filter(Q(memoreferencenumber = None) , Q(employeeid__deletehide=0))
-    awards = Document.objects.filter(Q(memoreferencenumber__recordtype='Award'),Q(employeeid__deletehide=0))
-    discipline = Document.objects.filter(Q(memoreferencenumber__recordtype='Discipline'), Q(employeeid__deletehide=0))
+    documents = Document.objects.filter(employeeid__deletehide = 0).filter(documenthide = 0)
+    employeedocu = Document.objects.filter(Q(memoreferencenumber = None) , Q(employeeid__deletehide=0), Q(documenthide=0))
+    awards = Document.objects.filter(Q(memoreferencenumber__recordtype='Award'),Q(employeeid__deletehide=0), Q(documenthide=0))
+    discipline = Document.objects.filter(Q(memoreferencenumber__recordtype='Discipline'), Q(employeeid__deletehide=0)), Q(documenthide=0)
     curlevel = 2
     ## Handle Main Sheet
     ws['A1'] = 'Total Documents:'
@@ -1153,7 +1246,7 @@ def uploademployeerecord(request,empid):
 
         recordform = EmployeeDocument(request.POST, request.FILES)
         if recordform.is_valid():
-            time = datetime.date.today()
+            time = datetime.datetime.now()
             user = request.user.username
             recordfile = request.FILES['recordfile']
             dest = 'media/employee/' + str(empid) + '/employeerecords'
@@ -1175,13 +1268,248 @@ def uploademployeerecord(request,empid):
             approvedby = recordform.cleaned_data['approvedby'] ,
             approveddate = recordform.cleaned_data['approveddate']  ,
             receivedby =recordform.cleaned_data['receivedby']  ,
-            receiveddate = recordform.cleaned_data['receiveddate']
+            receiveddate = recordform.cleaned_data['receiveddate'],
+            documenthide = 0
             )
             return redirect('/home/employee/' + str(empid))
-    else:
-        recordform = EmployeeDocument()
-        return render(request, 'loginapp/recordtest.html',{'record':recordform})
+    
+    recordform = EmployeeDocument()
     return render(request, 'loginapp/recordtest.html',{'record':recordform})
+
+
+def editedocument(request,empid,did):
+    doc = get_object_or_404(Document, documentid=did)
+    employee = get_object_or_404(Employee, employeeid=empid)
+    initialdata = {
+    'preparedby' : doc.preparedby,
+    'preparationdate' : doc.preparationdate,
+    'notedby' : doc.notedby,
+    'noteddate' : doc.noteddate,
+    'approvedby' : doc.approvedby,
+    'approveddate' : doc.approveddate,
+    'receivedby': doc.receivedby,
+    'receiveddate' : doc.receiveddate,
+    }
+
+    if request.method == "POST":
+
+        recordform = EmployeeDocument(request.POST, request.FILES, initial = initialdata)
+        if recordform.is_valid():
+            time = datetime.datetime.now()
+            user = request.user.username
+            if request.FILES['recordfile']:
+                oldfilepath = os.path.splitext(doc.documentlink)
+                newfilename = oldfilepath[0] + datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + oldfilepath[1]
+                os.rename(doc.documentlink,newfilename)
+                recordfile = request.FILES['recordfile']
+                dest = 'media/employee/' + str(empid) + '/employeerecords'
+                fs = FileSystemStorage(location = dest, base_url = dest)
+                filename = fs.save(recordfile.name,recordfile)
+                fileurl = fs.url(filename)
+                doc.documentname = recordfile.name
+                doc.documentlink = fileurl
+
+            doc.dateandtimelastedited = time  
+            doc.recenteditor = user  
+            doc.preparedby = recordform.cleaned_data['preparedby']  
+            doc.preparationdate = recordform.cleaned_data['preparationdate']  
+            doc.notedby = recordform.cleaned_data['notedby'] 
+            doc.noteddate = recordform.cleaned_data['noteddate']  
+            doc.approvedby = recordform.cleaned_data['approvedby'] 
+            doc.approveddate = recordform.cleaned_data['approveddate']  
+            doc.receivedby =recordform.cleaned_data['receivedby']  
+            doc.receiveddate = recordform.cleaned_data['receiveddate']
+            doc.save()
+            return redirect('/home/employee/' + str(empid))
+    
+    recordform = EmployeeDocument(initial = initialdata)
+    return render(request, 'loginapp/recordtest.html',{'record':recordform})
+
+def editadocument(request,did):
+    doc = get_object_or_404(Document, documentid=did)
+    employee = doc.employeeid
+    empid = employee.employeeid
+    initialdata = {
+    'preparedby' : doc.preparedby,
+    'preparationdate' : doc.preparationdate,
+    'notedby' : doc.notedby,
+    'noteddate' : doc.noteddate,
+    'approvedby' : doc.approvedby,
+    'approveddate' : doc.approveddate,
+    'receivedby': doc.receivedby,
+    'receiveddate' : doc.receiveddate,
+    }
+
+    if request.method == "POST":
+
+        recordform = EmployeeDocument(request.POST, request.FILES, initial = initialdata)
+        if recordform.is_valid():
+            time = datetime.datetime.now()
+            user = request.user.username
+            if request.FILES['recordfile']:
+                oldfilepath = os.path.splitext(doc.documentlink)
+                newfilename = oldfilepath[0] + datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + oldfilepath[1]
+                os.rename(doc.documentlink,newfilename)
+                recordfile = request.FILES['recordfile']
+                dest = 'media/employee/' + str(empid) + '/awards'
+                fs = FileSystemStorage(location = dest, base_url = dest)
+                filename = fs.save(recordfile.name,recordfile)
+                fileurl = fs.url(filename)
+                doc.documentname = recordfile.name
+                doc.documentlink = fileurl
+
+            doc.dateandtimelastedited = time  
+            doc.recenteditor = user  
+            doc.preparedby = recordform.cleaned_data['preparedby']  
+            doc.preparationdate = recordform.cleaned_data['preparationdate']  
+            doc.notedby = recordform.cleaned_data['notedby'] 
+            doc.noteddate = recordform.cleaned_data['noteddate']  
+            doc.approvedby = recordform.cleaned_data['approvedby'] 
+            doc.approveddate = recordform.cleaned_data['approveddate']  
+            doc.receivedby =recordform.cleaned_data['receivedby']  
+            doc.receiveddate = recordform.cleaned_data['receiveddate']
+            doc.save()
+            return redirect('/home/awards/' + str(did))
+    
+    recordform = EmployeeDocument(initial = initialdata)
+    return render(request, 'loginapp/recordtest.html',{'record':recordform})
+
+
+
+AWARDSFORMS = [('1',  AwardsRecord ),
+('2',  RecordDocument ),
+]
+AWARDSTEMPLATES = {
+'1' : 'loginapp/awards/record.html',
+'2' : 'loginapp/awards/document.html',
+
+}
+class AwardsWizard(SessionWizardView):
+
+    file_storage = FileSystemStorage(location='/media/temporary')
+    def get_template_names(self):
+        return [AWARDSTEMPLATES[self.steps.current]]
+
+    def done(self, form_list, **kwargs):
+        #data = [form.cleaned_data for form in form_list] ##Ignore form list since sorting it out with ifs is a pain
+        record = self.get_cleaned_data_for_step('1')
+        document = self.get_cleaned_data_for_step('2')
+        destinationemployee = record['recordfor']
+        time = datetime.datetime.now()
+        user = self.request.user.username
+        recordfile = self.get_cleaned_data_for_step('2')['recordfile']
+        dest = 'media/employee/' + str(destinationemployee.employeeid) + '/awards'
+        fs = FileSystemStorage(location = dest, base_url = dest)
+        filename = fs.save(recordfile.name,recordfile)
+        fileurl = fs.url(filename)
+
+        recstorage = Record.objects.create(
+            memoreferencenumber = record['memoreferencenumber'],
+            recordname = record['recordname'],
+            memodate = record['memodate'],
+            issuingbranch = record['issuingbranch'],
+            recorddescription = record['recorddescription'],
+            recordtype = 'Award',
+            issuingdepartment = record['issuingdepartment'],
+
+
+        )
+
+        award = Awards.objects.create(
+            amemoreferencenumber = recstorage,
+            awardissuer = record['awardissuer'],
+            awardpurpose = record['awardpurpose'],
+            awardtype = record['awardtype']
+
+        )
+
+        Document.objects.create(
+        documentname = recordfile.name  ,
+        dateandtimecreated = time ,
+        documentlink = fileurl,
+        author = user,
+        dateandtimelastedited = time  ,
+        recenteditor = user  ,
+        employeeid =destinationemployee  ,
+        preparedby = document['preparedby']  ,
+        preparationdate = document['preparationdate']  ,
+        notedby = document['notedby'] ,
+        noteddate = document['noteddate']  ,
+        approvedby = document['approvedby'] ,
+        approveddate = document['approveddate']  ,
+        receivedby =document['receivedby']  ,
+        receiveddate = document['receiveddate'],
+        documenthide = 0,
+        memoreferencenumber = recstorage)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        return redirect('viewtest_awards')
+
+
+
+
+
+
+
+
+    def render_goto_step(self, goto_step, **kwargs):
+
+
+        form1 = self.get_form(self.storage.current_step, data=self.request.POST,files=self.request.FILES)
+        if form1.is_valid:
+            self.storage.set_step_data(self.storage.current_step, self.process_step(form1))
+            self.storage.set_step_files(self.storage.current_step, self.process_step_files(form1))
+
+
+        ######### this is from render_goto_step method
+        self.storage.current_step = goto_step
+
+        form = self.get_form(
+            data=self.storage.get_step_data(self.steps.current),
+            files=self.storage.get_step_files(self.steps.current),
+            )
+
+        return self.render(form)
+
+
+
+award_view = AwardsWizard.as_view(AWARDSFORMS)
+
+@login_required
+def uploadaward(request):
+     return award_view(request)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1199,6 +1527,33 @@ def testing(request):
                 EmployeeWorkLocation.objects.create(branch = branches.cleaned_data['branch'], region = branches.cleaned_data['region'])
 
     return render(request, 'loginapp/testing.html',{'branch' : branch})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1222,7 +1577,7 @@ RECORDTEMPLATES = {
 '7' : 'loginapp/create/7.html',
 '8' : 'loginapp/create/8.html',
 }
-class MyWizard(SessionWizardView):
+class EmployeeWizard(SessionWizardView):
 
     def get_template_names(self):
         return [RECORDTEMPLATES[self.steps.current]]
@@ -1367,27 +1722,7 @@ class MyWizard(SessionWizardView):
 
 
 
-
-
-    # def post(self, *args, **kwargs):
-    #     go_to_step = self.request.POST.get('wizard_goto_step', None)  # get the step name
-    #     form = self.get_form(data=self.request.POST, files=self.request.FILES)
-
-    #     current_index = self.get_step_index(self.steps.current)
-    #     goto_index = self.get_step_index(go_to_step)
-
-    #     if current_index > goto_index:
-    #         if form.is_valid():
-    #             self.storage.set_step_data(self.steps.current,
-    #                 self.process_step(form))
-    #             self.storage.set_step_files(self.steps.current,
-    #                 self.process_step_files(form))
-    #     else:
-    #         return self.render(form)
-    #     return super(MyWizard, self).post(*args, **kwargs)
-
-
-wizard_view = MyWizard.as_view(RECORDFORMS)
+wizard_view = EmployeeWizard.as_view(RECORDFORMS)
 
 @login_required
 def createrecord(request):
