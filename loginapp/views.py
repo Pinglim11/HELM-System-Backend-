@@ -20,6 +20,7 @@ from openpyxl.writer.excel import save_virtual_workbook
 from django.utils.encoding import smart_str
 from formtools.wizard.views import SessionWizardView
 from itertools import chain
+from operator import itemgetter
 
     # Redirect to a success page.
 def checkmodel(classmodel, **kwargs):
@@ -582,6 +583,57 @@ def viewtest_awards(request):
                 'awardtype' : award.awardtype,
             }
             documents.append(customdatadic)
+    if request.method == "POST":
+        sortbytype = request.POST.get('sorted')
+        searchempid = request.POST.get('searchempid')
+        searchempname = request.POST.get('searchempname')
+        searchrecordname = request.POST.get('searchrecordname')
+        searchmemoreferencenumber = request.POST.get('searchmemoreferencenumber')
+        searchissuingbranch = request.POST.get('searchissuingbranch')
+        searchissuingdepartment = request.POST.get('searchissuingdepartment')
+        searchawardtype = request.POST.get('searchawardtype')
+        if searchempid != '' or searchempid != None:
+            if searchempid.isdecimal():
+                documents = [d for d in documents if int(searchempid) == d['employeeid']]
+
+
+        if searchempname != '' :
+            if searchempname.replace(' ', '').replace('.',' ').isalpha(): ## This other condition can be removed, as long as it isn't empty is what it matters
+                documents = [d for d in documents if searchempname.lower() in d['employeename'].lower()]
+
+
+        if searchrecordname != '' :
+            if searchrecordname.replace(' ', '').replace('.',' ').isalpha():
+                documents = [d for d in documents if searchrecordname.lower() in d['recordname'].lower()]
+
+
+        if searchmemoreferencenumber != '' or searchmemoreferencenumber != None:
+            if searchmemoreferencenumber.isdecimal():
+                documents = [d for d in documents if int(searchmemoreferencenumber) == d['memoreferencenumber']]
+
+
+
+        if searchissuingbranch != '':
+            if searchissuingbranch.replace(' ', '').replace('.',' ').isalpha():
+                documents = [d for d in documents if searchissuingbranch.lower() in d['issuingbranch'].lower()]
+        
+        if searchissuingdepartment != '':
+            if searchissuingdepartment.replace(' ', '').replace('.',' ').isalpha():
+                documents = [d for d in documents if searchissuingdepartment.lower() in d['issuingdepartment'].lower()]
+
+        if searchawardtype != '':
+            if searchawardtype.replace(' ', '').replace('.',' ').isalpha():
+                documents = [d for d in documents if searchawardtype.lower() in d['awardtype'].lower()]
+
+        documents = sorted(documents, key = itemgetter(sortbytype))
+
+        context = {
+        'documents': documents,
+        }
+
+        return render(request, 'loginapp/viewtest_awards.html',context)
+    
+    documents = sorted(documents, key = itemgetter('employeename'))
     context = {
     'documents': documents,
     }
@@ -692,6 +744,58 @@ def viewtest_discipline(request):
                 'noactype' : doc.noactype,
             }
             documents.append(customdatadic)
+    
+    
+    if request.method == "POST":
+        sortbytype = request.POST.get('sorted')
+        searchempid = request.POST.get('searchempid')
+        searchempname = request.POST.get('searchempname')
+        searchrecordname = request.POST.get('searchrecordname')
+        searchmemoreferencenumber = request.POST.get('searchmemoreferencenumber')
+        searchissuingbranch = request.POST.get('searchissuingbranch')
+        searchissuingdepartment = request.POST.get('searchissuingdepartment')
+        searchNOACtype = request.POST.get('searchNOACtype')
+        if searchempid != '' or searchempid != None:
+            if searchempid.isdecimal():
+                documents = [d for d in documents if int(searchempid) == d['employeeid']]
+
+
+        if searchempname != '' :
+            if searchempname.replace(' ', '').replace('.',' ').isalpha(): ## This other condition can be removed, as long as it isn't empty is what it matters
+                documents = [d for d in documents if searchempname.lower() in d['employeename'].lower()]
+
+
+        if searchrecordname != '' :
+            if searchrecordname.replace(' ', '').replace('.',' ').isalpha():
+                documents = [d for d in documents if searchrecordname.lower() in d['recordname'].lower()]
+
+
+        if searchmemoreferencenumber != '' or searchmemoreferencenumber != None:
+            if searchmemoreferencenumber.isdecimal():
+                documents = [d for d in documents if int(searchmemoreferencenumber) == d['memoreferencenumber']]
+
+
+
+        if searchissuingbranch != '':
+            if searchissuingbranch.replace(' ', '').replace('.',' ').isalpha():
+                documents = [d for d in documents if searchissuingbranch.lower() in d['issuingbranch'].lower()]
+        
+        if searchissuingdepartment != '':
+            if searchissuingdepartment.replace(' ', '').replace('.',' ').isalpha():
+                documents = [d for d in documents if searchissuingdepartment.lower() in d['issuingdepartment'].lower()]
+
+        if searchNOACtype != '':
+            documents = [d for d in documents if searchNOACtype.lower() in d['noactype'].lower()]
+
+        documents = sorted(documents, key = itemgetter(sortbytype))
+
+        context = {
+        'documents': documents,
+        }
+
+        return render(request, 'loginapp/viewtest_discipline.html',context)
+    
+    documents = sorted(documents, key = itemgetter('employeename'))
     context = {
     'documents': documents,
     }
