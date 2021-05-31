@@ -104,7 +104,7 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M1 0h22l-9 15.094v8.906l-4-3v-5.906z"/></svg>
                                     Filter
                                 </button>
-                                <button class="primary-btn" onclick="location.href='{% url 'genreport' %}'">
+                                <button class="primary-btn" onclick="location.href='{{reportlink}}'">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M16 11h5l-9 10-9-10h5v-11h8v11zm1 11h-10v2h10v-2z"/></svg>
                                                 Download
                                 </button>
@@ -241,66 +241,71 @@
                 </div>
 
                 <div class="section-block">
+                    <form action="" method="post"> {% csrf_token %}
                     <div class="section-row">
                         <div class="data">
                             <label>Sort By:</label>
-                            <input value="Employee ID">
+                            <select class="form-control" name="sorted" id="sorted">
+                            <option value="employeeid">Employee ID</option>
+                            <option value="employeename">Employee Name</option>
+                            <option value="author">Author</option>
+                            <option value="recenteditor">Last Editor</option>
+                            <option value="documentname">Document Name</option>
+               
+                            </select>
                         </div>
                     </div>
                     <div class="section-row">
                         <div class="data">
                             <label>Employee ID:</label>
-                            <input >
+                            <input class="form-control" type = "number" name = "searchempid" id = "searchempid">
                         </div>
                     </div>
                     <div class="section-row">
                         <div class="data">
                             <label>Employee Name:</label>
-                            <input>
+                            <input class="form-control"  type="text"  name = "searchempname" id = "searchempname">
+                        </div>
+                    </div>
+                     <div class="section-row">
+                        <div class="data">
+                            <label>Branch:</label>
+                            <input class="form-control"  type="text" name = "searchbranch" id = "searchbranch">
+                        </div>
+                    </div>
+                    <div class="section-row">
+                        <div class="data">
+                            <label>Region:</label>
+                            <input class="form-control"  type="text"  name = "searchregion" id = "searchregion">
                         </div>
                     </div>
                     <div class="section-row">
                         <div class="data">
                             <label>Department:</label>
-                            <input>
+                            <input class="form-control"  type="text"  name = "searchdept" id = "searchdept">
                         </div>
                     </div>
                     <div class="section-row">
                         <div class="data">
                             <label>Position:</label>
-                            <input>
+                            <input class="form-control"  type="text" name = "searchposition" id = "searchposition">
                         </div>
                     </div>
                     <div class="section-row">
                         <div class="data">
                             <label>Employment Status:</label>
-                            <input>
+                            <select class="form-control" name="searchempstatus" id="searchempstatus">
+                            <option value=""></option>
+                            <option value="Probationary">Probationary</option>
+                            <option value="Seasonal">Seasonal</option>
+                            <option value="Project-Based">Project-Based</option>
+                            <option value="Reliever">Reliever</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="section-row">
-                        <div class="data">
-                            <label>Start Date:</label>
-                            <input>
-                        </div>
-                    </div>
-                    <div class="section-row">
-                        <div class="data">
-                            <label>End Date:</label>
-                            <input>
-                        </div>
-                    </div>
-                    <div class="section-row">
-                        <div class="data">
-                            <label>Salary (PHP):</label>
-                            <input>
-                        </div>
-                    </div>
-                    <div class="section-row">
-                        <div class="data">
-                            <label>Salary Type:</label>
-                            <input>
-                        </div>
-                    </div>
+                   <input type="submit" value="Submit">
+                    
+                </form> 
                     
                 </div>
 

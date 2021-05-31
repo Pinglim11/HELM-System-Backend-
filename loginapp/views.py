@@ -813,13 +813,93 @@ def viewreport(request):
     employeedocu = Document.objects.filter(Q(memoreferencenumber = None) , Q(employeeid__deletehide=0), Q(documenthide=0))
     awards = Document.objects.filter(Q(memoreferencenumber__recordtype='Award'),Q(employeeid__deletehide=0), Q(documenthide=0))
     discipline = Document.objects.filter(Q(memoreferencenumber__recordtype='Discipline'), Q(employeeid__deletehide=0), Q(documenthide=0))
+    reportlink = '/home/genreport'
     context = {
     'documentcount' : documents.count(),
     'employeedocucount' : employeedocu.count(),
     'awardscount' : awards.count(),
     'disciplinecount' : discipline.count(),
-    'documents': documents
+    'documents': documents,
+    'reportlink': reportlink
     }
+    if request.method == "POST":
+        sortbytype = request.POST.get('sorted')
+        searchempid = request.POST.get('searchempid')
+        searchempname = request.POST.get('searchempname')
+        searchbranch = request.POST.get('searchbranch')
+        searchregion = request.POST.get('searchregion')
+        searchdept = request.POST.get('searchdept')
+        searchposition = request.POST.get('searchposition')
+        searchempstatus = request.POST.get('searchempstatus')
+        employees = Employee.objects.filter(deletehide = 0)
+        passed = {}
+
+        if searchempid != '' or searchempid != None:
+            if searchempid.isdecimal():
+                employees = employees.filter(employeeid = int(searchempid))
+                passed['empid'] = searchempid
+            
+
+
+        if searchempname != '' :
+            if searchempname.replace(' ', '').replace('.',' ').isalpha(): ## This other condition can be removed, as long as it isn't empty is what it matters
+                employees = employees.filter(informationid__employeename__icontains = searchempname)
+                passed['empname'] = searchempname
+
+
+        if searchbranch != '' :
+            if searchbranch.replace(' ', '').replace('.',' ').isalpha():
+                employees = employees.filter(branch__branch__icontains = searchbranch)
+                passed['branch'] = searchbranch
+
+
+        if searchregion != '' :
+            if searchregion.replace(' ', '').replace('.',' ').isalpha():
+                employees = employees.filter(branch__region__icontains = searchregion)
+                passed['region'] = searchregion
+
+
+        if searchdept != '':
+            if searchdept.replace(' ', '').replace('.',' ').isalpha():
+                employees = employees.filter(jobid__department__icontains = searchdept)
+                passed['dept'] = searchdept
+
+
+        if searchposition != '':
+            if searchposition.replace(' ', '').replace('.',' ').isalpha():
+                employees = employees.filter(jobid__position__icontains = searchposition)
+                passed['position'] = searchposition
+
+        if searchempstatus != '':
+                employees = employees.filter(employmentstatus__icontains = searchempstatus)
+                passed['empstatus'] = searchempstatus
+
+        
+        
+        documents = documents.filter(employeeid__in= employees )
+
+
+        if sortbytype == 'employeename' :
+            documents = documents.order_by('employeeid__informationid__'+ sortbytype)
+        elif sortbytype == 'employeeid':
+            documents = documents.order_by('employeeid__'+ sortbytype)
+        else:
+            documents = documents.order_by(sortbytype)
+        employeedocu = Document.objects.filter(Q(memoreferencenumber = None) , Q(employeeid__deletehide=0), Q(documenthide=0)).filter(employeeid__in= employees )
+        awards = Document.objects.filter(Q(memoreferencenumber__recordtype='Award'),Q(employeeid__deletehide=0), Q(documenthide=0)).filter(employeeid__in= employees )
+        discipline = Document.objects.filter(Q(memoreferencenumber__recordtype='Discipline'), Q(employeeid__deletehide=0), Q(documenthide=0)).filter(employeeid__in= employees )
+        request.session['filterdata'] = passed
+        context = {
+        'documentcount' : documents.count(),
+        'employeedocucount' : employeedocu.count(),
+        'awardscount' : awards.count(),
+        'disciplinecount' : discipline.count(),
+        'documents': documents,
+        'reportlink': reportlink
+        }
+
+        return render(request, 'loginapp/viewreport.html', context)
+    request.session['filterdata'] = {}
     return render(request, 'loginapp/viewreport.html', context)
 
 
@@ -853,10 +933,47 @@ def genreport(request):
     ws = wb.active
     ws.title = 'General'
     employees = Employee.objects.filter(deletehide=0)
-    documents = Document.objects.filter(employeeid__deletehide = 0).filter(documenthide = 0)
-    employeedocu = Document.objects.filter(Q(memoreferencenumber = None) , Q(employeeid__deletehide=0), Q(documenthide=0))
-    awards = Document.objects.filter(Q(memoreferencenumber__recordtype='Award'),Q(employeeid__deletehide=0), Q(documenthide=0))
-    discipline = Document.objects.filter(Q(memoreferencenumber__recordtype='Discipline'), Q(employeeid__deletehide=0)), Q(documenthide=0)
+    filterdata = request.session['filterdata']
+    
+    if 'empid' in filterdata:
+        employees = employees.filter(employeeid = int(filterdata['empid']))
+
+
+    if 'empname' in filterdata:
+        employees = employees.filter(informationid__employeename__icontains = filterdata['empname'])
+
+
+
+    if 'branch' in filterdata:
+        
+        employees = employees.filter(branch__branch__icontains = filterdata['branch'])
+        
+
+
+    if 'region' in filterdata:
+        
+        employees = employees.filter(branch__region__icontains = filterdata['region'])
+           
+
+
+    if 'dept' in filterdata:
+       
+        employees = employees.filter(jobid__department__icontains = filterdata['dept'])
+           
+
+
+    if 'position' in filterdata:
+        
+        employees = employees.filter(jobid__position__icontains = filterdata['position'])
+           
+
+    if 'empstatus' in filterdata:
+        employees = employees.filter(employmentstatus__icontains = filterdata['empstatus'])
+           
+    documents = Document.objects.filter(employeeid__deletehide = 0).filter(documenthide = 0).filter(employeeid__in= employees )
+    employeedocu = Document.objects.filter(Q(memoreferencenumber = None) , Q(employeeid__deletehide=0), Q(documenthide=0)).filter(employeeid__in= employees )
+    awards = Document.objects.filter(Q(memoreferencenumber__recordtype='Award'),Q(employeeid__deletehide=0), Q(documenthide=0)).filter(employeeid__in= employees )
+    discipline = Document.objects.filter(Q(memoreferencenumber__recordtype='Discipline'), Q(employeeid__deletehide=0), Q(documenthide=0)).filter(employeeid__in= employees )
     curlevel = 2
     ## Handle Main Sheet
     ws['A1'] = 'Total Documents:'
