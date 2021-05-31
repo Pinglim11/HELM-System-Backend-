@@ -160,7 +160,7 @@ def documentsdelete(request,did):
 
     document.documenthide = 1
     document.save()
-    return redirect('viewtest_awards')
+    return redirect('viewtest_home')
 
 
 @login_required
@@ -674,7 +674,24 @@ def editawardrecord(request,did):
 
 @login_required
 def viewtest_discipline(request):
-    documents = Document.objects.filter(memoreferencenumber__recordtype='Discipline')
+    documents = []#Document.objects.filter(memoreferencenumber__recordtype='Discipline')
+    for doc in Noac.objects.all().iterator():
+        rec = doc.nmemoreferencenumber
+        document = Document.objects.get(memoreferencenumber = rec)
+        if document.documenthide == 0:
+            customdatadic = {
+                'documentid' : document.documentid,
+                'recordname' : rec.recordname,
+                'issuingbranch' : rec.issuingbranch,
+                'memoreferencenumber' : rec.memoreferencenumber,
+                'issuingdepartment' : rec.issuingdepartment,
+                'employeeid' : document.employeeid.employeeid,
+                'employeename' : document.employeeid.informationid.employeename,
+                'documentlink' : document.documentlink,
+                'author' : document.author,
+                'noactype' : doc.noactype,
+            }
+            documents.append(customdatadic)
     context = {
     'documents': documents,
     }
@@ -1261,7 +1278,7 @@ class DisciplineWizard(SessionWizardView):
         time = datetime.datetime.now()
         user = self.request.user.username
         recordfile = self.get_cleaned_data_for_step('2')['recordfile']
-        dest = 'media/employee/' + str(destinationemployee.employeeid) + '/awards'
+        dest = 'media/employee/' + str(destinationemployee.employeeid) + '/discipline'
         fs = FileSystemStorage(location = dest, base_url = dest)
         filename = fs.save(recordfile.name,recordfile)
         fileurl = fs.url(filename)

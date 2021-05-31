@@ -97,15 +97,21 @@
 
                         <div class="section-header">
 
+
                             <div class="section-title">
                                 <h1>Awards & Recognition</h1>
                                 &nbsp;<span class="subtitle"> </span>
                             </div>
-
+                            <div class="section-buttons">
                             <button class="primary-btn" onclick="location.href='/home/uploadaward'">
                                 <svg style="width:10px; height:10px;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z"/></svg>
                                 New Record
                             </button>
+                            <button class="secondary-btn" id='filter' onclick="filter()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M1 0h22l-9 15.094v8.906l-4-3v-5.906z"/></svg>
+                                Filter
+                            </button>
+                            </div>
                         </div>
 		 <table>
                             <thead>
@@ -150,7 +156,7 @@
                                     </th>
                                     <th>
                                         <label>
-                                            <button class="sort-btn" id="employee-name">Award Type</button>
+                                            <button class="sort-btn" id="employee-name">NOAC Type</button>
                                         </label>
                                     </th>
                                     <th>
@@ -182,16 +188,88 @@
         
 		
             
-            <div id="pop-up">
+                <div id="pop-up">
 
-                <div class="section-block">
-                    <button class="icon-btn" onclick="collapse()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-11z"/></svg>
-                    </button>
+                    <div class="section-header">
+    
+                        <div class="section-title">
+                            <h2>Filter</h2>
+                        </div>
+    
+                        <div class="section-buttons">
+                            <button class="icon-btn" onclick="collapse()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/></svg>
+                            </button>
+                        </div>
+                        
+                    </div>
+    
+                    <div class="section-block">
+                    <form action="" method="post"> {% csrf_token %}
+                        <div class="section-row">
+                            <div class="data">
+                                <label>Sort By:</label>
+                                <select class="form-control" name="sorted" id="sorted">
+                                <option value="employeename">Employee Name</option>
+                                <option value="employeeid">Employee ID</option>
+                                <option value="recordname">Record Name</option>
+                                <option value="memoreferencenumber">Memo Reference Number</option>
+                                <option value="author">Author</option>
+                                <option value="issuingbranch">Issuing Branch</option>
+                                <option value="issuingdepartment">Issuing Department</option>
+                                <option value="awardtype">NOAC Type</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="section-row">
+                            <div class="data">
+                                <label>Employee Name:</label>
+                                <input class="form-control"  type="text"  name = "searchempname" id = "searchempname">
+                            </div>
+                        </div>
+                        <div class="section-row">
+                            <div class="data">
+                                <label>Employee ID:</label>
+                                <input class="form-control" type = "number" name = "searchempid" id = "searchempid">
+                            </div>
+                        </div>
+                         <div class="section-row">
+                            <div class="data">
+                                <label>Record Name:</label>
+                                <input class="form-control"  type="text" name = "searchrecordname" id = "searchrecordname">
+                            </div>
+                        </div>
+                        <div class="section-row">
+                            <div class="data">
+                                <label>Memo Reference Number:</label>
+                                <input class="form-control"  type="number"  name = "searchmemoreferencenumber" id = "searchmemoreferencenumber">
+                            </div>
+                        </div>
+                        <div class="section-row">
+                            <div class="data">
+                                <label>Issuing Branch:</label>
+                                <input class="form-control"  type="text"  name = "searchissuingbranch" id = "searchissuingbranch">
+                            </div>
+                        </div>
+                        <div class="section-row">
+                            <div class="data">
+                                <label>Issuing Department:</label>
+                                <input class="form-control"  type="text" name = "searchissuingdepartment" id = "searchissuingdepartment">
+                            </div>
+                        </div>
+                        <div class="section-row">
+                            <div class="data">
+                                <label>NOAC Type:</label>
+                                <input class="form-control"  type="text" name = "searchNOACtype" id = "searchNOACtype">
+                            </div>
+                        </div>
+
+                       <input type="submit" value="Submit">
+                        
+                    </form>   
+                    </div>
+    
                 </div>
-
-
-            </div>
             </div>
         </div>
     </div>
