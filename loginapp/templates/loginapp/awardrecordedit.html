@@ -96,11 +96,30 @@
                 <div class="section">
 
                     <div class="section-container">
+                        <form enctype="multipart/form-data" action="" method="post">
+                            {% csrf_token %}
+                            <p>
+                                            {% if form.errors %}
+                                            {% for field in form %}
+                                                {% for error in field.errors %}
+                                                    <div class="alert alert-danger">
+                                                        <strong>{{ error|escape }}</strong>
+                                                    </div>
+                                                {% endfor %}
+                                            {% endfor %}
+                                            {% for error in form.non_field_errors %}
+                                                <div class="alert alert-danger">
+                                                    <strong>{{ error|escape }}</strong>
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                        </p>
 
                         <div class="section-header">
 
                             <div class="section-title">
                                 <h1>Create Awards</h1>
+								&nbsp;<span class="subtitle">1 of 2</span>
                             </div>
 
                             <div class="section-buttons">
@@ -116,39 +135,168 @@
                         </div>
 
                         <div class="section-flex">
-						<form enctype="multipart/form-data" action="" method="post">
-						{% csrf_token %}
-						<p>
-										{% if form.errors %}
-										{% for field in form %}
-											{% for error in field.errors %}
-												<div class="alert alert-danger">
-													<strong>{{ error|escape }}</strong>
-												</div>
-											{% endfor %}
-										{% endfor %}
-										{% for error in form.non_field_errors %}
-											<div class="alert alert-danger">
-												<strong>{{ error|escape }}</strong>
-											</div>
-										{% endfor %}
-									{% endif %}
-									</p>
-						<div>
-						{{ form.as_table }}
-						
-						<input class="primary-btn" type="submit" value="Submit" style="margin-right: 15px;">
-						</div>
-						</form>
                             
-                        
+                            <div class="section-column">
 
+                                <div class="section-block">
+                                    <div class="section-flex">
+
+                                        <div class="section-column">
+
+                                            <div class="section-row">
+                                                <div class="data">
+                                                    <label>Memo Reference Number:</label>
+                                                    {{ form.memoreferencenumber }}
+                                                </div>
+                                            </div>
+        
+                                        </div>
+        
+                                        <div class="section-column">
+
+                                            <div class="section-row">
+                                                <div class="data">
+                                                    <label>Record Name:</label>
+                                                    {{ form.recordname }}
+                                                </div>
+                                            </div>
+        
+                                        </div>
+        
+                                    </div>
+                                </div>
+
+                                <div class="section-block">
+                                    <div class="section-flex">
+
+                                        <div class="section-column">
+
+                                            <div class="section-row">
+                                                <div class="data">
+                                                    <label>Award Issuer:</label>
+                                                    {{ form.awardissuer }}
+                                                </div>
+                                            </div>
+        
+                                        </div>
+        
+                                        <div class="section-column">
+
+                                            <div class="section-row">
+                                                <div class="data">
+                                                    <label>Issuing Branch:</label>
+                                                    {{ form.issuingbranch }}
+                                                </div>
+                                            </div>
+        
+                                        </div>
+        
+                                    </div>
+                                </div>
+
+                                <div class="section-block">
+                                    <div class="section-flex">
+
+        
+                                        <div class="section-column">
+
+                                            <div class="section-row">
+                                                <div class="data">
+                                                    <label>Award Type:</label>
+                                                    {{ form.awardtype }}
+                                                </div>
+                                            </div>
+                                            <div class="section-row">
+                                                <div class="data">
+                                                    <label>Record Description:</label>
+                                                    {{ form.recorddescription }}
+                                                </div>
+                                            </div>
+                                            <button class="secondary-btn" name="goto_step" type="submit" value="2">Next</button>
+                                        </div>
+        
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="section-column">
+
+                                <div class="section-block">
+                                    <div class="section-flex">
+
+                                        <div class="section-column">
+
+                                            <div class="section-row">
+                                                <div class="data">
+                                                    <label>Memo Date:</label>
+                                                    {{ form.memodate }}
+                                                </div>
+                                            </div>
+        
+                                        </div>
+        
+                                        <div class="section-column">
+
+                                            <div class="section-row">
+                                                <div class="data">
+                                                    <label>Awards Receiver:</label>
+                                                    {{ form.recordfor }}
+                                                    
+                                                </div>
+                                            </div>
+        
+                                        </div>
+        
+                                    </div>
+                                </div>
+
+                                <div class="section-block">
+                                    <div class="section-flex">
+
+                                        <div class="section-column">
+        
+                                            <div class="section-row">
+                                                <div class="data">
+                                                    <label>Issuing Department:</label>
+                                                    {{ form.issuingdepartment }}
+                                                </div>
+                                            </div>
+        
+                                        </div>
+        
+                                        <div class="section-column">
+        
+                                            <div class="section-row">
+                                                <div class="data">
+                                                    <label>Award Purpose:</label>
+                                                    {{ form.awardpurpose }}
+                                                </div>
+                                            </div>
+        
+                                        </div>
+        
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                            
+                        </div>
+                            
+                                
+                                
+                                
+                                
+                                </form>
+                        </div>
+
+						
+                            
+                        </div>
+                        </div>
                     </div>
-
-                </div>
-
-
-            </div>
             
             <div id="pop-up">
 

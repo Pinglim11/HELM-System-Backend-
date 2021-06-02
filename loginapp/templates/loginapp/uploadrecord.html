@@ -94,53 +94,200 @@
             <div id="container">
         
                 <div class="section">
-					
+
                     <div class="section-container">
-						<p>
-										{% if record.errors %}
-										{% for field in record %}
-											{% for error in field.errors %}
-												<div class="alert alert-danger">
-													<strong>{{ error }}</strong>
-												</div>
-											{% endfor %}
-										{% endfor %}
-										{% for error in record.non_field_errors %}
-											<div class="alert alert-danger">
-												<strong>{{ error }}</strong>
-											</div>
-										{% endfor %}
-									{% endif %}
-									</p>
+                        <form enctype="multipart/form-data" action="" method="post">
+                            {% csrf_token %}
+                          
+                            <p>
+                                            {% if record.errors %}
+                                            {% for field in record %}
+                                                {% for error in field.errors %}
+                                                    <div class="alert alert-danger">
+                                                        <strong>{{ error|escape }}</strong>
+                                                    </div>
+                                                {% endfor %}
+                                            {% endfor %}
+                                            {% for error in record.non_field_errors %}
+                                                <div class="alert alert-danger">
+                                                    <strong>{{ error|escape }}</strong>
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                        </p>
+
                         <div class="section-header">
 
                             <div class="section-title">
-                                <h1>Upload New Record</h1>
+                                <h1>Create Discipline</h1>
+								&nbsp;<span class="subtitle">2 of 2</span>
                             </div>
 
-                     
+                            <div class="section-buttons">
+                                <button class="secondary-btn" onclick="location.href='/home/employeeform'">
+                                    Cancel
+                                </button>
+                                
+                            </div>
                         </div>
 
-                        
+                        <div class="section-block">
+                            <h2>DisciplineRecord</h2>
+                        </div>
 
                         <div class="section-flex">
-						<form enctype="multipart/form-data" action="" method="post">
-						{% csrf_token %}
-						
-						
-						{{ record.as_table }}
-						
-						<input type="submit" value="Submit">
-						
-						</form>
                             
-                        
+                            <div class="section-column">
 
+                                <div class="section-block">
+                                    <div class="section-flex">
+
+                                        <div class="section-column">
+
+                                            <div class="section-row">
+                                                <div class="data">
+                                                    <label>Record File:</label>
+                                                    {{ record.recordfile }}
+                                                </div>
+                                            </div>
+        
+                                        </div>
+        
+                                        <div class="section-column">
+
+                                            <div class="section-row">
+                                                <div class="data">
+                                                    <label>Prepared By:</label>
+                                                    {{ record.form.preparedby }}
+                                                </div>
+                                            </div>
+        
+                                        </div>
+        
+                                    </div>
+                                </div>
+
+                                <div class="section-block">
+                                    <div class="section-flex">
+
+                                        <div class="section-column">
+
+                                            <div class="section-row">
+                                                <div class="data">
+                                                    <label>Noted Date:</label>
+                                                    {{ record.form.noteddate }}
+                                                </div>
+                                            </div>
+        
+                                        </div>
+        
+                                        <div class="section-column">
+
+                                            <div class="section-row">
+                                                <div class="data">
+                                                    <label>Approved By:</label>
+                                                    {{ record.form.approvedby }}
+                                                </div>
+                                            </div>
+        
+                                        </div>
+        
+                                    </div>
+                                </div>
+
+                                <div class="section-block">
+                                    <div class="section-flex">
+
+        
+                                        <div class="section-column">
+
+                                            <div class="section-row">
+                                                <div class="data">
+                                                    <label>Received Date:</label>
+                                                    {{ record.form.receiveddate }}
+                                                </div>
+                                            </div>
+                                            <input class="primary-btn" type="submit" value="Submit" style="margin-right: 15px;">
+                        <button class="secondary-btn" formnovalidate="formnovalidate" name="wizard_goto_step" type="submit" value="1">Back</button>
+                                        </div>
+        
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="section-column">
+
+                                <div class="section-block">
+                                    <div class="section-flex">
+
+                                        <div class="section-column">
+
+                                            <div class="section-row">
+                                                <div class="data">
+                                                    <label>Preparation Date:</label>
+                                                    {{ record.form.preparationdate }}
+                                                </div>
+                                            </div>
+        
+                                        </div>
+        
+                                        <div class="section-column">
+
+                                            <div class="section-row">
+                                                <div class="data">
+                                                    <label>Noted By:</label>
+                                                    {{ record.form.notedby }}
+                                                    
+                                                </div>
+                                            </div>
+        
+                                        </div>
+        
+                                    </div>
+                                </div>
+
+                                <div class="section-block">
+                                    <div class="section-flex">
+
+                                        <div class="section-column">
+        
+                                            <div class="section-row">
+                                                <div class="data">
+                                                    <label>Approved Date:</label>
+                                                    {{ record.form.approveddate }}
+                                                </div>
+                                            </div>
+        
+                                        </div>
+        
+                                        <div class="section-column">
+        
+                                            <div class="section-row">
+                                                <div class="data">
+                                                    <label>Received By:</label>
+                                                    {{ record.form.receivedby }}
+                                                </div>
+                                            </div>
+        
+                                        </div>
+        
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                            
+                        </div> 
+                                </form>
+                        </div>
+
+						
+                            
+                        </div>
+                        </div>
                     </div>
-
-                </div>
-
-
             </div>
             
             <div id="pop-up">
