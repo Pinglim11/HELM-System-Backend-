@@ -518,6 +518,7 @@
                         <form action="" method="post">
                         {% csrf_token %}
 						{{ wizard.management_form }}
+						
                             <div id = "childform-container">
 
                                 <div class="section-header">
@@ -539,6 +540,22 @@
 
                                     {{wizard.form.management_form}}
                                     {% for form in wizard.form %}
+									<p>
+										{% if form.errors %}
+										{% for field in form %}
+											{% for error in field.errors %}
+												<div class="alert alert-danger">
+													<strong>{{ error|escape }}</strong>
+												</div>
+											{% endfor %}
+										{% endfor %}
+										{% for error in form.non_field_errors %}
+											<div class="alert alert-danger">
+												<strong>{{ error|escape }}</strong>
+											</div>
+										{% endfor %}
+									{% endif %}
+									</p>
                                     <div class="child-form">
 
                                         <div class="section-block">

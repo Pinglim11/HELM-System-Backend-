@@ -21,7 +21,7 @@ from django.utils.encoding import smart_str
 from formtools.wizard.views import SessionWizardView
 from itertools import chain
 from operator import itemgetter
-
+from notifications.signals import notify
     # Redirect to a success page.
 def checkmodel(classmodel, **kwargs):
     try:
@@ -142,7 +142,12 @@ def employeeprof(request,empid):
 @login_required
 def employeedelete(request,empid):
     employee = get_object_or_404(Employee, employeeid=empid)
-    employee.deletehide = 1
+    if employee.deletehide == 1:
+        employee.deletehide = 0
+        notify.send(request.user,recipient = User.objects.filter(groups__name = 'HR Manager'), verb = str(employee.employeeid) + ',' + employee.informationid.employeename + '`s Employee Record visible', description = request.user.username + ' has unhid ' + str(employee.employeeid) + ',' + employee.informationid.employeename + '`s Employee Record')
+    else:
+        employee.deletehide = 1
+        notify.send(request.user,recipient = User.objects.filter(groups__name = 'HR Manager'), verb = str(employee.employeeid) + ',' + employee.informationid.employeename + '`s Employee Record hidden', description = request.user.username + ' has hid ' + str(employee.employeeid) + ',' + employee.informationid.employeename + '`s Employee Record')
     employee.save()
 
 
@@ -158,8 +163,12 @@ def employeedelete(request,empid):
 @login_required
 def documentsdelete(request,did):
     document = get_object_or_404(Document, documentid=did)
-
-    document.documenthide = 1
+    if document.documenthide == 1:
+        document.documenthide = 0
+        notify.send(request.user,recipient = User.objects.filter(groups__name = 'HR Manager'), verb = str(did) + ',' + document.documentname + ' has been made visible', description = request.user.username + ' has unhid ' + str(did) + ',' + document.documentname )
+    else:
+        document.documenthide = 1
+        notify.send(request.user,recipient = User.objects.filter(groups__name = 'HR Manager'), verb = str(did) + ',' + document.documentname + ' has been hidden', description = request.user.username + ' has hid ' + str(did) + ',' + document.documentname )
     document.save()
     return redirect('viewtest_home')
 
@@ -189,6 +198,7 @@ def editrecord(request,empid):
             employee.branch = recordform.cleaned_data['branch']
             employee.jobid = recordform.cleaned_data['jobid']
             employee.save()
+            notify.send(request.user,recipient = User.objects.filter(groups__name = 'HR Manager'), verb = str(employee.employeeid) + ',' + employee.informationid.employeename + '`s Employee Record edited', description = request.user.username + ' has edited ' + str(employee.employeeid) + ',' + employee.informationid.employeename + '`s Employee Record: Record')
             return redirect('/home/employee/' + str(empid))
     recordform.fields['employeeid'].widget.attrs['readonly'] = True
     context = {
@@ -230,6 +240,7 @@ def editpersonal(request,empid):
             information.permanentaddress = recordform.cleaned_data['permanentaddress']
             information.contactnumber = recordform.cleaned_data['contactnumber']
             information.save()
+            notify.send(request.user,recipient = User.objects.filter(groups__name = 'HR Manager'), verb = str(employee.employeeid) + ',' + employee.informationid.employeename + '`s Employee Record edited', description = request.user.username + ' has edited ' + str(employee.employeeid) + ',' + employee.informationid.employeename + '`s Employee Record: Personal Information')
             return redirect('/home/employee/' + str(empid))
     context = {
     'form': recordform,}
@@ -277,6 +288,7 @@ def editemergency(request,empid):
                 emergency.emergencyaddress=recordform.cleaned_data['emergencyaddress']
                 emergency.save()
                 information.save()
+            notify.send(request.user,recipient = User.objects.filter(groups__name = 'HR Manager'), verb = str(employee.employeeid) + ',' + employee.informationid.employeename + '`s Employee Record edited', description = request.user.username + ' has edited ' + str(employee.employeeid) + ',' + employee.informationid.employeename + '`s Employee Record: Emergency Contact')
             return redirect('/home/employee/' + str(empid))
     context = {
     'form': recordform,}
@@ -337,6 +349,7 @@ def editemphistory(request,empid):
                         companycontactnumber= histories.cleaned_data['companycontactnumber'],
                         withcoeorclearance= histories.cleaned_data['withcoeorclearance']
                         )
+            notify.send(request.user,recipient = User.objects.filter(groups__name = 'HR Manager'), verb = str(employee.employeeid) + ',' + employee.informationid.employeename + '`s Employee Record edited', description = request.user.username + ' has edited ' + str(employee.employeeid) + ',' + employee.informationid.employeename + '`s Employee Record: Employment History')
             return redirect('/home/employee/' + str(empid))
     else:
         emphistoryform = emphistoryform1(initial = emphistoryData)
@@ -401,6 +414,7 @@ def editeducation(request,empid):
                         endingyearattended=educations.cleaned_data['endingyearattended'],
                         schooltype=educations.cleaned_data['schooltype']
                         )
+            notify.send(request.user,recipient = User.objects.filter(groups__name = 'HR Manager'), verb = str(employee.employeeid) + ',' + employee.informationid.employeename + '`s Employee Record edited', description = request.user.username + ' has edited ' + str(employee.employeeid) + ',' + employee.informationid.employeename + '`s Employee Record: Educational History')
             return redirect('/home/employee/' + str(empid))
     else:
 
@@ -459,6 +473,7 @@ def editfamily(request,empid):
                             memberrelationship= fammembers.cleaned_data['memberrelationship'],
                             memberoccupation= fammembers.cleaned_data['memberoccupation']
                         )
+            notify.send(request.user,recipient = User.objects.filter(groups__name = 'HR Manager'), verb = str(employee.employeeid) + ',' + employee.informationid.employeename + '`s Employee Record edited', description = request.user.username + ' has edited ' + str(employee.employeeid) + ',' + employee.informationid.employeename + '`s Employee Record: Family Background')
             return redirect('/home/employee/' + str(empid))
     else:
         
@@ -492,6 +507,7 @@ def editspouse(request,empid):
             elif spouseform.cleaned_data['spousename'] != None and spouseform.cleaned_data['spousecompany'] != None and spouseform.cleaned_data['numberofchildren'] != None:
                 temp = SpouseBackground.objects.create(spousename = spouseform.cleaned_data['spousename'], spousecompany = spouseform.cleaned_data['spousecompany'], spousecompanyaddress = spouseform.cleaned_data['spousecompanyaddress'], numberofchildren = spouseform.cleaned_data['numberofchildren'])
                 information.spouseid = temp
+            notify.send(request.user,recipient = User.objects.filter(groups__name = 'HR Manager'), verb = str(employee.employeeid) + ',' + employee.informationid.employeename + '`s Employee Record edited', description = request.user.username + ' has edited ' + str(employee.employeeid) + ',' + employee.informationid.employeename + '`s Employee Record: Spouse Background')
             return redirect('/home/employee/' + str(empid))
     context = {
     'form': spouseform,}
@@ -544,6 +560,7 @@ def editchild(request,empid):
                         childoccupation= famchild.cleaned_data['childoccupation'],
                         informationid= information
                         )
+            notify.send(request.user,recipient = User.objects.filter(groups__name = 'HR Manager'), verb = str(employee.employeeid) + ',' + employee.informationid.employeename + '`s Employee Record edited', description = request.user.username + ' has edited ' + str(employee.employeeid) + ',' + employee.informationid.employeename + '`s Employee Record: Child Background')
             return redirect('/home/employee/' + str(empid))
     else:
         childform = childform1(initial = childrenData)
@@ -715,6 +732,7 @@ def editawardrecord(request,did):
             award.save()
             document.memoreferencenumber = rec
             document.save()
+            notify.send(request.user,recipient = User.objects.filter(groups__name = 'HR Manager'), verb = rec.recordname +  ' Awards Record edited', description = request.user.username + ' has edited ' + rec.recordname + ',' + str(document.employeeid.employeeid)  + ',' + document.employeeid.informationid.employeename + '`s Award Record: Record')
             return redirect('/home/awards/' + str(did))
     context = {
     'form': recordform,}
@@ -803,9 +821,14 @@ def viewtest_discipline(request):
 
 @login_required
 def home(request):
-    return render(request, 'loginapp/home.html')
+    notifs = request.user.notifications.unread()
+    return render(request, 'loginapp/home.html' , context = {'notif': notifs})
 
-
+def markasread(request):
+    request.user.notifications.mark_all_as_deleted()
+    for x in request.user.notifications.deleted():
+        x.delete()
+    return redirect('home') #change for final product
 
 @login_required
 def viewreport(request):
@@ -824,6 +847,7 @@ def viewreport(request):
     }
     if request.method == "POST":
         sortbytype = request.POST.get('sorted')
+        searchdocumentname = request.POST.get('searchdocumentname')
         searchempid = request.POST.get('searchempid')
         searchempname = request.POST.get('searchempname')
         searchbranch = request.POST.get('searchbranch')
@@ -877,7 +901,12 @@ def viewreport(request):
         
         
         documents = documents.filter(employeeid__in= employees )
-
+        canbefilter = False
+        if searchdocumentname != '' :
+            if searchdocumentname.replace(' ', '').replace('.',' ').isalpha(): ## This other condition can be removed, as long as it isn't empty is what it matters
+                documents = documents.filter(documentname__icontains = searchdocumentname)
+                passed['docname'] = searchdocumentname
+                canbefilter = True
 
         if sortbytype == 'employeename' :
             documents = documents.order_by('employeeid__informationid__'+ sortbytype)
@@ -888,6 +917,10 @@ def viewreport(request):
         employeedocu = Document.objects.filter(Q(memoreferencenumber = None) , Q(employeeid__deletehide=0), Q(documenthide=0)).filter(employeeid__in= employees )
         awards = Document.objects.filter(Q(memoreferencenumber__recordtype='Award'),Q(employeeid__deletehide=0), Q(documenthide=0)).filter(employeeid__in= employees )
         discipline = Document.objects.filter(Q(memoreferencenumber__recordtype='Discipline'), Q(employeeid__deletehide=0), Q(documenthide=0)).filter(employeeid__in= employees )
+        if canbefilter:
+            employeedocu = employeedocu.filter(documentname__icontains = searchdocumentname)
+            awards = awards.filter(documentname__icontains = searchdocumentname)
+            discipline = discipline.filter(documentname__icontains = searchdocumentname)
         request.session['filterdata'] = passed
         context = {
         'documentcount' : documents.count(),
@@ -969,11 +1002,23 @@ def genreport(request):
 
     if 'empstatus' in filterdata:
         employees = employees.filter(employmentstatus__icontains = filterdata['empstatus'])
-           
+    
+    
+
+
     documents = Document.objects.filter(employeeid__deletehide = 0).filter(documenthide = 0).filter(employeeid__in= employees )
     employeedocu = Document.objects.filter(Q(memoreferencenumber = None) , Q(employeeid__deletehide=0), Q(documenthide=0)).filter(employeeid__in= employees )
     awards = Document.objects.filter(Q(memoreferencenumber__recordtype='Award'),Q(employeeid__deletehide=0), Q(documenthide=0)).filter(employeeid__in= employees )
     discipline = Document.objects.filter(Q(memoreferencenumber__recordtype='Discipline'), Q(employeeid__deletehide=0), Q(documenthide=0)).filter(employeeid__in= employees )
+
+
+
+    if 'docname' in filterdata :    
+        documents = documents.filter(documentname__icontains = filterdata['docname'])   
+        employeedocu = employeedocu.filter(documentname__icontains = filterdata['docname'])  
+        awards = awards.filter(documentname__icontains = filterdata['docname'])  
+        discipline = discipline.filter(documentname__icontains = filterdata['docname'])  
+
     curlevel = 2
     ## Handle Main Sheet
     ws['A1'] = 'Total Documents:'
@@ -1086,7 +1131,7 @@ def genreport(request):
 
 def uploademployeerecord(request,empid):
     employee = get_object_or_404(Employee, employeeid=empid)
-
+    recordform = EmployeeDocument()
 
     if request.method == "POST":
 
@@ -1117,10 +1162,12 @@ def uploademployeerecord(request,empid):
             receiveddate = recordform.cleaned_data['receiveddate'],
             documenthide = 0
             )
+            
+            notify.send(request.user,recipient = User.objects.filter(groups__name = 'HR Manager'), verb = employee.informationid.employeename +  ' document has been uploaded', description = request.user.username + ' has uploaded a employee document for ' + str(employee))
             return redirect('/home/employee/' + str(empid))
     
-    recordform = EmployeeDocument()
-    return render(request, 'loginapp/recordtest.html',{'record':recordform})
+    
+    return render(request, 'loginapp/uploadrecord.html',{'record':recordform})
 
 
 def editedocument(request,empid,did):
@@ -1136,14 +1183,14 @@ def editedocument(request,empid,did):
     'receivedby': doc.receivedby,
     'receiveddate' : doc.receiveddate,
     }
-
+    recordform = EditDocument(initial = initialdata)
     if request.method == "POST":
 
         recordform = EditDocument(request.POST, request.FILES, initial = initialdata)
         if recordform.is_valid():
             time = datetime.datetime.now()
             user = request.user.username
-            if request.FILES['recordfile']:
+            if 'recordfile' in request.FILES:
                 oldfilepath = os.path.splitext(doc.documentlink)
                 newfilename = oldfilepath[0] + datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + oldfilepath[1]
                 os.rename(doc.documentlink,newfilename)
@@ -1166,10 +1213,11 @@ def editedocument(request,empid,did):
             doc.receivedby =recordform.cleaned_data['receivedby']  
             doc.receiveddate = recordform.cleaned_data['receiveddate']
             doc.save()
+            notify.send(request.user,recipient = User.objects.filter(groups__name = 'HR Manager'), verb = doc.documentname +  ' has been edited', description = request.user.username + ' has edited ' + doc.documentname + ' for ' + str(employee))
             return redirect('/home/employee/' + str(empid))
     
-    recordform = EditDocument(initial = initialdata)
-    return render(request, 'loginapp/recordtest.html',{'record':recordform})
+    
+    return render(request, 'loginapp/uploadrecord.html',{'record':recordform})
 
 def editadocument(request,did):
     doc = get_object_or_404(Document, documentid=did)
@@ -1185,14 +1233,14 @@ def editadocument(request,did):
     'receivedby': doc.receivedby,
     'receiveddate' : doc.receiveddate,
     }
-
+    recordform = EditDocument(initial = initialdata)
     if request.method == "POST":
 
         recordform = EditDocument(request.POST, request.FILES, initial = initialdata)
         if recordform.is_valid():
             time = datetime.datetime.now()
             user = request.user.username
-            if request.FILES['recordfile']:
+            if 'recordfile' in request.FILES:
                 oldfilepath = os.path.splitext(doc.documentlink)
                 newfilename = oldfilepath[0] + datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + oldfilepath[1]
                 os.rename(doc.documentlink,newfilename)
@@ -1215,10 +1263,11 @@ def editadocument(request,did):
             doc.receivedby =recordform.cleaned_data['receivedby']  
             doc.receiveddate = recordform.cleaned_data['receiveddate']
             doc.save()
+            notify.send(request.user,recipient = User.objects.filter(groups__name = 'HR Manager'), verb = doc.documentname +  ' has been edited', description = request.user.username + ' has edited awards document ' + doc.documentname + ' for ' + str(employee))
             return redirect('/home/awards/' + str(did))
     
-    recordform = EditDocument(initial = initialdata)
-    return render(request, 'loginapp/recordtest.html',{'record':recordform})
+    
+    return render(request, 'loginapp/uploadrecord.html',{'record':recordform})
 
 
 
@@ -1290,7 +1339,7 @@ class AwardsWizard(SessionWizardView):
 
 
 
-
+        notify.send(self.request.user,recipient = User.objects.filter(groups__name = 'HR Manager'), verb = recordfile.name +  ' has been uploaded for Awards Records', description = self.request.user.username + ' has uploaded a awards document named ' + recordfile.name +  ' for' + str(destinationemployee))
 
 
 
@@ -1419,6 +1468,7 @@ def editdisciplinerecord(request,did):
 
             document.memoreferencenumber = rec
             document.save()
+            notify.send(request.user,recipient = User.objects.filter(groups__name = 'HR Manager'), verb = rec.recordname +  ' Discipline Record edited', description = request.user.username + ' has edited ' + rec.recordname + ',' + str(document.employeeid.employeeid)  + ',' + document.employeeid.informationid.employeename + '`s Discipline Record: Record')
             return redirect('/home/discipline/' + str(did))
     context = {
     'form': recordform,}
@@ -1441,14 +1491,14 @@ def editddocument(request,did):
     'receivedby': doc.receivedby,
     'receiveddate' : doc.receiveddate,
     }
-
+    recordform = EditDocument(initial = initialdata)
     if request.method == "POST":
 
         recordform = EditDocument(request.POST, request.FILES, initial = initialdata)
         if recordform.is_valid():
             time = datetime.datetime.now()
             user = request.user.username
-            if request.FILES['recordfile']:
+            if 'recordfile' in request.FILES:
                 oldfilepath = os.path.splitext(doc.documentlink)
                 newfilename = oldfilepath[0] + datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + oldfilepath[1]
                 os.rename(doc.documentlink,newfilename)
@@ -1471,10 +1521,11 @@ def editddocument(request,did):
             doc.receivedby =recordform.cleaned_data['receivedby']  
             doc.receiveddate = recordform.cleaned_data['receiveddate']
             doc.save()
+            notify.send(request.user,recipient = User.objects.filter(groups__name = 'HR Manager'), verb = doc.documentname +  ' has been edited', description = request.user.username + ' has edited discipline document ' + doc.documentname + ' for ' + str(employee))
             return redirect('/home/discipline/' + str(did))
     
-    recordform = EditDocument(initial = initialdata)
-    return render(request, 'loginapp/recordtest.html',{'record':recordform})
+    
+    return render(request, 'loginapp/uploadrecord.html',{'record':recordform})
 
 
 
@@ -1551,7 +1602,7 @@ class DisciplineWizard(SessionWizardView):
         memoreferencenumber = recstorage)
 
 
-
+        notify.send(self.request.user,recipient = User.objects.filter(groups__name = 'HR Manager'), verb = recordfile.name +  ' has been uploaded for Discipline Records', description = self.request.user.username + ' has uploaded a discipline document named ' + recordfile.name +  ' for' + str(destinationemployee))
 
 
 
@@ -1694,7 +1745,7 @@ class EmployeeWizard(SessionWizardView):
         child = self.get_cleaned_data_for_step('8')
         spousetemp = None
         if 'spousename' in spouse and 'spousecompany' in spouse and 'numberofchildren' in spouse:
-            if spouse['spousename'] != None and spouse['spousecompany'] != None and spouse['numberofchildren'] != None:
+            if spouse['spousename'] != '' and spouse['spousecompany'] != '' and spouse['numberofchildren'] != None:
                 spousenamearg = Q(spousename__contains = spouse['spousename'])
                 spousecomparg = Q(spousecompany__contains = spouse['spousecompany'])
                 spousechildren = Q(numberofchildren__contains = spouse['numberofchildren'])
@@ -1791,6 +1842,7 @@ class EmployeeWizard(SessionWizardView):
                     informationid= informationid
                     )
 
+        notify.send(self.request.user,recipient = User.objects.filter(groups__name = 'HR Manager'), verb = str(recordstore) +  '`s employee record has been created', description = self.request.user.username + ' has created the employee record for ' + str(recordstore))
 
         return redirect('employeeform')
 

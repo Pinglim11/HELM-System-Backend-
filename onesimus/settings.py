@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'loginapp',
     'formtools',
+    'notifications',
 ]
 
 MIDDLEWARE = [
@@ -134,3 +135,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_REDIRECT_URL  = '/home'
 LOGOUT_REDIRECT_URL = '/accounts/login'
+
+#NOTIFS
+DJANGO_NOTIFICATIONS_CONFIG = { 'SOFT_DELETE': True}

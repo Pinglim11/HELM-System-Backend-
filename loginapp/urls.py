@@ -53,6 +53,7 @@ urlpatterns = [
     path('viewtest_discipline', views.viewtest_discipline, name='viewtest_discipline'),
     path('viewreport', views.viewreport, name='viewreport'),
     path('viewtest_home', views.home, name='viewtest_home'),
+    path('markasread', views.markasread, name='markasread'),
 
 
 ] +  static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)# + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

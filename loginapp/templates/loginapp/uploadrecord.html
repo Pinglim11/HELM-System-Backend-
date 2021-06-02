@@ -94,39 +94,44 @@
             <div id="container">
         
                 <div class="section">
-
+					
                     <div class="section-container">
-
+						<p>
+										{% if record.errors %}
+										{% for field in record %}
+											{% for error in field.errors %}
+												<div class="alert alert-danger">
+													<strong>{{ error }}</strong>
+												</div>
+											{% endfor %}
+										{% endfor %}
+										{% for error in record.non_field_errors %}
+											<div class="alert alert-danger">
+												<strong>{{ error }}</strong>
+											</div>
+										{% endfor %}
+									{% endif %}
+									</p>
                         <div class="section-header">
 
                             <div class="section-title">
-                                <h1>Create New Record</h1>
+                                <h1>Upload New Record</h1>
                             </div>
 
-                            <div class="section-buttons">
-                                <button class="secondary-btn" onclick="location.href='/home/employeeform'">
-                                    Cancel
-                                </button>
-                                <button class="primary-btn">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15.003 3h2.997v5h-2.997v-5zm8.997 1v20h-24v-24h20l4 4zm-19 5h14v-7h-14v7zm16 4h-18v9h18v-9z"/></svg>
-                                    Save
-                                </button>
-                            </div>
+                     
                         </div>
 
-                        <div class="section-block">
-                            <h2>Employee Record</h2>
-                        </div>
+                        
 
                         <div class="section-flex">
 						<form enctype="multipart/form-data" action="" method="post">
 						{% csrf_token %}
 						
-						<div>
+						
 						{{ record.as_table }}
 						
 						<input type="submit" value="Submit">
-						</div>
+						
 						</form>
                             
                         
