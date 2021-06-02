@@ -15,7 +15,7 @@ from django.http import HttpResponse, Http404
 from django.forms import formset_factory
 from openpyxl import Workbook
 from openpyxl import load_workbook
-from openpyxl.styles import Font
+from openpyxl.styles import Font, Alignment
 from openpyxl.writer.excel import save_virtual_workbook
 from django.utils.encoding import smart_str
 from formtools.wizard.views import SessionWizardView
@@ -960,6 +960,8 @@ def document(request,did):
     return response
 
 
+
+
 @login_required
 def genreport(request):
     wb = Workbook()
@@ -1039,89 +1041,207 @@ def genreport(request):
 
     #Handle Employee Sheet
 
-    EmployeeSheet['A1'] = 'Link'
-    EmployeeSheet['B1'] ='Employee ID'
-    EmployeeSheet['C1'] ='Employee Name'
-    EmployeeSheet['D1'] ='Department'
-    EmployeeSheet['E1'] ='Position'
-    EmployeeSheet['F1'] ='Employment Status'
-    EmployeeSheet['G1'] ='Start Date'
-    EmployeeSheet['H1'] ='End Date'
-    EmployeeSheet['I1'] ='Salary (PHP)'
-    EmployeeSheet['J1'] ='Salary Type'
+  
+    EmployeeSheet['A1'] ='Employee ID'
+    EmployeeSheet['B1'] ='Employee Name'
+    EmployeeSheet['C1'] ='Department'
+    EmployeeSheet['D1'] ='Position'
+    EmployeeSheet['E1'] ='Branch'
+    EmployeeSheet['F1'] ='Region'
+    EmployeeSheet['G1'] ='Employment Status'
+    EmployeeSheet['H1'] ='Start Date'
+    EmployeeSheet['I1'] ='End Date'
+    EmployeeSheet['J1'] ='Salary (PHP)'
+    EmployeeSheet['K1'] ='Salary Type'
 
     for employee in employees:
-        EmployeeSheet['A' + str(curlevel)] = '127.0.0.1/home/employee/'	+ str(employee.employeeid) + '/'
-        EmployeeSheet['B'+ str(curlevel)] =employee.employeeid
-        EmployeeSheet['C'+ str(curlevel)] =employee.informationid.employeename
-        EmployeeSheet['D'+ str(curlevel)] = employee.jobid.department
-        EmployeeSheet['E'+ str(curlevel)] = employee.jobid.position
-        EmployeeSheet['F'+ str(curlevel)] = employee.employmentstatus
-        EmployeeSheet['G'+ str(curlevel)] = str(employee.startdate)
-        EmployeeSheet['H'+ str(curlevel)] =	str(employee.enddate)
-        EmployeeSheet['I'+ str(curlevel)] = employee.salary
-        EmployeeSheet['J'+ str(curlevel)] = employee.salarytype
+        #EmployeeSheet['A' + str(curlevel)] = '127.0.0.1/home/employee/'	+ str(employee.employeeid) + '/'
+        EmployeeSheet['A'+ str(curlevel)] =employee.employeeid
+        EmployeeSheet['B'+ str(curlevel)] =employee.informationid.employeename
+        EmployeeSheet['C'+ str(curlevel)] = employee.jobid.department
+        EmployeeSheet['D'+ str(curlevel)] = employee.jobid.position
+        EmployeeSheet['E'+ str(curlevel)] = employee.branch.branch
+        EmployeeSheet['F'+ str(curlevel)] = employee.branch.region
+        EmployeeSheet['G'+ str(curlevel)] = employee.employmentstatus
+        EmployeeSheet['H'+ str(curlevel)] = str(employee.startdate)
+        EmployeeSheet['I'+ str(curlevel)] =	str(employee.enddate)
+        EmployeeSheet['J'+ str(curlevel)] = employee.salary
+        EmployeeSheet['K'+ str(curlevel)] = employee.salarytype
         curlevel += 1
+
+    dims = {}
+    for row in EmployeeSheet.rows:
+        for cell in row:
+            cell.alignment = Alignment(wrap_text=True,vertical='top') 
+            if cell.value:
+                dims[cell.column_letter] = max((dims.get(cell.column_letter, 0), len(str(cell.value))))
+    for col, value in dims.items():
+        EmployeeSheet.column_dimensions[col].width = value
 
     curlevel = 2
 
     #Handle Employee Documents
 
-    EmployeeRecSheet['A1'] = 'Link'
+    EmployeeRecSheet['A1'] ='Document Name'
     EmployeeRecSheet['B1'] ='Employee ID'
     EmployeeRecSheet['C1'] ='Document ID'
-    EmployeeRecSheet['D1'] ='Document Name'
-    EmployeeRecSheet['E1'] ='Date Created'
-    EmployeeRecSheet['F1'] ='Author'
+    EmployeeRecSheet['D1'] ='Date Created'
+    EmployeeRecSheet['E1'] ='Author'
+    EmployeeRecSheet['F1'] ='Prepared by'
+    EmployeeRecSheet['G1'] ='Prepared at'
+    EmployeeRecSheet['H1'] ='Noted by'
+    EmployeeRecSheet['I1'] ='Noted at'
+    EmployeeRecSheet['J1'] ='Approved by'
+    EmployeeRecSheet['K1'] ='Approved at'
+    EmployeeRecSheet['L1'] ='Received by'
+    EmployeeRecSheet['M1'] ='Received at'
 
     for docu in employeedocu:
-        EmployeeRecSheet['A' + str(curlevel)] = docu.documentlink
+        EmployeeRecSheet['A'+ str(curlevel)] = docu.documentname
         EmployeeRecSheet['B'+ str(curlevel)] =docu.employeeid.employeeid
         EmployeeRecSheet['C'+ str(curlevel)] =docu.documentid
-        EmployeeRecSheet['D'+ str(curlevel)] = docu.documentname
-        EmployeeRecSheet['E'+ str(curlevel)] = str(docu.dateandtimecreated)
-        EmployeeRecSheet['F'+ str(curlevel)] = docu.author
+        EmployeeRecSheet['D'+ str(curlevel)] = str(docu.dateandtimecreated)
+        EmployeeRecSheet['E'+ str(curlevel)] = docu.author
+        EmployeeRecSheet['F'+ str(curlevel)] = docu.preparedby
+        EmployeeRecSheet['G'+ str(curlevel)] = str(docu.preparationdate)
+        EmployeeRecSheet['H'+ str(curlevel)] = docu.notedby
+        EmployeeRecSheet['I'+ str(curlevel)] = str(docu.noteddate)
+        EmployeeRecSheet['J'+ str(curlevel)] = docu.approvedby
+        EmployeeRecSheet['K'+ str(curlevel)] = str(docu.approveddate)
+        EmployeeRecSheet['L'+ str(curlevel)] = docu.receivedby
+        EmployeeRecSheet['M'+ str(curlevel)] = str(docu.receiveddate)
         curlevel += 1
+
+
+    dims = {}
+    for row in EmployeeRecSheet.rows:
+        for cell in row:
+            cell.alignment = Alignment(wrap_text=True,vertical='top') 
+            if cell.value:
+                dims[cell.column_letter] = max((dims.get(cell.column_letter, 0), len(str(cell.value))))
+    for col, value in dims.items():
+        EmployeeRecSheet.column_dimensions[col].width = value
+
 
     curlevel = 2
 
-    #Handle Employee Documents
-
-    AwardsSheet['A1'] = 'Link'
-    AwardsSheet['B1'] ='Employee ID'
-    AwardsSheet['C1'] ='Memo Reference Number'
-    AwardsSheet['D1'] ='Document Name'
+    #Handle Awards Documents
+    AwardsSheet['A1'] ='Record Name'
+    AwardsSheet['B1'] ='Document Name'
+    AwardsSheet['C1'] ='Employee ID'
+    AwardsSheet['D1'] ='Memo Reference Number'
     AwardsSheet['E1'] ='Date Created'
     AwardsSheet['F1'] ='Author'
+    AwardsSheet['G1'] ='Issuing Branch'
+    AwardsSheet['H1'] ='Issuing Department'
+    AwardsSheet['I1'] ='Award Issuer'
+    AwardsSheet['J1'] ='Award Purpose'
+    AwardsSheet['K1'] ='Award Type'
+    AwardsSheet['L1'] ='Prepared by'
+    AwardsSheet['M1'] ='Prepared at'
+    AwardsSheet['N1'] ='Noted by'
+    AwardsSheet['O1'] ='Noted at'
+    AwardsSheet['P1'] ='Approved by'
+    AwardsSheet['Q1'] ='Approved at'
+    AwardsSheet['R1'] ='Received by'
+    AwardsSheet['S1'] ='Received at'
 
     for docu in awards:
-        AwardsSheet['A' + str(curlevel)] = docu.documentlink
-        AwardsSheet['B'+ str(curlevel)] =docu.employeeid.employeeid
-        AwardsSheet['C'+ str(curlevel)] =docu.memoreferencenumber.memoreferencenumber
-        AwardsSheet['D'+ str(curlevel)] = docu.documentname
+        record = docu.memoreferencenumber
+        award = Awards.objects.get(amemoreferencenumber = record)
+        AwardsSheet['A'+ str(curlevel)] = record.recordname
+        AwardsSheet['B'+ str(curlevel)] = docu.documentname
+        AwardsSheet['C'+ str(curlevel)] =docu.employeeid.employeeid
+        AwardsSheet['D'+ str(curlevel)] =docu.memoreferencenumber.memoreferencenumber
         AwardsSheet['E'+ str(curlevel)] = str(docu.dateandtimecreated)
         AwardsSheet['F'+ str(curlevel)] = docu.author
+        AwardsSheet['G'+ str(curlevel)] = record.issuingbranch
+        AwardsSheet['H'+ str(curlevel)] = record.issuingdepartment
+        AwardsSheet['I'+ str(curlevel)] = award.awardissuer
+        AwardsSheet['J'+ str(curlevel)] = award.awardpurpose
+        AwardsSheet['K'+ str(curlevel)] = award.awardtype
+        AwardsSheet['L'+ str(curlevel)] = docu.preparedby
+        AwardsSheet['M'+ str(curlevel)] = str(docu.preparationdate)
+        AwardsSheet['N'+ str(curlevel)] = docu.notedby
+        AwardsSheet['O'+ str(curlevel)] = str(docu.noteddate)
+        AwardsSheet['P'+ str(curlevel)] = docu.approvedby
+        AwardsSheet['Q'+ str(curlevel)] = str(docu.approveddate)
+        AwardsSheet['R'+ str(curlevel)] = docu.receivedby
+        AwardsSheet['S'+ str(curlevel)] = str(docu.receiveddate)
         curlevel += 1
+
+    dims = {}
+    for row in AwardsSheet.rows:
+        for cell in row:
+            cell.alignment = Alignment(wrap_text=True,vertical='top') 
+            if cell.value:
+                dims[cell.column_letter] = max((dims.get(cell.column_letter, 0), len(str(cell.value))))
+    for col, value in dims.items():
+        AwardsSheet.column_dimensions[col].width = value
+
+
+
 
     curlevel = 2
 
+
+
+
     #Handle Employee Documents
 
-    DisciplineSheet['A1'] = 'Link'
-    DisciplineSheet['B1'] ='Employee ID'
-    DisciplineSheet['C1'] ='Memo Reference Number'
-    DisciplineSheet['D1'] ='Document Name'
+    DisciplineSheet['A1'] ='Record Name'
+    DisciplineSheet['B1'] ='Document Name'
+    DisciplineSheet['C1'] ='Employee ID'
+    DisciplineSheet['D1'] ='Memo Reference Number'
     DisciplineSheet['E1'] ='Date Created'
     DisciplineSheet['F1'] ='Author'
+    DisciplineSheet['G1'] ='Issuing Branch'
+    DisciplineSheet['H1'] ='Issuing Department'
+    DisciplineSheet['I1'] ='NOAC Type'
+    DisciplineSheet['J1'] ='Sanction'
+    DisciplineSheet['K1'] ='Prepared by'
+    DisciplineSheet['L1'] ='Prepared at'
+    DisciplineSheet['M1'] ='Noted by'
+    DisciplineSheet['N1'] ='Noted at'
+    DisciplineSheet['O1'] ='Approved by'
+    DisciplineSheet['P1'] ='Approved at'
+    DisciplineSheet['Q1'] ='Received by'
+    DisciplineSheet['R1'] ='Received at'
 
     for docu in discipline:
-        DisciplineSheet['A' + str(curlevel)] = docu.documentlink
-        DisciplineSheet['B'+ str(curlevel)] =docu.employeeid.employeeid
-        DisciplineSheet['C'+ str(curlevel)] =docu.memoreferencenumber.memoreferencenumber
-        DisciplineSheet['D'+ str(curlevel)] = docu.documentname
+        record = docu.memoreferencenumber
+        noac = Noac.objects.get(nmemoreferencenumber = record)
+        DisciplineSheet['A'+ str(curlevel)] = record.recordname
+        DisciplineSheet['B'+ str(curlevel)] = docu.documentname
+        DisciplineSheet['C'+ str(curlevel)] =docu.employeeid.employeeid
+        DisciplineSheet['D'+ str(curlevel)] =docu.memoreferencenumber.memoreferencenumber
         DisciplineSheet['E'+ str(curlevel)] = str(docu.dateandtimecreated)
         DisciplineSheet['F'+ str(curlevel)] = docu.author
+        DisciplineSheet['G'+ str(curlevel)] = record.issuingbranch
+        DisciplineSheet['H'+ str(curlevel)] = record.issuingdepartment
+        DisciplineSheet['I'+ str(curlevel)] = noac.noactype
+        DisciplineSheet['J'+ str(curlevel)] = noac.sanction
+        DisciplineSheet['K'+ str(curlevel)] = docu.preparedby
+        DisciplineSheet['L'+ str(curlevel)] = str(docu.preparationdate)
+        DisciplineSheet['M'+ str(curlevel)] = docu.notedby
+        DisciplineSheet['N'+ str(curlevel)] = str(docu.noteddate)
+        DisciplineSheet['O'+ str(curlevel)] = docu.approvedby
+        DisciplineSheet['P'+ str(curlevel)] = str(docu.approveddate)
+        DisciplineSheet['Q'+ str(curlevel)] = docu.receivedby
+        DisciplineSheet['R'+ str(curlevel)] = str(docu.receiveddate)
         curlevel += 1
+    
+    dims = {}
+    for row in DisciplineSheet.rows:
+        for cell in row:
+            cell.alignment = Alignment(wrap_text=True,vertical='top') 
+            if cell.value:
+                dims[cell.column_letter] = max((dims.get(cell.column_letter, 0), len(str(cell.value))))
+    for col, value in dims.items():
+        DisciplineSheet.column_dimensions[col].width = value
+    
+    
+    
     response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd.ms-excel')
 
     return response
