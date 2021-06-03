@@ -109,10 +109,10 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M16 11h5l-9 10-9-10h5v-11h8v11zm1 11h-10v2h10v-2z"/></svg>
                                                 Download
                                 </button>
-                                <button class="primary-btn">
+                                <!--<button class="primary-btn">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 5h-4v-5h-16v5h-4v13h4v6h9.519c2.947 0 6.029-3.577 6.434-6h4.047v-13zm-18-3h12v3h-12v-3zm8.691 16.648s1.469 3.352-2 3.352h-6.691v-8h12v2.648c0 3.594-3.309 2-3.309 2zm6.809-10.648c-.276 0-.5-.224-.5-.5s.224-.5.5-.5.5.224.5.5-.224.5-.5.5zm-5.5 9h-8v-1h8v1zm-3 1h-5v1h5v-1z"/></svg>
                                     Print
-                                </button>
+                                </button>-->
                             </div>
                         </div>
 
@@ -203,9 +203,13 @@
 								<tr>
 								<td><a href = "download/{{ doc.documentid }}/">Download</a></td>
 								{% if doc.memoreferencenumber %}
-								<td><a href = "document/{{ doc.documentid }}/">{{ doc.memoreferencenumber.memoreferencenumber }}</a></td>
+									{% if doc.memoreferencenumber.recordtype == "Discipline" %}
+									<td><a href = "/home/discipline/{{ doc.documentid }}/">{{ doc.memoreferencenumber.memoreferencenumber }} / {{ doc.documentid }}</a></td>
+									{% else %}
+									<td><a href = "/home/awards/{{ doc.documentid }}/">{{ doc.memoreferencenumber.memoreferencenumber }} / {{ doc.documentid }}</a></td>
+									{% endif %}
 								{% else %}
-								<td><a href = "document/{{ doc.documentid }}/">{{ doc.documentid }}</a></td>
+								<td><a href = "/home/employee/{{ doc.employeeid.employeeid }}/">{{ doc.documentid }}</a></td>
 								{% endif %}
 								<td>{{ doc.documentname }}</td>
 								<td>{{ doc.employeeid.employeeid }}</td>

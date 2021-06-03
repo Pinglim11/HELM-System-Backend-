@@ -39,18 +39,18 @@ def checkmodelq(classmodel, arg):
 @login_required
 def employeeform(request):
     employees = Employee.objects.filter(deletehide = 0).order_by('employeeid')
-    documents = Document.objects.filter(employeeid__deletehide = 0).filter(documenthide = 0)
-    employeedocu = Document.objects.filter(Q(memoreferencenumber = None) , Q(employeeid__deletehide=0) , Q(documenthide=0))
-    awards = Document.objects.filter(Q(memoreferencenumber__recordtype='Award'),Q(employeeid__deletehide=0), Q(documenthide=0))
-    discipline = Document.objects.filter(Q(memoreferencenumber__recordtype='Discipline'), Q(employeeid__deletehide=0), Q(documenthide=0))
+    # documents = Document.objects.filter(employeeid__deletehide = 0).filter(documenthide = 0)
+    # employeedocu = Document.objects.filter(Q(memoreferencenumber = None) , Q(employeeid__deletehide=0) , Q(documenthide=0))
+    # awards = Document.objects.filter(Q(memoreferencenumber__recordtype='Award'),Q(employeeid__deletehide=0), Q(documenthide=0))
+    # discipline = Document.objects.filter(Q(memoreferencenumber__recordtype='Discipline'), Q(employeeid__deletehide=0), Q(documenthide=0))
     context = {
     'employees': employees,
     'count': employees.count(),
-    'documentcount' : documents.count(),
-    'employeedocucount' : employeedocu.count(),
-    'awardscount' : awards.count(),
-    'disciplinecount' : discipline.count(),
-    'documents': documents
+    # 'documentcount' : documents.count(),
+    # 'employeedocucount' : employeedocu.count(),
+    # 'awardscount' : awards.count(),
+    # 'disciplinecount' : discipline.count(),
+    # 'documents': documents
     }
     if request.method == "POST":
         sortbytype = request.POST.get('sorted')
