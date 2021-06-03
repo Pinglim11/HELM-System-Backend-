@@ -5,6 +5,7 @@ import datetime
 import re
 from .models import Employee, EmployeePersonalInfo,EmployeePosition,EmployeeWorkLocation, ChildBackground,SpouseBackground,FamilyMemberBackground,EducationalBackground,EmploymentHistory, EmergencyDetails, Document, Record
 from django.contrib.admin.widgets import FilteredSelectMultiple
+
 # create a ModelForm 
 
 def checkmodel(classmodel, **kwargs):
@@ -445,6 +446,27 @@ class EmploymentHistoryForm(forms.Form):
             raise forms.ValidationError(error)
         
         return cd
+
+def current_year():
+    return datetime.date.today().year
+
+
+def year_choices():
+    return [(r,r) for r in range(1900, datetime.date.today().year+1)]
+
+
+class OnesimusHistoryForm(forms.Form): 
+    branch = forms.ModelChoiceField(EmployeeWorkLocation.objects.all())
+    jobid = forms.ModelChoiceField(EmployeePosition.objects.all())
+    year = forms.TypedChoiceField(coerce=int, choices=year_choices, initial=current_year)
+
+    
+
+
+
+
+
+
 
 class EducationalBackgroundForm(forms.Form): 
     schooltypes = (('Grade School', 'Grade School'), ('High School', 'High School'), ('College', 'College'), ('Post Grad', 'Post Grad'), ('Vocational', 'Vocational'))

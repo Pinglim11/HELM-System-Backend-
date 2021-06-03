@@ -521,20 +521,20 @@
                         {% csrf_token %}
 						
 						
-                            <div id = "emphisform-container">
+                            <div id = "oneform-container">
 
                                 <div class="section-header">
 
                                     <div class="section-title">
-                                        <h1>Employment History</h1>
+                                        <h1>Employment History Onesimus</h1>
                                         
                                     </div>
 
                                     <div class="section-buttons">
-                                        <button class="secondary-btn" id="emphisremove-form" type="button" style="display: none;">
+                                        <button class="secondary-btn" id="oneremove-form" type="button" style="display: none;">
                                             Remove
                                         </button>
-                                        <button class="secondary-btn" id="emphisadd-form" type="button">
+                                        <button class="secondary-btn" id="oneadd-form" type="button">
                                             Add
                                         </button>
                                     </div>
@@ -558,44 +558,35 @@
 										{% endfor %}
 									{% endif %}
 									</p>
-                                    <div class="emphis-form">
+                                    <div class="one-form">
 
-                                        <div class="section-block">
+                                        <div class="one-block">
 
-                                            <div class="section-flex" style="margin: 30px 0">
+                                            <div class="one-flex" style="margin: 30px 0">
 
-                                                <div class="section-column">
-                                                    <div class="section-row">
-                                                        <div class="data">
-                                                            <label>Previous Company Name:</label>
-                                                            {{ form.previouscompanyname }}
-                                                        </div>
-                                                    </div>
+                                                
 
                                                     <div class="section-block">
                                                         <div class="section-flex">
-                
+															<div class="section-column">
+                                                    <div class="section-row">
+																<div class="data">
+																	<label>Year:</label>
+																	{{ form.year }}
+																</div>
+                                                    </div>
                                                             <div class="section-column">
-                            
+																
                                                                 <div class="section-row">
                                                                     <div class="data">
-                                                                        <label>Previous Position:</label>
-                                                                        {{ form.previousposition }}
+                                                                        <label>Previous Position and Dept:</label>
+                                                                       {{ form.jobid }}  
                                                                     </div>
                                                                 </div>
                             
                                                             </div>
                             
-                                                            <div class="section-column">
-                            
-                                                                <div class="section-row">
-                                                                    <div class="data">
-                                                                        <label>Reason for Leaving:</label>
-                                                                        {{ form.reasonforleaving }}
-                                                                    </div>
-                                                                </div>
-                            
-                                                            </div>
+                                                            
                             
                                                         </div>
                                                     </div>
@@ -610,23 +601,14 @@
                             
                                                                 <div class="section-row">
                                                                     <div class="data">
-                                                                        <label>Company Contact Number:</label>
-                                                                        {{ form.companycontactnumber }}
+                                                                        <label>Previous Branch:</label>
+                                                                      {{ form.branch }}
                                                                     </div>
                                                                 </div>
                             
                                                             </div>
                             
-                                                            <div class="section-column">
-                            
-                                                                <div class="section-row">
-                                                                    <div class="data">
-                                                                        <label>With COE or Clearance:</label>
-                                                                        {{ form.withcoeorclearance }}
-                                                                    </div>
-                                                                </div>
-                            
-                                                            </div>
+                                                            
                             
                                                         </div>
                                                     </div>
@@ -638,8 +620,10 @@
                                         </div>
 
                                     </div>
-                                    {% endfor %}
-                                    <div id = "emphisblocker"></div>
+									
+									
+									{% endfor %}
+                                    <div id = "oneblocker"></div>
 
                             </div>
 
@@ -764,7 +748,7 @@
         x.addListener(adjustSidebar) // Attach listener function on state changes
 
     </script>
-    <script type="text/javascript" src = {% static 'javascript/editemphistory.js' %}>  </script>
+    <script type="text/javascript" src = {% static 'javascript/editone.js' %}>  </script>
 
 </body>
 

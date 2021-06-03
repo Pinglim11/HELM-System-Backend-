@@ -8,8 +8,8 @@ import datetime
 import os
 import re
 from django import forms
-from .forms import EmployeeRecordForm,EmployeePersonalForm,EmergencyForm,JobsForm, BranchForm, SpouseForm, EmploymentHistoryForm,EducationalBackgroundForm,FamilyMemberBackgroundForm,ChildBackgroundForm, EmployeeDocument, EditRecordForm, AwardsRecord, RecordDocument, AwardsRecordEdit,EditDocument,DisciplineRecord,DisciplineRecordEdit
-from .models import Employee, EmployeePersonalInfo,EmployeePosition,EmployeeWorkLocation, ChildBackground,SpouseBackground,FamilyMemberBackground,EducationalBackground,EmploymentHistory, EmergencyDetails, Document, Record, Awards, Noac,Awol,Timekeeping ,MajorOffense
+from .forms import OnesimusHistoryForm,EmployeeRecordForm,EmployeePersonalForm,EmergencyForm,JobsForm, BranchForm, SpouseForm, EmploymentHistoryForm,EducationalBackgroundForm,FamilyMemberBackgroundForm,ChildBackgroundForm, EmployeeDocument, EditRecordForm, AwardsRecord, RecordDocument, AwardsRecordEdit,EditDocument,DisciplineRecord,DisciplineRecordEdit
+from .models import Employee, EmployeePersonalInfo,EmployeePosition,EmployeeWorkLocation, ChildBackground,SpouseBackground,FamilyMemberBackground,EducationalBackground,EmploymentHistory, EmergencyDetails, Document, Record, Awards, Noac,Awol,Timekeeping ,MajorOffense, EmployeePositionHistory
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse, Http404
 from django.forms import formset_factory
@@ -120,7 +120,8 @@ def employeeprof(request,empid):
     education = EducationalBackground.objects.filter(informationid=information)
     family = FamilyMemberBackground.objects.filter(informationid=information)
     children = ChildBackground.objects.filter(informationid=information)
-    employeedocu = Document.objects.filter(Q(memoreferencenumber = None) , Q(employeeid__deletehide=0) , Q(documenthide=0))
+    onesimushistory = EmployeePositionHistory.objects.filter(employeeid = empid)
+    employeedocu = Document.objects.filter(Q(memoreferencenumber = None) , Q(documenthide=0))
     degree = None
     if education.count() >= 1:
         degree = education[0].highestdegree
@@ -135,6 +136,7 @@ def employeeprof(request,empid):
         'family' :family,
         'children':children,
         'documents': employeedocu,
+        'onesimushistory' : onesimushistory
 
     }
     return render(request, 'loginapp/prof.html', context)
@@ -356,6 +358,71 @@ def editemphistory(request,empid):
     context = {
     'form': emphistoryform,}
     return render(request, 'loginapp/edit/4.html',context)
+
+
+@login_required
+def editone(request,empid):
+    employee = get_object_or_404(Employee, employeeid=empid)
+    emphistory = EmployeePositionHistory.objects.filter(employeeid=empid)
+    emphistoryData = []
+    counts = 1
+    for history in emphistory:
+        counts = 0
+        dic = {
+            'jobid': EmployeePosition.objects.get(department =history.previousdepartment, position = history.previousposition_one),
+            'branch'  : EmployeeWorkLocation.objects.get(branch = history.previousbranch),
+            'year'   : history.year,
+        }
+        emphistoryData.append(dic)
+    emphistoryform1 = formset_factory(OnesimusHistoryForm, extra = counts )
+    if request.method == "POST":
+        emphistoryform = emphistoryform1(request.POST,initial = emphistoryData)
+        if emphistoryform.is_valid():
+            counts = [0,0,0,0]
+            totals = [0,0,0,0]
+            for histories in emphistoryform:
+                totals[0] += 1
+
+            if totals[0] < emphistory.count():
+                #print(totals[0] )
+                for x in range(emphistory.count() - 1, totals[0] - 1, -1):
+
+                    todel = emphistory[x]
+                    todel.delete()
+
+            for histories in emphistoryform:
+                counts[0] += 1
+                if counts[0] <= emphistory.count():
+                    curhistory = emphistory[counts[0] - 1]
+                    
+                    curhistory.previousdepartment= histories.cleaned_data['jobid'].department
+                    curhistory.previousposition_one= histories.cleaned_data['jobid'].position
+                    curhistory.previousbranch= histories.cleaned_data['branch'].branch
+                    curhistory.year= histories.cleaned_data['year']
+                    curhistory.save()
+                else:
+                    EmployeePositionHistory.objects.create(
+                    employeeid=employee,
+                    previousdepartment= histories.cleaned_data['jobid'].department,
+                    previousposition_one= histories.cleaned_data['jobid'].position,
+                    previousbranch= histories.cleaned_data['branch'].branch,
+                    year= histories.cleaned_data['year'])
+                    
+
+            notify.send(request.user,recipient = User.objects.filter(groups__name = 'HR Manager'), verb = str(employee.employeeid) + ',' + employee.informationid.employeename + '`s Employee Record edited', description = request.user.username + ' has edited ' + str(employee.employeeid) + ',' + employee.informationid.employeename + '`s Employee Record: Employment History Onesimus')
+            return redirect('/home/employee/' + str(empid))
+    else:
+        emphistoryform = emphistoryform1(initial = emphistoryData)
+    context = {
+    'form': emphistoryform,}
+    return render(request, 'loginapp/edit/onesimushistory.html',context)
+
+
+
+
+
+
+
 
 @login_required
 def editeducation(request,empid):

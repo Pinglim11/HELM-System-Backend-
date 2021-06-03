@@ -669,6 +669,116 @@
                     </div>
 
                 </div>
+                <div class="section">
+
+                    <div class="section-container">
+
+                        
+                        
+
+                            <div id = "emphisform-container">
+
+                                <div class="section-header">
+
+                                    <div class="section-title">
+                                        <h1>Employment History Onesimus</h1>
+                                        
+                                    </div>
+									
+
+                                     <div class="section-buttons">
+                                <button class="primary-btn" onclick="location.href='/home/employee/{{ employee.employeeid }}/editone'" type="button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7.127 22.564l-7.126 1.436 1.438-7.125 5.688 5.689zm-4.274-7.104l5.688 5.689 15.46-15.46-5.689-5.689-15.459 15.46z"/></svg>
+                                    Edit
+                                </button>
+								</div>
+                                </div>
+
+                                    
+                                    {% for data in onesimushistory %}
+                                    <div class="one-form">
+
+                                        <div class="one-block">
+
+                                            <div class="one-flex" style="margin: 30px 0">
+
+                                                
+
+                                                    <div class="section-block">
+                                                        <div class="section-flex">
+															<div class="section-column">
+                                                    <div class="section-row">
+                                                        <div class="data">
+                                                            <label>Year:</label>
+                                                           <p> {{ data.year }}</p>  
+                                                        </div>
+                                                    </div>
+                                                            <div class="section-column">
+                            
+                                                                <div class="section-row">
+                                                                    <div class="data">
+                                                                        <label>Previous Position:</label>
+                                                                    <p>    {{ data.previousposition_one }}</p>  
+                                                                    </div>
+                                                                </div>
+                            
+                                                            </div>
+                            
+                                                            <div class="section-column">
+                            
+                                                                <div class="section-row">
+                                                                    <div class="data">
+                                                                        <label>Previous Department:</label>
+                                                                     <p>   {{ data.previousdepartment }}</p>  
+                                                                    </div>
+                                                                </div>
+                            
+                                                            </div>
+                            
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+    
+                                                <div class="section-column">
+                                                    <div class="section-block">
+                                                        <div class="section-flex">
+                
+                                                            <div class="section-column">
+                            
+                                                                <div class="section-row">
+                                                                    <div class="data">
+                                                                        <label>Previous Branch:</label>
+                                                                     <p>   {{ data.previousbranch }}</p>  
+                                                                    </div>
+                                                                </div>
+                            
+                                                            </div>
+                            
+                                                            
+                            
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            
+                                            </div>
+                                            
+                                        </div>
+
+                                    </div>
+                                    {% endfor %}
+                                    
+
+                            </div>
+
+                            
+                        
+                        
+
+                    </div>
+
+                </div>
 
                 <div class="section">
 
